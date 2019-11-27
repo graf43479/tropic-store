@@ -1,0 +1,23 @@
+﻿@model WebUI.Models.RegisterViewModel 
+
+@{
+    ViewBag.Title = "RegistrateAdmin";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Robots = "nofollow, noindex";   
+}
+<div class="header">
+<h2>Регистрация администратора сайта</h2>
+</div>
+@using (Html.BeginForm())
+{
+    <p>@Html.ValidationSummary(true)</p>
+    <p>Имя: @Html.EditorFor(x => x.UserName) @Html.ValidationMessageFor(x => x.UserName)</p>
+    <p>Логин: @Html.EditorFor(x => x.Login) @Html.ValidationMessageFor(x => x.Login)</p>
+    <p>Пароль: @Html.EditorFor(x => x.Password) @Html.ValidationMessageFor(x => x.Password)</p>
+    <p>Пароль: @Html.EditorFor(x => x.ConfirmPassword) @Html.ValidationMessageFor(x => x.ConfirmPassword)</p>
+    <p>Телефон: @Html.EditorFor(x => x.Phone) @Html.ValidationMessageFor(x => x.Phone)</p>
+    <p>Email: @Html.EditorFor(x => x.Email) @Html.ValidationMessageFor(x => x.Email)</p>
+    <p>Подписаться на рассылку: @Html.CheckBoxFor(x => x.Mailing) @Html.ValidationMessageFor(x => x.Mailing)</p>
+    <input type="submit" class="actionButtons" value="Готово"/>
+    
+}

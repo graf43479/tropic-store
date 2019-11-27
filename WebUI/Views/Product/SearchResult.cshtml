@@ -1,0 +1,36 @@
+﻿@using WebUI.Infrastructure.ExtensionMethods
+@model WebUI.Models.ProductsListViewModel
+
+@{
+    ViewBag.Title = "Результат поиска";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="heading">
+        <h1>Результаты поиска</h1>
+  </div>
+
+
+@{
+    if (@Model.Products.Count() == 0)
+    {
+        <p>К сожалнию нет товаров, соответствующих условию поиска. Попробуйте найти товар по запросу, сформулированному иначе</p>
+    }
+   
+    }
+
+<script>    document.getElementById("searcherEditor").value = "@ViewBag.Searcher"</script>
+
+  @{
+        Html.RenderPartial("SearchOptions");
+    }
+
+<div id="productList">
+@foreach (var p in Model.Products)
+{
+    Html.RenderPartial("ProductSummary", p);
+}
+</div>
+<div class="pager">
+    @Html.PageLinks(Model.PagingInfo, x => Url.Action("SearchResult", new { Searcher = ViewBag.Searcher, page = x }))
+</div>

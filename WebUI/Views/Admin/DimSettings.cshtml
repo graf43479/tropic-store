@@ -1,0 +1,60 @@
+﻿@model IEnumerable<Domain.Entities.DimSettingType>
+
+
+@using MvcContrib.UI
+@using MvcContrib.UI.Grid
+@using WebUI.Infrastructure.ExtensionMethods
+
+<h2>Таблица настроек</h2>
+@Html.Grid(Model).Columns(column =>
+    {
+
+        column.For(x => x.SettingTypeID).SortColumnName("Name").Named("Параметр").Attributes(x =>
+        {
+            return new Dictionary<string, object> { { "style", "text-align: left;" } };
+        });
+
+        column.For(x => x.SettingTypeDesc).SortColumnName("Name").Named("Описание").Attributes(x =>
+        {
+            return new Dictionary<string, object> { { "style", "text-align: left;" } };
+        });
+
+
+        column.Custom(x => Html.Raw("<a href = " + Url.Action("Options", "Admin", new { settingTypeId = x.SettingTypeID }) + " class='glyphicon glyphicon-edit btn-xs btn btn-default' title='Редактировать'></a>")).Header(o => "<span class='glyphicon glyphicon-edit'> </span>").Encode(false)
+                                        .Sortable(false);
+        
+        
+        
+        
+    }
+              ).Attributes(@class => "table table-striped table-bordered table-hover table-condensed grid-style").Empty("Нет данных")
+ 
+    
+
+
+@*
+@{
+    ViewBag.Title = "DimSettings";
+    Layout = null;
+}
+
+<div>
+    <h2>Таблица настроек</h2>
+    <table class="table table-striped table-bordered table-hover table-condensed grid-style">
+        <thead><tr><th>Параметр</th><th>Описание</th></tr></thead>
+        
+        <tbody>
+            @{
+                foreach (var p in Model)
+                {
+                    <tr>
+                        <td>@Html.ActionLink(@p.SettingTypeID, "Options", new { settingTypeId = @p.SettingTypeID.TrimEnd() })</td>
+                        <td>@p.SettingTypeDesc</td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+
+</div>
+*@

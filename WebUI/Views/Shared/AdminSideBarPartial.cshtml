@@ -1,0 +1,184 @@
+﻿@{
+    var searchWord = TempData.Peek("SearchWord");
+    var gridSortOptions = TempData.Peek("GridSortOptions");
+    var page = TempData.Peek("Page");
+    var startDate = TempData.Peek("StartDate");
+    var endDate = TempData.Peek("EndDate");
+    var isActive = TempData.Peek("IsActive");
+}
+                    <h3>Links</h3>
+        
+@{
+    //string s = ViewContext.RouteData.Values["controller"].ToString();
+    string s = ViewContext.RouteData.Values["action"].ToString();
+
+    //-----Actions
+    if (s == "Actions")
+    {
+        <ul class="sidemenu">
+            <li>@Html.ActionLink("Смотреть заказы", "Orders", "Admin")</li>
+            <li>@Html.ActionLink("Добавить категорию", "CreateCategory")</li>
+            <li>@Html.ActionLink("Смотреть категории", "Categories")</li>
+            <li>@Html.ActionLink("Смотреть товар", "Products")</li>
+            <li>@Html.ActionLink("Смотреть учетные записи клиентов", "UsersView")</li>
+            <li>@Html.ActionLink("Перейти в магазин", "List", "Product")</li>
+         </ul>
+    }
+    //-----Users
+    else if (s == "UsersView")
+    {
+        <ul class="sidemenu">
+            <li>@Html.ActionLink("Перейти в меню администратора", "Actions")</li>
+            <li>@Html.ActionLink("Перейти в магазин", "List", "Product")</li>
+        </ul>
+    }
+
+    else if (s == "EditUser")
+    {
+        <ul class="sidemenu">
+            <li>@Html.ActionLink("Перейти в меню администратора", "Actions")</li>
+            <li>@Html.ActionLink("Перейти в магазин", "List", "Product")</li>
+        </ul>
+    }
+
+    //------Categories
+    else if (s == "Categories")
+    {
+        <ul class="sidemenu">
+            <li>@Html.ActionLink("Добавить категорию", "CreateCategory")</li>
+            <li>@Html.ActionLink("Обновить ссылки", "RefreshAllShortNamesInCategories")</li>    
+            <li>@Html.ActionLink("Упорядочить категории", "CategorySequenceView")</li>    
+            <li>@Html.ActionLink("Перейти в меню администратора", "Actions")</li>
+            <li>@Html.ActionLink("Перейти в магазин", "List", "Product")</li>
+        </ul>
+    }
+
+    else if (s == "EditCategory")
+    {
+           <ul class="sidemenu">
+            <li>@Html.ActionLink("Вернуться к списку категорий", "Categories")</li>
+            <li>@Html.ActionLink("Перейти в меню администратора", "Actions")</li>
+        </ul>
+    }
+
+    else if (s == "CreateCategory")
+    {
+           <ul class="sidemenu">
+            <li>@Html.ActionLink("Вернуться к списку категорий", "Categories")</li>
+            <li>@Html.ActionLink("Перейти в меню администратора", "Actions")</li>
+        </ul>
+    }
+
+  //-----Products
+    else if (s == "Products")
+    {
+         <ul class="sidemenu">
+            <li>@Html.ActionLink("Добавить товар", "CreateProduct")</li>
+             <li>@Html.ActionLink("Обновить ссылки", "RefreshAllShortNamesInProducts")</li>
+             <li>@Html.ActionLink("Перейти в меню администратора", "Actions")</li>
+        </ul>
+    }
+
+    else if (s == "EditProduct")
+    {
+        <ul class="sidemenu">
+            <li>@Html.ActionLink("Вернуться к списку товаров", "Products")</li>
+            <li>@Html.ActionLink("Упорядочить для этого товара", "UpdateImageSequence", new { productId = @Model.ProductID, every = false }, null)</li>
+            <li>@Html.ActionLink("Упорядочить для всех товаров", "UpdateImageSequence", new { productId = @Model.ProductID, every = true }, null)</li>
+            <li>@Html.ActionLink("Перейти в меню администратора", "Actions")</li>
+        </ul>
+    }
+
+    else if (s == "CreateProduct")
+    {
+         <ul class="sidemenu">
+             <li>@Html.ActionLink("Перейти к списку товаров", "Products")</li>
+             <li>@Html.ActionLink("Перейти в меню администратора", "Actions")</li>
+        </ul>
+    }
+
+    //-----Orders
+    else if (s == "Orders")
+    {
+        <ul class="sidemenu">
+            <li>@Html.ActionLink("Смотреть учетные записи клиентов", "UsersView")</li>
+            <li>@Html.ActionLink("Смотреть категории", "Categories")</li>
+            <li>@Html.ActionLink("Смотреть список товаров", "Products")</li>
+            <li>@Html.ActionLink("Перейти в меню администратора", "Actions")</li>
+            <li>@Html.ActionLink("Перейти в магазин", "List", "Product")</li>
+        </ul>
+    }
+
+    //-----OrderDetails
+    else if (s == "OrdersDetails")
+    {
+     <ul class="sidemenu">
+            <li>@Html.ActionQueryLink("Вернуться к списку заказов", "Orders", new { searchWord, page, startDate, endDate, isActive })</li>
+            <li>@Html.ActionLink("Смотреть категории", "Categories")</li>
+            <li>@Html.ActionLink("Смотреть список товаров", "Products")</li>
+            <li>@Html.ActionLink("Перейти в меню администратора", "Actions")</li>
+            <li>@Html.ActionLink("Перейти в магазин", "List", "Product")</li>
+        </ul>
+    }
+
+    else if (s == "EditOrderDetailBegin")
+    {
+     <ul class="sidemenu">
+         @* <li>@Html.ActionLink("Вернуться к списку заказов", "Orders", "Admin")</li>
+            <li>@Html.ActionLink("Смотреть категории", "Categories")</li>
+            <li>@Html.ActionLink("Смотреть список товаров", "Products")</li>*@
+            <li>@Html.ActionLink("Вернуться к списку заказов", "Orders", "Admin")</li>
+            <li>@Html.ActionLink("Перейти в меню администратора", "Actions")</li>
+            <li>@Html.ActionLink("Перейти в магазин", "List", "Product")</li>
+        </ul>
+    }
+
+
+    else if (s == "UserRoles")
+    {
+     <ul class="sidemenu">
+         @* <li>@Html.ActionLink("Вернуться к списку заказов", "Orders", "Admin")</li>
+            <li>@Html.ActionLink("Смотреть категории", "Categories")</li>
+            <li>@Html.ActionLink("Смотреть список товаров", "Products")</li>*@
+            <li>@Html.ActionLink("Справочник ролей", "Roles", "Admin")</li>
+            <li>@Html.ActionLink("Перейти в меню администратора", "Actions")</li>
+            <li>@Html.ActionLink("Перейти в магазин", "List", "Product")</li>
+        </ul>
+    }
+
+
+    else if (s == "Roles")
+    {
+     <ul class="sidemenu">
+         @* <li>@Html.ActionLink("Вернуться к списку заказов", "Orders", "Admin")</li>
+            <li>@Html.ActionLink("Смотреть категории", "Categories")</li>
+            <li>@Html.ActionLink("Смотреть список товаров", "Products")</li>*@
+            <li>@Html.ActionLink("Создать роль", "EditRole", "Admin", null, new { @class = "change" })</li>
+            <li>@Html.ActionLink("Роли пользователей", "UserRoles", "Admin")</li>
+            <li>@Html.ActionLink("Перейти в меню администратора", "Actions")</li>
+            <li>@Html.ActionLink("Перейти в магазин", "List", "Product")</li>
+        </ul>
+    }
+
+    else if (s == "SuperCategories")
+    {
+        <ul class="sidemenu">
+            <li>@Html.ActionLink("Смотреть заказы", "Orders", "Admin")</li>
+            <li>@Html.ActionLink("Добавить категорию", "CreateSuperCategory")</li>
+            <li>@Html.ActionLink("Смотреть категории", "Categories")</li>
+            <li>@Html.ActionLink("Перейти в магазин", "List", "Product")</li>
+         </ul>
+    }
+
+    else
+    {
+       <ul class="sidemenu">
+            <li>@Html.ActionLink("Перейти в меню администратора", "Actions")</li>
+            <li>@Html.ActionLink("Перейти в магазин", "List", "Product")</li>
+        </ul>
+    }
+
+}
+    
+         
+         

@@ -1,0 +1,103 @@
+﻿@model IEnumerable<WebUI.Models.MenuViewModel>
+
+@{
+    Layout = null;
+    int counter = 0;        
+}
+
+<div id="logo" class="col-md-12 col-xs-12" style="padding: 0;">
+    <div class="col-xs-offset-4 col-xs-4 col-md-offset-0 col-md-12" style="padding: 0;">
+
+        <a href="@Url.Action("List", "Product")"><img class="img-responsive" src="@(Url.Content("~/Content/images/logo.png"))" alt="logo"/></a>
+          </div>
+</div>
+<div class="col-md-12" style="margin: 0 auto; padding: 0;">
+    @{
+        Html.RenderAction("Search", "Product");
+    }
+</div>
+<ul class="nav nav-menu col-md-12">
+    <li class="orange">@Html.ActionLink("На главную", "List", "Product")</li>  
+    
+   @* @{
+        try
+        {
+            if ((User.IsInRole("Admin")) || ((User.IsInRole("admin")) || ((User.IsInRole("ConetnManager")))))
+            {
+         <li class="green">@Html.ActionLink("Admin", "Actions", "Admin", null, new { @rel = "nofollow" })</li>
+            }
+            else
+            {
+
+            }
+        }
+        catch (Exception){}
+  
+    }*@
+    
+</ul>
+
+@functions
+{
+    public string current(string shortName)
+    {
+        return (shortName == ViewBag.SelectedCategory) ? "current" : "";
+    }
+    public string color(int num)
+    {
+        switch (num)
+        {
+            case 0:
+                return "pink";
+            case 1:
+                return "purple";
+            case 2:
+                return "blue";
+            case 3:
+                return "green";
+            case 4:
+                return "orange";
+            case 5:
+                return "red";
+            case 6:
+                return "plum";
+            case 7:
+                return "salmon";
+            case 8:
+                return "lightskyblue";
+            case 9:
+                return "seagreen";
+            case 10:
+                return "mediumturquoise";
+        }
+        return "blue";
+    }
+}
+<ul class="nav nav-menu col-md-12">
+    @foreach (var link in Model)
+    {
+        counter++;
+        <li class="@color(counter)">
+            <a href="#">@link.SuperCategory.Name<span class="glyphicon glyphicon-chevron-down nav-icon" style="float: right"></span></a>
+            <ul>
+                @foreach (var sub in link.Categories)
+                {
+                    string z = sub.ShortName.TrimEnd();
+                    <li class="@current(z)" style="">@Ajax.RouteLink(sub.Name, new { controller = "Product", action = "List", category = sub.ShortName.TrimEnd(), page = 1 },
+                                                                     new AjaxOptions
+                                                                     {
+                                                                         UpdateTargetId = "content",
+                                                                         InsertionMode = InsertionMode.Replace,
+                                                                         HttpMethod = "POST",
+                                                                         OnBegin = "gifLoaderBefore",
+                                                                         //  OnSuccess = "gifLoaderAfter",
+                                                                         //  OnFailure = "gifLoaderAfter",
+                                                                         OnComplete = "gifLoaderAfter"
+
+
+                                                                     }, new { @target = "productList", @class = sub.ShortName.TrimEnd() == ViewBag.SelectedCategory ? "selected item-class" : "item-class", @rel = "follow, index" })</li>        
+                }
+            </ul>
+        </li>
+    }
+</ul>

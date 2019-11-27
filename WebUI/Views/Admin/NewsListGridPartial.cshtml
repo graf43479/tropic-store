@@ -1,0 +1,61 @@
+﻿@using MvcContrib.UI
+@using MvcContrib.UI.Grid
+@using WebUI.Infrastructure.ExtensionMethods
+@*@model IEnumerable<Domain.Entities.Category>*@
+@model WebUI.Models.PagedViewModel<Domain.Entities.NewsTape>
+
+
+
+
+
+@{
+    Html.RenderPartial("Pager", Model.PagedList);
+}
+
+
+@Html.Grid(Model.PagedList).Columns(column =>
+        {
+            column.For(x => Ajax.ActionLink(x.NewsDate.ToShortDateString(), "CreateNews", new {newsId = x.NewsID}, new AjaxOptions
+                {
+                    UpdateTargetId = "newsDetails",
+                    InsertionMode = InsertionMode.Replace,
+                    HttpMethod = "GET",
+                    OnBegin = "gifLoaderBefore",
+                    OnSuccess = "gifLoaderAfter",
+                    OnFailure = "gifLoaderAfter",
+                    OnComplete = "gifLoaderAfter"
+                })).SortColumnName("NewsDate").Sortable(true).Named("Дата");
+
+
+            column.For(x => Ajax.ActionLink(x.Header1, "CreateNews", new { newsId = x.NewsID }, new AjaxOptions
+            {
+                UpdateTargetId = "newsDetails",
+                InsertionMode = InsertionMode.Replace,
+                HttpMethod = "GET",
+                OnBegin = "gifLoaderBefore",
+                OnSuccess = "gifLoaderAfter",
+                OnFailure = "gifLoaderAfter",
+                OnComplete = "gifLoaderAfter"
+            })).SortColumnName("NewsDate").Sortable(true).Named("Заголовок").Attributes(x =>
+            {
+                return new
+                    Dictionary<string, object> { { "style", "word-break: normal; text-align: left;" } };
+            });
+
+            column.For(x => Ajax.ActionLink((x.Header2==null) ? "ссылка" : x.Header1, "CreateNews", new { newsId = x.NewsID }, new AjaxOptions
+            {
+                UpdateTargetId = "newsDetails",
+                InsertionMode = InsertionMode.Replace,
+                HttpMethod = "GET",
+                OnBegin = "gifLoaderBefore",
+                OnSuccess = "gifLoaderAfter",
+                OnFailure = "gifLoaderAfter",
+                OnComplete = "gifLoaderAfter"
+            })).SortColumnName("NewsDate").Sortable(true).Named("Подзаголовок").Attributes(x =>
+            {
+                return new
+                    Dictionary<string, object> { { "style", "word-break: normal; text-align: left;" } };
+            });
+
+          
+        }).Sort(Model.GridSortOptions).Attributes(@class => "table table-striped table-bordered table-hover table-condensed grid-style").Empty("Нет данных")

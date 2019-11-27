@@ -1,0 +1,17 @@
+﻿<div id="search" class="col-md-12 col-xs-12">
+    @using (Html.BeginForm("SearchResult", "Product", FormMethod.Post, new { enctype = "multipart/form-data", id = "search-form" }))
+    {
+       <input type="text" class="input-tip" name="searcherEditor" id="searcherEditor" title="Поиск" style="height: 30px"/>
+        <button type="submit"  class="btn btn-default" style="" title="Поиск" @*value=""*@><i class="fa fa-search" ></i></button>
+    }
+</div>
+@{
+    ViewBag.Searcher = @Html.Editor("searcherEditor").ToString();
+ }
+@*
+ <!-- Search form -->
+                <form class="search-form" method="post" action="#">
+                	<input type="text" name="s" id="s" value="" title="Enter search" />
+                    <button type="submit" value="Send" title="Send search">Send</button>
+                </form>
+*@

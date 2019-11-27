@@ -1,0 +1,201 @@
+﻿@model WebUI.Models.ProductsListViewModel
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";      
+    ViewBag.Robots ="follow, index";   
+}
+@{
+    if (Model.CurrentCategory == null)
+    {
+        ViewBag.Title = "Каталог товаров";
+    }
+    else
+    {
+        try
+        {
+            ViewBag.Title = @Model.Products.FirstOrDefault(x => x.CategoryName != null).CategoryName;
+        }
+        catch (Exception)
+        {
+            ViewBag.Title = "Категория товара";
+        }
+    }
+}
+
+<div id="ProductContent">
+    <div id="BannerContent0">
+        <noscript>
+            @Html.Partial("_Banner")
+        </noscript>
+    
+        @*     @{
+             Html.RenderAction("BannerPreLoad", "Account");
+         }   *@
+    </div>
+    
+    
+    <div id="crumbs" class="row">
+        <ul class="exbreadcrumb">
+            @{
+                if (Model.CurrentCategory==null)
+                {
+                    <li class="active">
+                        <a href="@Url.Action("List")"  rel="follow, index">Главная</a> 
+                    </li>
+                }
+                else
+                {
+                    <li>
+                        <a href="@Url.Action("List")"  rel="follow, index">Главная</a> 
+                    </li>
+                    <li class="active">
+                        <a href="@Url.Action("List", new { category = @Model.Products.First().Category.ShortName })" rel="follow, index">@Model.Products.First().Category.Name</a> 
+                    </li>
+                }
+            }
+        </ul>
+    </div>
+    @if (TempData["message"] != null)
+    {
+        <div class="message"><a href="#" data-dismiss="alert" class="close">&times;</a><p class="@TempData["messageType"]">@TempData["message"]</p></div>
+    }
+    <div class="heading">
+        <h1>Каталог товаров</h1>
+    </div>
+    @{
+        if (Model.Description != null)
+        {
+            <div class="snippet">@Model.Description</div>
+        }
+        else
+        {
+            <div class="snippet">Здесь будет описание</div>
+        }
+    }
+    @{
+        Html.RenderPartial("SearchOptions");
+    }
+    <div id="productList">
+        <div class="" style="margin: 0; padding: 0; ">
+            <div class="product-grid">
+                @foreach (var p in Model.Products)
+                {
+                    Html.RenderPartial("ProductSummary", p);
+                    @*
+  <div class="item col-lg-4 col-md-4 col-sm-4 col-xs-6"  style="">
+    <div class="grid-box">
+        <div class="item-header container" >
+            <h3 class="product-name">@p.Name</h3>
+        </div>
+        <div class="inner">
+            @{
+                if ((p.OldPrice > p.Price) && (((p.OldPrice - p.Price)/p.OldPrice*100) > 10) && (p.LastPriceChangeDate > DateTime.Now.AddMonths(-1)))
+                {
+                            if (p.ProductImages.Any(x => x.ProductID == @p.ProductID) == true)
+                            {
+                                <div class="image sale" >
+                                    <a href="@Url.Action("ProductInfo", "Product", new { category = @p.Category.ShortName.TrimEnd(), shortName = @p.ShortName + "'" })" rel="follow, index" >
+                                        <img class="img-thumbnail" 
+                                             src="@(Url.Content("~/Content"))/@(Domain.Constants.PRODUCT_IMAGE_FOLDER)/@(Domain.Constants.PRODUCT_IMAGE_PREVIEW_FOLDER)/@p.ProductID@(String.Format("_"))@p.ProductImages.FirstOrDefault(x => x.Sequence == 1 & x.ProductID == p.ProductID).ProductImageID@p.ProductImages.FirstOrDefault(x => x.Sequence == 1 & x.ProductID == p.ProductID).ImageExt" 
+                                             alt="@p.Name.TrimEnd()"/>
+                                        <span class="onsale" style="position: absolute">Sale!</span>
+                                    </a>
+                                    </div>
+                            }
+                            else
+                            {
+                                <div class="image">
+                                    <a href="@Url.Action("ProductInfo", "Product", new { category = @p.Category.ShortName.TrimEnd(), shortName = @p.ShortName + "'" })" rel="follow, index" >
+                                        <img class="img-thumbnail"  
+                                             src="@(Url.Content("~/Content"))/@(Domain.Constants.PRODUCT_IMAGE_FOLDER)/@(Domain.Constants.PRODUCT_IMAGE_PREVIEW_FOLDER)/@String.Format("0.jpg")" 
+                                             alt="@p.Name.TrimEnd()"/>
+                                    </a>
+                                </div>
+                            }
+                    <div style="visibility: hidden; margin-top: -38px;" class="quickview"><a id="qv98" class="button btn btn-default" onclick=" _this.showPopupPreview('@Url.Action("ProductPreview", "Product", new { productId = p.ProductID })') ">+ Превью</a></div>
+                    <div class="item-legend">
+                                <p class="price">
+                                    <b class="old-price-border"><b class="old-price">@p.OldPrice.ToString()р.</b></b>
+                                    <b class="new-price">@p.Price.ToString("c")</b>
+                                </p>
+                        <p class="description" style="visibility: hidden">@p.Snippet</p>
+    
+                        @using (Html.BeginForm("AddToCart", "Cart", FormMethod.Post, new { @class = "cart-form" }))
+                        {
+                            @Html.Hidden("productId", p.ProductID)
+                            @Html.Hidden("returnUrl", Request.Url.PathAndQuery)
+                            @Html.Hidden("login", (User.Identity.IsAuthenticated != true) ? Domain.Constants.ANONYMOUS_LOGIN : User.Identity.Name)
+                            <button type="submit" class="btn btn-custom btn-md"  value="В корзину"><span class="glyphicon glyphicon-shopping-cart"><b class="glyph-bug">&nbsp;В&nbsp;корзину</b></span></button>
+                        }
+                    </div>
+                }
+                else
+                {
+                    <div class="image">
+                        @{
+                    if (p.ProductImages.Any(x => x.ProductID == @p.ProductID) == true)
+                    {
+                        <a href="@Url.Action("ProductInfo", "Product", new { category = @p.Category.ShortName.TrimEnd(), shortName = @p.ShortName + "'" })" rel="follow, index" >
+                            <img class="img-thumbnail" 
+                                 src="@(Url.Content("~/Content"))/@(Domain.Constants.PRODUCT_IMAGE_FOLDER)/@(Domain.Constants.PRODUCT_IMAGE_PREVIEW_FOLDER)/@p.ProductID@(String.Format("_"))@p.ProductImages.FirstOrDefault(x => x.Sequence == 1 & x.ProductID == p.ProductID).ProductImageID@p.ProductImages.FirstOrDefault(x => x.Sequence == 1 & x.ProductID == p.ProductID).ImageExt" 
+                                 alt="@p.Name.TrimEnd()"/>
+                        </a>
+                    }
+                    else
+                    {
+                        <a href="@Url.Action("ProductInfo", "Product", new { category = @p.Category.ShortName.TrimEnd(), shortName = @p.ShortName + "'" })" rel="follow, index" >
+                            <img class="img-thumbnail"  
+                                 src="@(Url.Content("~/Content"))/@(Domain.Constants.PRODUCT_IMAGE_FOLDER)/@(Domain.Constants.PRODUCT_IMAGE_PREVIEW_FOLDER)/@String.Format("0.jpg")" 
+                                 alt="@p.Name.TrimEnd()"/>
+                        </a>
+                    }
+                        }
+                    </div>
+                    <div style="visibility: hidden; margin-top: -38px;" class="quickview"><a id="qv98" class="button btn btn-default" onclick=" _this.showPopupPreview('@Url.Action("ProductPreview", "Product", new { productId = p.ProductID })') ">+ Превью</a></div>
+                    <div class="item-legend">
+                               <p class="price">
+                                    <b>@p.Price.ToString("c")</b>
+                                </p>
+                    <p class="description" style="visibility: hidden">@p.Snippet</p>
+                        @using (Html.BeginForm("AddToCart", "Cart", FormMethod.Post, new { @class = "cart-form" }))
+                        {
+                           @Html.Hidden("productId", p.ProductID)
+                            @Html.Hidden("returnUrl", Request.Url.PathAndQuery)
+                            @Html.Hidden("login", (User.Identity.IsAuthenticated != true) ? Domain.Constants.ANONYMOUS_LOGIN : User.Identity.Name)
+                            <button type="submit" class="btn btn-custom btn-md"  value="В корзину"><span class="glyphicon glyphicon-shopping-cart"><b class="glyph-bug">&nbsp;В&nbsp;корзину</b></span></button>
+                        }
+                    </div>
+                }
+            } 
+        </div> 
+    </div>
+</div>*@
+
+                }
+            </div>
+        </div>
+        <div class="pager col-md-12 col-lg-12 col-xs-12">
+            @* <p>@DateTime.Now</p>*@
+            @Html.Partial("_ProductListPagination")
+        </div>
+    </div>
+
+</div>
+
+
+
+<script type="text/javascript">    document.getElementById("searcherEditor").value = "@ViewBag.Searcher"</script>
+
+
+
+ @*   <script>
+                   $(document).ready(function () {
+                       var url = "@(Html.Raw(Url.Action("List","Product")))";
+                       $("#ProductContent").load(url);
+
+                       $.ajaxSetup({ cache: false });  //Turn off caching
+                       
+                       //$("#newsContent").append("<p style='color: red;'>Идёт загрузка контента...</p>");
+                   });
+               </script>
+  *@
+

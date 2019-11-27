@@ -1,0 +1,12 @@
+﻿@{
+    ViewBag.Title = "Успешное завершение операции";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Robots = "nofollow, noindex";   
+}
+<div class="heading">
+<h1>Спасибо за регистрацию</h1>
+</div>
+<p>На указанный Вами адрес было выслано письмо для активации аккаунта. Пожалуйста, проверьте почту! </p>
+@Html.ActionLink("Вход на сайт", "List", "Product", new { }, new { @class = "btn btn-default btn-xs" })
+
+<p>@ViewBag.UserInfo</p>

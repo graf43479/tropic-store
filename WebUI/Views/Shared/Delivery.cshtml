@@ -1,0 +1,43 @@
+﻿@{
+    ViewBag.Title = "Оплата и доставка";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Robots = "follow, index"; 
+}
+
+<div id="crumbs" class="row">
+ <ul class="exbreadcrumb">
+        @{
+                <li><a href="@Url.Action("List", "Product")"  rel="follow, index">Главная</a></li>
+                <li class="active"><a href="@Url.Action("Delivery", "Account")" rel="follow, index">Оплата и доставка</a></li>
+            }
+    </ul>
+    </div>
+<div class="heading">
+    <h1>Доставка и оплата</h1>
+</div>
+
+
+
+<div class="col-lg-12 col-md-12">
+    <div class="heading">
+    <h2>Доставка</h2>
+</div>
+    <p>Мы предлагаем Вам следующие способы доставки: </p>
+    <ul>
+        <li>Доставка курьером по Москве - 250 руб.</li>
+        <li>Доставка курьером по Московской области до 10 км от МКАД - 500 руб.</li>
+        <li>Доставка по Люберецкому району - 150 руб.</li>
+    </ul>
+    <p>В ближайшей перспективе мы расширим количество способов оплаты для Вашего удобства!</p>
+</div>
+
+    
+
+<div class="col-lg-12 col-md-12">
+    <div class="heading">
+        <h2>Оплата</h2>
+    </div>
+
+    <p>Наличные курьеру</p>
+    <p>В ближайшей перспективе мы расширим количество способов оплаты для Вашего удобства!</p>
+</div>

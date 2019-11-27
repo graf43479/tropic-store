@@ -1,0 +1,102 @@
+﻿@model WebUI.Models.LoginViewModel
+@{
+    Layout = null;
+}
+@{
+    if (Session["attempt"] == null)
+    {
+        Session["attempt"] = 0;
+    @*    TempData["attempt"] = TempData.Peek("attempt");*@
+    }
+    else
+    {
+        @*TempData["attempt"] = TempData.Peek("attempt");*@
+    }
+}
+
+@using (Html.BeginForm("AjaxUserEnter", "Account", FormMethod.Post, new
+{
+    @class = "form-horizontal",
+    Id = "updateLoginForm",
+        
+    }))
+{
+    @Html.ValidationSummary(true, "Неудачная попытка авторизации. Пожалуйста попробуйте ещё раз.")
+    
+    <fieldset class="col-md-12 col-lg-12 col-xs-12">
+        <legend>Авторизация</legend>
+    <div id="update-message" class="error invisible"></div>
+        <div class="editor-label">Логин:</div> 
+        <div class="editor-field">
+            @Html.TextBoxFor(x => x.Login, new { @class = "form-control" }) 
+            @Html.ValidationMessageFor(x => x.Login)
+        </div>
+    <div class="editor-label">Пароль:</div> 
+        <div class="editor-field">
+            @Html.TextBoxFor(x => x.Password, new { @class = "form-control" }) 
+            @Html.ValidationMessageFor(x => x.Password)
+        </div>
+       
+        <div class="editor-label">@Html.CheckBoxFor(x=>x.RememberMe) Запомнить меня</div>
+        
+    </fieldset>    
+    <div class="col-md-12" style="font-size: small; margin: 5px 0 0 0; padding: 0">@Html.ActionLink("Забыли пароль?", "ForgottenPassword", "Account", new { @class = "send-email btn btn-success btn-xs" }) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; @Html.ActionLink("Регистрация", "RegistrateUser", "Account", new { @class = "btn btn-success btn-xs" })</div>
+    
+     <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+        <button class="btn btn-primary" id="LoginButton">Login</button>
+    
+    @*<p><input type="checkbox" name="RememberMe" value="true" checked="checked" />Запомнить меня</p>
+    <input type="submit" class="actionButtons" value="Вход"/>*@
+}
+
+
+<div id="updateDialog4" title="Смена пароля"></div>
+
+
+           
+<script type="text/javascript">
+    var linkObj4;
+    $(function () {
+        $('#updateDialog4').dialog({
+            autoOpen: false,
+            width: 250,
+            resizable: false,
+            modal: true,
+            buttons: {
+                "OK": function () {
+                    $("#update-message4").html(''); 
+                    $("#updateEmailForm").submit();
+                },
+                "Отмена": function () {
+                    $(this).dialog("close");
+                }
+            }
+        });
+
+        $(".send-email").click(function () {
+            linkObj4 = $(this);
+            var dialogDiv = $('#updateDialog4');
+            var viewUrl = linkObj4.attr('href'); 
+            $.get(viewUrl, function (data) {
+                dialogDiv.html(data);
+                var $form = $("#updateEmailForm");
+                $form.unbind();
+                $form.data("validator", null);
+                $.validator.unobtrusive.parse(document);
+                dialogDiv.dialog('open');
+            });
+            return false;
+        });
+    });
+    
+    function updateSuccess4(data) {
+        if (data.Success==true) {
+            alert('На указанный адрес был выслан новый пароль!');
+            $('#updateDialog4').dialog('close');
+        }
+        else {
+            $("#update-message4").html(data.ErrorMessage);
+            $("#update-message4").show();   
+        }
+    }
+</script>

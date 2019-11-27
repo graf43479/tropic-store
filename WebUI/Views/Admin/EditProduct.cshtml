@@ -1,0 +1,312 @@
+﻿@model WebUI.Models.ProductEditViewModel
+
+@{
+    ViewBag.Title = "Admin: Редактирование " + @Model.Name;
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+@{
+    bool readonl = false;
+    if (User.IsInRole("SEO"))
+    {
+        readonl = true;
+    }
+}
+
+<style>
+    form {
+        border: none;
+        background-color: white;
+    }
+</style>
+    
+@*<link href="@Url.Content("~/Content/jquery_ui_datepicker.css")" rel="stylesheet" type="text/css"/>*@
+
+@*<script src="@Url.Content("~/Scripts/jquery.unobtrusive-ajax.js")" type="text/javascript" charset="utf-8"></script>*@
+
+@*<script src="@Url.Content("~/Scripts/js/jquery-1.10.2.min.js")" type="text/javascript"></script>*@
+<script src="@Url.Content("~/Scripts/js/lightbox-2.6.min.js")" type="text/javascript" charset="utf-8"></script>
+@*<script src="@Url.Content("~/Scripts/js/jquery_ui_datepicker.js")" type="text/javascript"></script>*@
+
+<link  href="@Url.Content("~/Content/LightBox/screen.css")" rel="stylesheet" media="screen" />
+<link href="@Url.Content("~/Content/LightBox/lightbox.css")" rel="stylesheet"/>
+
+
+<ul class="breadcrumb">
+    @{
+        <li><a href="@Url.Action("Actions", "Admin")">Главная</a> <span class="divider">/</span></li>
+        <li class=""><a href="@Url.Action("Products", "Admin")">Товары</a> <span class="divider">/</span></li>
+        <li class="active"><a href="@Url.Action("EditProduct", "Admin", new { productId = @Model.ProductID})">@{
+                                                                                                                  if(Model.Name == null) 
+                                                                                                                  { <b>Новый товар</b>} 
+                                                                                                                  else {<b>Редактировать "@Model.Name"</b>}
+                                                                                                              } </a> <span class="divider">/</span></li>
+    }
+</ul>
+
+<h2>@{
+        if (Model.Name == null)
+        {
+            <b>Новый товар</b>
+        }
+        else
+        {
+            <b>Редактировать "@Model.Name"</b>
+        }
+    }
+    </h2>
+
+<div class="col-lg-12 col-md-12" style="border-bottom: 1px solid #D5D5D5; padding-bottom: 7px;">
+    @using (Html.BeginForm("EditProduct", "Admin", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+        @Html.ValidationSummary();
+        <div class="editor-field"> @Html.HiddenFor(model => model.ProductID)</div>    
+        <div class="editor-field"> @Html.HiddenFor(model => model.ShortName)</div>    
+        <div class="editor-field"> @Html.HiddenFor(model => model.Sequence)</div>    
+
+    
+        @*<div class="editor-field"> @Html.HiddenFor(model => model.ProductImages)</div>    *@
+        <div class="col-lg-12 col-md-12" style="padding: 0; padding-bottom: 5px;">
+        
+            <div class="form-group" style="padding: 0">
+                <div class="col-lg-2 col-md-2 form-control-static"  style="padding: 0"> @Html.Label("Название")</div>    
+                <div class="col-lg-4 col-md-4" style="padding: 0"> @Html.TextBoxFor(model => model.Name, @readonl ? (object)new { @class = "form-control", @readonly = "readonly" } : (object)new { @class = "form-control" })</div>    
+         
+         <div class="col-lg-1 col-md-1 form-control-static" style="padding: 0; text-align: right; padding-right: 15px;"> @Html.Label("Цена") </div>    
+                <div class="col-lg-2 col-md-2" style="padding: 0"> @Html.TextBoxFor(model => model.Price, @readonl ? (object)new { @class = "form-control", @readonly = "readonly" } : (object)new { @class = "form-control" })</div>    
+
+                <div class="col-lg-1 col-md-1 form-control-static"  style="padding: 0; text-align: right"> @Html.Label("Старая цена")</div>    
+            <div class="col-lg-2 col-md-2" style="padding: 0"> @Html.TextBoxFor(model => model.OldPrice, new { @class = "form-control", @readonly = "readonly" })</div>        
+                
+                
+                
+                
+
+            </div></div>
+        
+        <div class="col-lg-12 col-md-12" style="padding: 0; padding-bottom: 5px;">
+        <div class="form-group" style="padding: 0">
+            <div class="col-lg-2 col-md-2 form-control-static" style="padding: 0; padding-right: 15px;"> @Html.Label("Дата смены цены") </div>    
+            <div class="col-lg-4 col-md-4" style="padding: 0"> @Html.TextBoxFor(model => model.LastPriceChangeDate, @readonl ? (object)new { @class = "form-control", @readonly = "readonly" } : (object)new { @class = "form-control" })</div>    
+            
+            
+            <div class="col-lg-1 col-md-1 form-control-static" style="padding: 0; text-align: right; padding-right: 15px;"> @Html.Label("Артикул") </div>    
+                <div class="col-lg-2 col-md-2" style="padding: 0"> @Html.TextBoxFor(model => model.ArticleNumber, @readonl ? (object)new { @class = "form-control", @readonly = "readonly" } : (object)new { @class = "form-control" })</div>    
+            
+            <div class="col-lg-1 col-md-1 form-control-static" style="padding: 0; text-align: right; padding-right: 15px;"> @Html.Label("ID") </div>    
+            <div class="col-lg-2 col-md-2" style="padding: 0"> @Html.TextBoxFor(model => model.ProductID, (object)new { @class = "form-control", @readonly = "readonly" })</div>    
+            
+         </div></div>
+        
+        <div class="col-lg-12 col-md-12" style="padding: 0">
+        <div class="form-group" style="padding: 0">
+            <div class="col-lg-2 col-md-2 form-control-static" style="padding: 0">@Html.Label("Выбранная категория")</div>
+            @{
+                                 if (readonl)
+                                 {
+                    <div class="col-lg-10 col-md-10 multi-line" style="padding: 0; padding-bottom: 5px;">@Html.HiddenFor(x => x.SelectedCategoryID) @Html.TextBoxFor(model => model.Categories.FirstOrDefault(x => x.CategoryID == model.SelectedCategoryID).Name, @readonl ? (object)new { @class = "form-control", @readonly = "readonly" } : (object)new { @class = "form-control" })</div>
+                                 }
+                                 else
+                                 {
+              <div class="col-lg-10 col-md-10 multi-line" style="padding: 0; padding-bottom: 5px;">  @Html.DropDownListFor(model => model.SelectedCategoryID,
+new SelectList(Model.Categories, "CategoryID", "Name"), "--Выберите категорию--", @readonl ? (object)new { @class = "form-control", @readonly = "readonly" } : (object)new { @class = "form-control" })</div>
+                                 }
+
+            }
+  
+        </div>
+        </div>
+        
+        
+        
+                                 if (User.IsInRole("ContentManager") != true)
+                                 {
+                         <div class="col-lg-12 col-md-12" style="padding: 0; padding-bottom: 5px;">
+                            <div class="form-group" style="padding: 0">
+                                <div class="col-lg-2 col-md-2 form-control-static"  style="padding: 0"> @Html.Label("Метатеги")</div>    
+                                <div class="col-lg-10 col-md-10" style="padding: 0"> @Html.TextAreaFor(model => model.Keywords, new { @class = "form-control", @style = "min-height: 200px" })</div>    
+                            </div>
+                        </div>
+        
+        
+                        <div class="col-lg-12 col-md-12" style="padding: 0; padding-bottom: 5px;">
+                            <div class="form-group" style="padding: 0">
+                                <div class="col-lg-2 col-md-2 form-control-static"  style="padding: 0"> @Html.Label("Сниппет")</div>    
+                                <div class="col-lg-10 col-md-10" style="padding: 0"> @Html.TextAreaFor(model => model.Snippet, new { @class = "form-control", @style = "min-height: 200px" })</div>    
+                            </div>
+                            </div>
+                                 }
+            
+        
+        
+        
+         <div class="form-group" style="padding: 0">
+                <div class="col-lg-2 col-md-2 form-control-static" style="padding: 0">@Html.Label("Описание")</div>
+                <div class="col-lg-10 col-md-10 multi-line" style="padding: 0;"> @Html.TextAreaFor(model => model.Description, new { @class = "form-control", @style = "min-height: 500px !important" })</div>
+             </div>
+        
+                                 //<div class="form-group" style="padding: 0">
+                                 //<div>
+        <div class="col-lg-12 col-md-12" style="padding: 0; padding-top: 5px; padding-bottom: 5px">
+        <div class="form-group" style="padding: 0">
+            <div class="col-lg-2 col-md-2 form-control-static" style="padding: 0">@Html.Label("Количество")</div>
+            <div class="col-lg-4 col-md-4" style="padding: 0">@Html.TextBoxFor(model => model.Quantity, @readonl ? (object)new { @class = "form-control", @readonly = "readonly" } : (object)new { @class = "form-control" })</div>
+            <div class="col-lg-6 col-md-6" style="padding: 0"></div>
+        </div>
+        </div>
+        
+        
+        
+        <div class="col-lg-12 col-md-12" style="padding: 0">
+        <div class="form-group" style="padding: 0">
+            @{
+                                 if (readonl)
+                                 {
+                                    <div class="col-lg-2 col-md-2 form-control-static" style="padding: 0">@Html.Label("Товар есть в наличии")</div> 
+                                    <div class="col-lg-4 col-md-4" style="padding: 0"> @Html.TextBoxFor(model => model.IsActive, @readonl ? (object)new { @class = "form-control", @readonly = "readonly" } : (object)new { @class = "form-control" })</div>  
+                                    <div class="col-lg-2 col-md-2 form-control-static" style="padding: 0; text-align: right; padding-right: 10px;">@Html.Label("Товар числится удаленным")</div> 
+                                    <div class="col-lg-4 col-md-4" style="padding: 0"> @Html.TextBoxFor(model => model.IsDeleted, @readonl ? (object)new { @class = "form-control", @readonly = "readonly" } : (object)new { @class = "form-control" })</div>  
+                                 }
+                                 else
+                                 {
+                                        <div class="col-lg-2 col-md-2 form-control-static" style="padding: 0">@Html.Label("Товар есть в наличии")</div> 
+                                        <div class="col-lg-4 col-md-4" style="padding: 0"> @Html.EditorFor(model => model.IsActive)</div>  
+                                        <div class="col-lg-2 col-md-2 form-control-static" style="padding: 0; text-align: right; padding-right: 10px;">@Html.Label("Товар числится удаленным")</div> 
+                                        <div class="col-lg-4 col-md-4" style="padding: 0"> @Html.EditorFor(model => model.IsDeleted)</div>  
+                                 }
+            }
+  
+        </div></div>
+        
+                                 if (Model.ProductID != 0)
+                                 {
+                                     <div class="col-lg-12 col-md-12" style="padding: 0">
+                                         <div class="form-group" style="padding: 0">
+                                             <div class="col-lg-2 col-md-2 form-control-static" style="padding: 0">@Html.Label("Дата появления товара")</div> 
+                                             <div class="col-lg-4 col-md-4" style="padding: 0">@Html.TextBoxFor(model => model.StartDate, @readonl ? (object)new { @class = "form-control", @readonly = "readonly" } : (object)new { @class = "form-control" })</div>
+   
+                                             <div class="col-lg-2 col-md-2 form-control-static" style="padding: 0; text-align: right; padding-right: 10px;">@Html.Label("Дата обновления товара")</div> 
+                                             <div class="col-lg-4 col-md-4" style="padding: 0">@Html.TextBoxFor(model => model.UpdateDate, new { disabled = "disabled", @class = "form-control" })</div>
+                                         </div>
+                                     </div>
+                                 }
+            
+        
+        <div class="form-group">
+                <div class="col-lg-10 col-md-10"></div>
+                <input type="submit" class="btn btn-warning btn-md col-lg-2 col-md-2 " value="Сохранить"/>
+            <br/>
+        </div>
+    
+    }
+</div>
+@{
+    if (readonl != true)
+    {
+            <div class="col-lg-12 col-md-12" style=" padding: 5px; border-bottom: 1px solid #D5D5D5">
+               
+                    <div class="col-md-6 col-lg-6">
+                        <a href="@Url.Action("Products", "Admin")" class="btn btn-md btn-default col-lg-12 col-md-12" style="margin: 2px 0"><span class="glyphicon glyphicon glyphicon-arrow-left"></span>&nbsp;Оменить и вернуться к списку</a>
+                        <a href="@Url.Action("ProductSequenceUpdater", "Admin")" class="btn btn-md btn-default col-lg-12 col-md-12" style="margin: 2px 0"><span class="glyphicon glyphicon glyphicon-sort"></span>&nbsp;Сортировать весь товар </a>
+                        <a href="@Url.Action("RefreshProductShortLink", "Admin", new { productId = @Model.ProductID})" class="btn btn-md btn-default col-lg-12 col-md-12" style="margin: 2px 0"><span class="glyphicon glyphicon glyphicon-sort-by-attributes"></span>&nbsp;Изменить ссылку товара</a>
+                    </div>
+                <div class="col-md-6 col-lg-6" >
+                    <a href="@Url.Action("UpdateImageSequence", "Admin", new { productId = @Model.ProductID, every = false })" class="btn btn-md btn-default col-lg-12 col-md-12" style="margin: 2px 0"><span class="glyphicon glyphicon glyphicon-sort-by-attributes"></span>&nbsp;Упорядочить рисунки товара</a>
+                    <a href="@Url.Action("UpdateImageSequence", "Admin", new { productId = @Model.ProductID, every = true })" class="btn btn-md btn-default col-lg-12 col-md-12" style="margin: 2px 0"><span class="glyphicon glyphicon glyphicon-sort-by-attributes"></span>&nbsp;Упорядочить рисунки всех товаров</a>
+                    @{
+                        try
+                        {
+                         <a href="@Url.Action("ProductInfo", "Product", new { category = @Model.Categories.FirstOrDefault(x => x.CategoryID == @Model.SelectedCategoryID).ShortName.TrimEnd(), shortName = @Model.ShortName + "'" })" class="btn btn-md btn-default col-lg-12 col-md-12" style="margin: 2px 0"><span class="glyphicon glyphicon glyphicon-sort-by-attributes"></span>&nbsp;Перейти на страницу товара</a>
+                        }
+                        catch (Exception)
+                        {
+                        }
+                    }
+  
+                </div>
+                </div>
+
+
+
+
+<div class="col-lg-12 col-md-12" style="padding: 0; padding-bottom: 5px;">
+ <h2>Добавление изображения для фотогалереи</h2>
+    @{using (Html.BeginForm("Upload", "Admin", FormMethod.Post, new { enctype = "multipart/form-data" }))
+      {
+        @Html.Hidden("ProductID", Model.ProductID)
+        <div class="col-lg-10 col-md-10" style=""><input type="file" name="imagefile" class="form-control"/></div>
+        @:   
+        <input type="submit" value="Загрузить" class="btn btn-md btn-info col-lg-2 col-md-2"/>
+      }
+}
+</div>
+
+<div id="uploadImage" class="col-lg-12 col-md-12" style="display: none">
+    @{
+      try
+      {
+          //@Html.Action("EditProductImages", new { productEditViewModel = @Model })
+          //@Html.Partial("EditProductImages", @Model)
+          // Html.RenderAction("EditProductImages", @Model);
+          //Html.RenderAction("EditProductImages", @Model);
+          //@Html.Partial("EditProductImages", @Model);
+            <div id="controlsHolder">
+                @Html.Partial("EditProductImages", Model)  
+              </div>
+
+      }
+      catch (Exception)
+      {
+
+      }
+        
+                }
+</div>     
+             
+          
+            
+          
+        <script type="text/javascript">
+            $(document).ready(function () {
+                $('#StartDate, #UpdateDate, #LastPriceChangeDate').datepicker({ firstDay: 1, dateFormat: 'dd.mm.yy' });
+                $('.datePicker').datepicker({ firstDay: 1, dateFormat: 'dd.mm.yy' });
+                $.datepicker.setDefaults({ dayNamesMin: ['Вс', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб'] });
+                $.datepicker.setDefaults({ monthNames: ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'] });
+            });
+        </script>    
+
+   
+
+      if (Model.ProductID != 0)
+      {
+          if (Model.ProductImages.Where(x => x.ProductID == Model.ProductID).Any())
+          {
+                    <script>            document.getElementById("uploadImage").style.display = ""</script>
+          }
+    
+                     <script>      document.getElementById("uploadImage").display = "none"</script>
+      }
+   
+    
+    
+        <script>
+            $(document).ready(function () {
+                $("#SelectedCategoryID, #IsActive, #IsDeleted").addClass("form-control");
+            });
+        </script>
+    }
+}
+
+<script src="@Url.Content("~/Scripts/jquery.cleditor.min.js")" type="text/javascript"></script>
+               <link href="@Url.Content("~/Content/jquery.cleditor.css")" rel="stylesheet" type="text/css" />
+<script type="text/javascript">
+    $("#Description").cleditor();
+</script>
+
+
+
+<script>
+    var p = $("#menu li a[href='/Admin/Products']");
+    p.parent().addClass("selected");
+    //alert(p.html());
+</script>

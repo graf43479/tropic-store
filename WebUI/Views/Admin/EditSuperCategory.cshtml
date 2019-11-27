@@ -1,0 +1,145 @@
+﻿@model Domain.Entities.SuperCategory
+
+@{
+   ViewBag.Title = "Admin: Редактирование " + @Model.Name;
+   Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+
+<ul class="breadcrumb">
+    @{
+        <li><a href="@Url.Action("Actions", "Admin")">Главная</a> <span class="divider">/</span></li>
+        <li class=""><a href="@Url.Action("SuperCategories", "Admin")">Надкатегории</a> <span class="divider">/</span></li>
+        <li class="active"><a href="@Url.Action("EditSuperCategory", "Admin", new {superCategoryId = @Model.SuperCategoryID})">Редактировать надкатегорию "@Model.Name"</a> <span class="divider">/</span></li>
+    }
+</ul>
+
+@{
+    bool readonl = false;
+    if (User.IsInRole("SEO"))
+    {
+        readonl = true;
+    }
+}
+<style>
+    form {
+        border: none;
+    }
+</style>
+
+<div class="col-lg-12 col-md-12" style="padding-bottom: 10px;">
+    <h2>Редактировать @Model.Name</h2>
+
+    @using (Html.BeginForm("EditSuperCategory", "Admin"))
+    {
+        <!--<div class="editor-label"> @Html.Label("ID")</div>    -->
+        <div class="editor-field"> @Html.HiddenFor(model => model.SuperCategoryID)</div>    
+        <div class="editor-field"> @Html.HiddenFor(model => model.ImageExt)</div>   
+   
+        <div class="form-group" style="padding: 0; ">
+            <div class="col-lg-2 col-md-2"> @Html.Label("Надкатегория")</div>    
+            <div class="col-lg-8 col-md-8"> @Html.TextBoxFor(model => model.Name, @readonl ? (object)new { @class = "form-control", @readonly = "readonly" } : (object)new { @class = "form-control" })</div>    
+            <input type="submit" value="Сохранить" class="col-lg-2 col-md-2 btn btn-info" />
+        </div>
+    
+        <!--@Html.EditorForModel()-->
+    @*<input type="submit" value="Сохранить" />*@
+    }
+</div>
+
+@{
+    if (readonl != true)
+    {
+  
+ 
+<div id="uploadCategoryImage" style="display: none" class="col-lg-12 col-md-12">
+    <h2>Изображение надкатегории</h2>
+    
+   @using (Html.BeginForm("UploadSuperCategoryImage", "Admin", FormMethod.Post, new { enctype = "multipart/form-data" }))
+   {
+        @Html.Hidden("superCategoryId", Model.SuperCategoryID)
+
+       @* <table>
+            <tr>
+                <td>
+                    @{
+       string filename = string.Empty;
+       if ((string.IsNullOrWhiteSpace(Model.ImageExt)) || (System.IO.File.Exists(System.IO.Path.Combine(Server.MapPath
+                               (@Url.Content("~/Content")), Domain.Constants.SUPER_CATEGORY_MINI_IMAGES_FOLDER, @Model.SuperCategoryID.ToString() + @Model.ImageExt)) != true))
+       { filename = "0.jpg"; }
+       else { filename = string.Format("{0}{1}?{2}", Model.SuperCategoryID, Model.ImageExt.TrimEnd(), DateTime.Now); }
+                    }
+                    <img class="example-image-link" src='@(Url.Content("~/Content"))/@(Domain.Constants.SUPER_CATEGORY_MINI_IMAGES_FOLDER)/@(filename)' alt='@Model.Name' /> 
+                    
+                   
+                </td>
+                <td style="padding-left:20px">
+                    <input type="file" name="imagefile" />
+                    <br />
+                    <input type="submit" value="Загрузить" />
+                </td>
+            </tr>
+        </table>*@
+       
+      <div class="col-lg-12 col-md-12">
+<div class="form-group" style="padding: 0">
+                <div class="col-lg-4 col-md-4" style="padding: 0"> @{
+       string filename = string.Empty;
+       if ((string.IsNullOrWhiteSpace(Model.ImageExt)) || (System.IO.File.Exists(System.IO.Path.Combine(Server.MapPath
+                               (@Url.Content("~/Content")), Domain.Constants.SUPER_CATEGORY_MINI_IMAGES_FOLDER, @Model.SuperCategoryID.ToString() + @Model.ImageExt)) != true))
+       { filename = "0.jpg"; }
+       else { filename = string.Format("{0}{1}?{2}", Model.SuperCategoryID, Model.ImageExt.TrimEnd(), DateTime.Now); }
+                    }
+                    <img class="example-image-link" src='@(Url.Content("~/Content"))/@(Domain.Constants.SUPER_CATEGORY_MINI_IMAGES_FOLDER)/@(filename)' alt='@Model.Name' /> 
+                </div>    
+    
+    <div class="col-lg-4 col-md-4" style="padding: 0"> <input type="file" name="imagefile" class = "form-control"/></div>    
+     <div class="col-lg-4 col-md-4" style="padding: 0"> <input type="submit" class = "form-control btn-info" value="Загрузить"/></div>    
+         
+    @*<div class="col-lg-2 col-md-2" style="padding: 0; text-align: right; padding-right: 15px;"> @Html.Label("Цена") </div>    
+                <div class="col-lg-4 col-md-4" style="padding: 0"> @Html.TextBoxFor(model => model.Price, new { @class = "form-control" })</div>    *@
+         </div></div>
+        
+
+       
+                
+                    
+                   
+                @*
+                <div style="padding-left:20px">
+                    <input type="file" name="imagefile" /></div>
+                    
+                    <input type="submit" value="Загрузить" />
+                    *@
+                
+
+   }
+   </div>
+   @*
+   <p>@Html.ActionLink("Отменить и вернуться к списку надкатегорий", "SuperCategories")</p>
+<p>@Html.ActionLink("Перейти в меню администратора", "Actions")</p>
+*@
+
+   
+   
+   if (Model.SuperCategoryID != 0)
+   {
+            <script>                document.getElementById("uploadCategoryImage").style.display = "inherit"</script>
+   }
+   else
+   {
+            <script>      document.getElementById("uploadCategoryImage").display = "none"</script>
+        }
+    }
+    
+   
+}
+
+
+
+
+<script>
+    var p = $("#menu li a[href='/Admin/SuperCategories']");
+    p.parent().addClass("selected");
+    //alert(p.html());
+</script>

@@ -1,0 +1,81 @@
+﻿@using MvcContrib.UI
+@using MvcContrib.UI.Grid
+@using WebUI.Infrastructure.ExtensionMethods
+@using SortDirection = MvcContrib.Sorting.SortDirection
+@model WebUI.Models.PagedViewModel<Domain.Entities.DimSetting>
+
+Не используется
+@{
+    TempData["Model"] = Model;
+    ViewBag.GridSortOption = Model.GridSortOptions;
+    ViewBag.page = Model.Page;
+}
+
+
+
+@{ AjaxOptions ajax = new AjaxOptions
+   {
+       UpdateTargetId = "table-list",
+       Url = Url.Action("EditSettings"),
+       /*HttpMethod = "Post",*/
+       InsertionMode = InsertionMode.Replace,
+       HttpMethod = "POST",
+       OnBegin = "gifLoaderBefore",
+       OnSuccess = "gifLoaderAfter",
+       OnFailure = "gifLoaderAfter",
+       OnComplete = "gifLoaderAfter"
+
+
+   }; 
+}
+
+<div id="table-list">
+@Html.Grid(Model.PagedList).Columns(column =>
+    {
+        //column.For(x => Html.ActionQueryLink(x.OrderNumber.ToString(), "OrdersDetails", new { orderSummaryID = x.OrderSummaryID, page = 1 })).SortColumnName("OrderNumber").Named("№");
+        column.For(x => x.SettingTypeID).SortColumnName("SettingTypeID").Named("TypeID");
+        column.For(x => x.SettingsID).SortColumnName("SettingsID").Named("SettingsID");
+        column.For(x => x.SettingsDesc).SortColumnName("SettingsDesc").Named("Описание");
+        //column.For(x => x.SettingsValue).SortColumnName("SettingsValue").Named("Значение");
+
+        column.For(x => Html.EditorFor(i=>x.SettingsValue)).SortColumnName("SettingsValue").Named("Значение");
+       @* column.For(x => Html.DropDownListFor(i => x.SettingsValue, new SelectList(new[] { "10", "15", "20", "50", "100" }), x.SettingsValue, x.SettingsValue)).SortColumnName("SettingsValue").Named("Значение");
+        *@
+        
+        @*      
+        column.Custom(@<text>
+                           @using (Ajax.BeginForm(ajax))
+                           {
+                               @Html.HiddenFor(x=>@item.SettingsID) 
+                               <input type="submit" value="Применить" />
+                           }
+                       </text>).Sortable(false).Named("Применить");
+  *@
+    column.Custom(x=>Html.Partial("SettingsUpdateLink", x));
+        
+       @* column.Custom(x => MvcHtmlString.Create(string.Format("<form action='/Admin/EditSettings' method='post'> <input id='settingsId' name='settingsId' type='hidden' value='{0}' />" +
+                                                              "<input type='submit' value='Применить' /></form>", x.SettingsID)))
+    .Sortable(false).Named("Применить"); *@
+        
+    @*column.For(x => Html.ActionLink(x.UserName, "UsersView", "Admin" , new { searchWord = x.UserName })).SortColumnName("UserName").Named("Пользователь").InsertAt(2);
+    column.For(x => Html.ActionQueryLink(x.Phone, "Orders", new { searchWord = x.Phone })).SortColumnName("Phone").Named("Телефон").InsertAt(3);*@
+        //column.For(x => Html.ActionQueryLink(x.UserAddress, "Orders", new { searchWord = x.UserAddress })).SortColumnName("UserAddress").Named("Адрес").InsertAt(4);
+        //column.For(x => Html.ActionQueryLink(x.TransactionDate.ToShortTimeString(), "EditUser", new { userId = x.UserID })).SortColumnName("TransactionDate").Named("Время заказа").Sortable(false).InsertAt(5);
+    @*
+    column.Custom(x => MvcHtmlString.Create(string.Format("<form action='/Admin/DeleteOrderSummary' method='post'> <input id='orderSummaryID' name='orderSummaryID' type='hidden' value='{0}' /><input type='submit' value='Удалить' /></form>", x.OrderSummaryID)))
+          .Sortable(false).Named("Удалить");
+    column.Custom(x => MvcHtmlString.Create(string.Format("<form action='/Admin/EditOrderSummaryBegin' method='post'> <input id='orderSummaryID' name='orderSummaryID' type='hidden' value='{0}' /><input type='submit' value='Правка' /></form>", x.OrderSummaryID)))
+    .Sortable(false).Named("Правка"); *@
+    }).Sort(Model.GridSortOptions).Attributes(@class => "grid-style").Empty("Нет данных")
+    
+@* new SelectList(Model.Categories, "CategoryID", "Name"), "--Выберите категорию--")</div>*@
+
+@*
+<td style="padding-left:20px">@Ajax.ActionLink("Удалить", "DeleteExpress", "Admin", new { id = image.ProductImageID, productId=image.ProductID}, new AjaxOptions
+                                                  {UpdateTargetId = "controlsHolder",                               
+                                                   InsertionMode = InsertionMode.Replace,
+                                                   HttpMethod = "POST"
+                                                  })</td>
+*@
+
+</div>

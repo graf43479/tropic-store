@@ -1,0 +1,172 @@
+﻿@using System.Web.Optimization
+@{
+    ViewBag.Title = "Статистика";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<ul class="breadcrumb">
+        @{
+                <li class="active"><a href="@Url.Action("Actions", "Admin")" >Главная</a> <span class="divider">/</span></li>
+               
+            }
+    </ul>
+
+
+
+
+<div class="btn-group">
+    
+    <div class="btn-group">
+        <button class="btn btn-default dropdown-toggle" data-toggle="dropdown">Категории<span class="caret"></span></button>
+        <ul class="dropdown-menu">
+            <li><a href="@Url.Action("SuperCategories")">Смотреть надкатегории</a></li>
+            <li><a href="@Url.Action("Categories")">Смотреть категории</a></li>
+            <li><a href="@Url.Action("CreateSuperCategory")">Добавить надкатегорию</a></li>
+            <li><a href="@Url.Action("CreateCategory")">Добавить категорию</a></li>
+            <li><a href="@Url.Action("CategorySequenceView")">Упорядочить категории</a></li>
+        </ul>
+    </div>
+    <div class="btn-group" style="padding: 0">
+        <button class="btn btn-default dropdown-toggle" data-toggle="dropdown">Товары<span class="caret"></span></button>
+        <ul class="dropdown-menu">
+            <li><a href="@Url.Action("Products")">Смотреть товар</a></li>
+            <li><a href="@Url.Action("CreateProduct")">Добавить товар</a></li>
+            <li><a href="@Url.Action("UploadExcel")">Импорт из Excel</a></li>
+        </ul>
+    </div>
+    <a href="@Url.Action("Orders")" class="btn btn-default">Заказы</a>
+    
+    
+    
+     @{
+        if (HttpContext.Current.User.IsInRole("Admin"))
+        {
+            <div class="btn-group">
+                <button class="btn btn-default dropdown-toggle" data-toggle="dropdown">Учетные записи<span class="caret"></span></button>
+                <ul class="dropdown-menu">
+                    <li><a href="@Url.Action("UsersView")">Смотреть учетные записи клиентов</a></li>
+                    <li><a href="@Url.Action("UserRoles")">Роли пользователей</a></li>
+                </ul>
+            </div>
+        }
+     }
+    <a href="@Url.Action("NewsList")" class="btn btn-default">Опубликовать новость</a>
+    <a href="@Url.Action("MailingList")" class="btn btn-default">Рассылка</a>
+</div>
+
+
+
+
+
+<h2 style="margin-bottom: 10px;">Статистика</h2>
+
+
+
+@{
+    if (TempData["rejectProduct"]!=null)
+    {
+        string s = "Следующие товары не были внесены в базу данных: ";    
+        foreach (var VARIABLE in (IEnumerable<string>)TempData["rejectProduct"])
+            {
+                s = (s + " " + @VARIABLE);
+            }
+        <script>alert('@s')</script>    
+    }
+}
+
+@{
+    var g = 0;
+    try
+    {
+        g = (int)TempData["succesInsertedProduct"];
+    }
+    catch (Exception)
+    {
+    }
+}
+@*
+@{
+    if (TempData["rejectProduct"] != null)
+    {
+        int d = ((IEnumerable<string>) TempData["rejectProduct"]).Count();
+        var f = ((IEnumerable<string>) TempData["ProductToInsert"]).Count();
+        string s = "Количество успешно внесенных записей: " + @g + ". Следующие " + @d + " из " + @f + " товаров не были внесены в базу данных: ";
+        @foreach(var VARIABLE in (IEnumerable<string>) TempData["rejectProduct"])
+        {
+            s = (s + " " + @VARIABLE);
+        }
+
+        <script> alert('@s') </script>
+    }
+    else if (g != 0)
+    {
+        <script> alert(@g + ' записей успешно внесено в базу данных') </script>
+    }
+
+}
+*@
+
+@{
+    Html.RenderAction("Dasboard", "Admin");
+}
+
+@*
+<div class="dashboard-parts col-lg-12 col-md-12">
+    <div class="col-lg-6 col-md-6" style="padding-left: 0">
+        <p class="dashboard-header"><span class="glyphicon glyphicon-stats" style="padding-right: 5px;"></span>Статусы заказов и количество</p>
+        @Html.Action("DasboardOrderStatusCount")
+    </div>
+
+    <div class="col-lg-6 col-md-6" style="padding-left: 0">
+        <p class="dashboard-header"><span class="glyphicon glyphicon-stats" style="padding-right: 5px;"></span>Статусы заказов и общая стоимость</p>
+        @Html.Action("DasboardOrderStatusCharges")
+    </div>
+</div>
+
+
+
+<div class="dashboard-parts col-lg-12 col-md-12">
+    <div class="col-lg-6 col-md-6" style="padding-left: 0">
+        <p class="dashboard-header"><span class="glyphicon glyphicon-stats" style="padding-right: 5px;"></span>Бестселлеры по объему выручке</p>
+        @Html.Action("DasboardBestsellerByRevenue")
+    </div>
+
+    <div class="col-lg-6 col-md-6" style="padding-left: 0">
+        <p class="dashboard-header"><span class="glyphicon glyphicon-stats" style="padding-right: 5px;"></span>Бестселлеры по количеству продаж</p>
+        @Html.Action("DasboardBestsellerByQuantity")
+    </div>
+</div>
+
+<div class="dashboard-parts col-lg-12 col-md-12">
+    <div class="col-lg-4 col-md-4" style="padding-left: 0">
+        <p class="dashboard-header"><span class="glyphicon glyphicon-stats" style="padding-right: 5px;"></span>Товары, непроданные ни разу</p>
+        @Html.Action("DasboardProductsUnsale")
+    </div>
+
+    <div class="col-lg-4 col-md-4" style="padding-left: 0">
+        <p class="dashboard-header"><span class="glyphicon glyphicon-stats" style="padding-right: 5px;"></span>Самые дорогие товары </p>
+        @Html.Action("DasboardGoodsByExpensive")
+    </div>
+    
+        <div class="col-lg-4 col-md-4" style="padding-left: 0">
+            <p class="dashboard-header"><span class="glyphicon glyphicon-stats" style="padding-right: 5px;"></span>Самые дешевые товары</p>
+            @Html.Action("DasboardGoodsByCheapness")
+        </div>
+</div>
+
+<div  class="dashboard-parts col-lg-12 col-md-12" style="clear: left">
+    <div class="col-lg-4 col-md-4" style="padding-left: 0">
+        <p class="dashboard-header"><span class="glyphicon glyphicon-stats" style="padding-right: 5px;"></span>Общая информация по товарам</p>
+        @Html.Action("DasboardProductExistence")
+    </div>
+
+    <div class="col-lg-4 col-md-4" style="padding-left: 0">
+        <p class="dashboard-header"><span class="glyphicon glyphicon-stats" style="padding-right: 5px;"></span>Количество зарегистрированных пользователей</p>
+        @Html.Action("DasboardUsersRegistered")
+    </div>
+    
+    <div class="col-lg-4 col-md-4" style="padding-left: 0">
+        <p class="dashboard-header"><span class="glyphicon glyphicon-stats" style="padding-right: 5px;"></span>Количество пользователей в ролях</p>
+        @Html.Action("DasboardInRoleCount")
+    </div>
+</div>*@

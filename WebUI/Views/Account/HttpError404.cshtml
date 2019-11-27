@@ -1,0 +1,10 @@
+﻿@*@model string*@
+@{
+    ViewBag.Title = "HttpError404";
+    Layout = null;
+    ViewBag.Robots = "nofollow, noindex";   
+}
+
+<h2>404!</h2>
+<p>Что-то пошло не так! В ближайшее время мы исправим эту проблему, а пока рекомендуем вернуться&nbsp; @Html.ActionLink("на главную", "List","Product") &nbsp;страницу</p>
+<p>@ViewBag.ErrorCode = message;</p>

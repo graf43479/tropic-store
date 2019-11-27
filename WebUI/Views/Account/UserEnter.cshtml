@@ -1,0 +1,246 @@
+﻿@model WebUI.Models.LoginViewModel
+
+@*<link href="@Url.Content("~/Content/bootstrapValidator.css")" rel="stylesheet"/>
+<sript src="@Url.Content("~/Scripts/js/bootstrapValidator.js")" type="text/javascript" charset="utf-8"></script>*@
+
+@functions {
+
+    public string BrName(string input, string name)
+    {
+        return "GA";
+    }
+
+}
+
+
+
+    @{
+    ViewBag.Title = "Вход на сайт";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Robots = "nofollow, noindex";   
+}
+
+@{
+    if (Session["attempt"] == null)
+    {
+        Session["attempt"] = 0;
+    @*    TempData["attempt"] = TempData.Peek("attempt");*@
+    }
+    else
+    {
+        @*TempData["attempt"] = TempData.Peek("attempt");*@
+    }
+}
+   
+
+
+
+
+    
+    
+    <div id="crumbs" class="row">
+<ul class="exbreadcrumb">
+        @{
+                <li><a href="@Url.Action("List", "Product")"  rel="follow, index">Главная</a></li>
+                <li class="active"><a href="@Url.Action("UserEnter", "Account")" rel="follow, index">Авторизация</a></li>
+            }
+    </ul>
+    </div>
+@*@{ string p = (string)TempData["message"]; }*@
+
+@if (TempData["message"] != null)
+{
+                                    <div class="message"><p class="@TempData["messageType"]">@TempData["message"]</p></div>
+}
+<div class="heading">
+    <h1>Вход</h1>
+</div>
+<div class="col-lg-6 col-md-6 col-sm-8 col-xs-12">
+    @using (Html.BeginForm("UserEnter", "Account", FormMethod.Post, new { @class = "form-vertical" }))
+    {
+        @*<p>@p</p>*@
+        @Html.ValidationSummary(true, "Ошибка", new { @class = "alert alert-block alert-error" })
+        
+        @*
+        <div class="form-group has-feedback" style="margin: 2px 0; padding-top: 10px;">
+            <label class="control-label col-md-2">Адрес доставки:</label>
+            <div class="col-md-10">
+                 @Html.TextAreaFor(x => x.ShippingAddress, new { @class = "form-control", @style = "margin: 2px 0;", @placeholder = "Адрес" })
+                 <span class="glyphicon glyphicon-ok form-control-feedback"></span>
+            </div>
+        </div>
+          *@  
+        
+        <div class="form-group has-feedback">
+            <label class="control-label">Логин: </label> 
+            <div>
+                @Html.TextBoxFor(x => x.Login, new { @class = "form-control " }) 
+                <span class="glyphicon glyphicon-pencil form-control-feedback"></span>
+            </div>
+            @Html.ValidationMessageFor(x => x.Login, null, new { @class = "help-inline" })
+        </div>
+        
+        
+        <div class="form-group has-feedback">
+            <label class="control-label">Пароль: </label> 
+            <div>
+                @Html.PasswordFor(x => x.Password, new { @class = "form-control " }) 
+                <span class="glyphicon glyphicon-pencil form-control-feedback"></span>
+            </div>
+            @Html.ValidationMessageFor(x => x.Password, null, new { @class = "help-inline" })
+        </div>
+        
+        if ((int)Session["attempt"] > 3)
+        {
+            <div class="form-group">
+                <label class="control-label">@Html.LabelFor(x => x.Captcha)</label> 
+                
+                <p><a href="@Url.Action("UserEnter")"><img alt="Capcha" src="@Url.Action("CaptchaImage")" style=""/></a></p>
+             </div>
+
+            <div class="form-group has-feedback">
+                <label class="control-label">Ответ</label> 
+                
+                <div>
+                @Html.TextBoxFor(x => x.Captcha, new { @class = "form-control " }) 
+                <span class="glyphicon glyphicon-pencil form-control-feedback"></span>
+            </div>
+            @Html.ValidationMessageFor(x => x.Captcha, null, new { @class = "help-inline" })
+
+                @*<p>@Html.TextBoxFor(x => x.Captcha, new { @class = "form-control" }) @Html.ValidationMessageFor(x => x.Captcha)</p>*@
+            </div>
+        }
+    
+    
+        <div class="btn-group">
+        <p><input type="checkbox" name="RememberMe" value="true" checked="checked" />Запомнить меня</p>
+        <input type="submit" class="btn btn-custom btn-md enter-type" id="enter-button" style="padding-top: 8px; padding-bottom: 8px;" value="Вход"/> 
+        @Html.ActionLink("Забыли пароль?", "ForgottenPassword", "Account", new { @class = "send-email btn btn-custom btn-md" })
+                
+    <div class="btn btn-default"><a href="http://oauth.vk.com/authorize?client_id=4522845&scope=email&redirect_uri=http://tropic-store.ru/Account/VkAuth/vk-auth/&response_type=code" title="Зайти через ВКонтакте"><i class="fa fa-vk"></i></a></div>
+                <div class="btn btn-default"><a href="https://www.facebook.com/dialog/oauth?client_id=698808393488449&redirect_uri=http://tropic-store.ru/Account/FbLogin/fblogin/&response_type=code" title="Зайти через Facebook"><i class="fa fa-facebook"></i></a></div>
+    </div>
+        
+    
+    
+    }
+</div>
+<div class="col-lg-6 col-md-6 col-xs-12">
+    <p>Если у Вас нет аккаунта, то Вы сможете легко его @Html.ActionLink("создать", "RegistrateUser", "Account", new { @class = "btn btn-default btn-xs" }) </p>
+    
+</div>
+
+<div id="updateDialog4" title="Смена пароля"></div>
+
+@*@{TempData["attempt"] = TempData.Peek("attempt");}*@
+@*@{
+    if (p != null)
+    {
+        <script type="text/javascript">            alert('@p');</script>  
+    }
+}*@
+
+
+<script type="text/javascript">
+    var linkObj4;
+    $(function () {
+        $('#updateDialog4').dialog({
+            autoOpen: false,
+            width: 250,
+            resizable: false,
+            modal: true,
+            buttons: {
+                "OK": function () {
+                    $("#update-message4").html('');
+                    $("#updateEmailForm").submit();
+                },
+                "Отмена": function () {
+                    $(this).dialog("close");
+                }
+            }
+        });
+
+        $(".send-email").click(function () {
+            linkObj4 = $(this);
+            var dialogDiv = $('#updateDialog4');
+            //var viewUrl = linkObj4.attr('href');
+            var viewUrl = linkObj4.attr('href');
+            $.get(viewUrl, function (data) {
+                dialogDiv.html(data);
+                var $form = $("#updateEmailForm");
+                $form.unbind();
+                $form.data("validator", null);
+                $.validator.unobtrusive.parse(document);
+                dialogDiv.dialog('open');
+            });
+            return false;
+        });
+    });
+
+    function updateSuccess4(data) {
+        if (data.Success == true) {
+            alert('На указанный адрес был выслан новый пароль!');
+            $('#updateDialog4').dialog('close');
+        }
+        else {
+            $("#update-message4").html(data.ErrorMessage);
+            $("#update-message4").show();
+        }
+    }
+</script>
+
+
+@*
+  <script>
+      $(function () {
+          var validator = $('form').data('validator');
+          var aspErrorPlacement = validator.settings.errorPlacement;
+          validator.settings.errorPlacement = function (error, element) {
+              aspErrorPlacement(error, element);
+              if (error.length > 0 && error[0].innerHTML === "") {
+                  error.closest('div.control-group').removeClass('error');
+              }
+          };
+          $('span.field-validation-valid, span.field-validation-error').each(function () {
+              $(this).addClass('help-inline');
+          });
+
+          $('form').submit(function () {
+              if ($(this).valid()) {
+                  $(this).find('div.control-group').each(function () {
+                      if ($(this).find('span.field-validation-error').length == 0) {
+                          $(this).removeClass('error');
+                      }
+                  });
+              } else {
+                  $(this).find('div.control-group').each(function () {
+                      var control = $(this).find('span.field-validation-error')
+                      if (control.length > 0) {
+                          $(this).addClass('error');
+                      }
+                  });
+              }
+          });
+      });
+
+
+        </script>*@
+        
+        
+        
+        
+        
+@*
+        
+        <script type="text/javascript">
+ var detect=navigator.userAgent.toLowerCase();
+ if( (detect.indexOf('safari')) !=-1) {
+     $("#enter-button").css("padding-top","18px !important");
+     $("input").css("padding-bottom", "18px;");
+ }
+ </script>*@
+ 
+ 
+
+
+ 

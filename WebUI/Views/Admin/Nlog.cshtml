@@ -1,0 +1,35 @@
+﻿@model WebUI.Models.PagedViewModel<Domain.Entities.NLog_Error>
+
+@{
+    ViewBag.Title = "Логи";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<style type="text/css">
+    .grid-style {
+        margin-left: 0;
+        margin-right: 0;
+    }
+</style>
+
+<ul class="breadcrumb">
+    @{
+        <li><a href="@Url.Action("Actions", "Admin")">Главная</a> <span class="divider">/</span></li>
+        <li class="active"><a href="@Url.Action("Nlog", "Admin")">Логи</a> <span class="divider">/</span></li>
+    }
+</ul>
+
+
+<h2>Логи</h2>
+
+@{
+    Html.RenderPartial("LogSearchBox");
+}
+
+
+
+<div class="table-list">
+@{
+   Html.RenderPartial("LogGridPartial", Model);
+}
+</div>

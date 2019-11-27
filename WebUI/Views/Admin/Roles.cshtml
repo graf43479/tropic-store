@@ -1,0 +1,47 @@
+﻿@using MvcContrib.UI.Grid
+@model WebUI.Models.PagedViewModel<Domain.Entities.Role>
+
+@{
+    ViewBag.Title = "Роли";
+    Layout =null;
+}
+
+<h2>Роли</h2>
+
+
+<div class="table-list" id="tmp">
+@{
+   Html.RenderPartial("RolesGridPartial", Model);
+}
+</div>
+
+        <div id="update-message"></div>  
+          
+<div id="updateDialog5"></div>  
+
+@*
+<script>
+    $(function () {
+        $("#roleButton").click(
+            function (event) {
+                if (!confirm('Are you sure?')) return false;
+                event.preventDefault();
+                var link = event.target;
+                var action = link.href;
+                while (link.tagName != 'FORM') {
+                    link = link.parentElement;
+                    if (!link) {
+                        return;
+                    }
+                }
+                link.action = action;
+                link.method = "POST";
+                alert(link);
+                link.submit();
+            });
+    });
+</script>*@
+
+
+
+

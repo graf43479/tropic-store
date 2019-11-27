@@ -1,0 +1,31 @@
+﻿@using MvcContrib.UI.Grid
+@model WebUI.Models.PagedViewModel<WebUI.Models.UserRoleViewModel>
+@{
+    ViewBag.Title = "Роли пользователей";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+
+<ul class="breadcrumb">
+    @{
+        <li><a href="@Url.Action("Actions", "Admin")">Главная</a> <span class="divider">/</span></li>
+        <li class="active"><a href="@Url.Action("UserRoles", "Admin")">Роли пользователей</a> <span class="divider">/</span></li>
+    }
+</ul>
+
+<h2>Роли пользователей</h2>
+
+
+
+@{
+    Html.RenderPartial("UserRoleSearchBox");
+}
+
+<div class="table-list">
+@{
+    Html.RenderPartial("UserRolesGridPartial", Model);
+}
+
+@Html.ActionLink("Обновить роли пользователей", "UpdateUserRole", "Admin", new{@class="btn btn-md btn-info", @style="margin-bottom: 15px;"})
+</div>
+

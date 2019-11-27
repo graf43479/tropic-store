@@ -1,0 +1,60 @@
+﻿@model WebUI.Models.ProductsListViewModel
+
+@{
+    string searcher = (ViewBag.Searcher == null) ? "" : ViewBag.Searcher;
+}
+<ul class="pagination">
+                @{
+                    for (int i = 1; i <= Model.PagingInfo.TotalPages; i++)
+                    {
+                        if (i==Model.PagingInfo.CurrentPage)
+                        {
+                         <li class="active">@Ajax.RouteLink(i.ToString(), new { controller = "Product", action = "List", page = i, sortOption = (string)Session["sortOption"], category = Model.CurrentCategory, searcher = searcher }, new AjaxOptions
+                                                {
+                                                  UpdateTargetId = "content",
+                                                                    InsertionMode = InsertionMode.Replace,
+                                                                    HttpMethod = "GET",
+                                                  OnBegin = "gifLoaderBefore",
+                                                  OnSuccess = "gifLoaderAfter",
+                                                  OnFailure = "gifLoaderAfter",
+                                                  OnComplete = "gifLoaderAfter"
+                                                                })    
+                                                </li>                                
+                        }
+                        else
+                        {
+                        @*   <li>@Html.ActionLink(i.ToString(), "List", "Product", new { page = i }, null)</li>*@
+                    
+                     <li>@Ajax.RouteLink(i.ToString(), new { controller = "Product", action = "List", page = i, sortOption = (string)Session["sortOption"], category = Model.CurrentCategory, searcher = searcher }, new AjaxOptions
+                                   {
+                                       UpdateTargetId = "content",
+                                       InsertionMode = InsertionMode.Replace,
+                                       HttpMethod = "GET",
+                                       OnBegin = "gifLoaderBefore",
+                                       OnSuccess = "gifLoaderAfter",
+                                       OnFailure = "gifLoaderAfter",
+                                       OnComplete = "gifLoaderAfter"
+                                   })   
+                                      
+                                                </li>            
+                        }
+                    }
+                }
+</ul>   
+
+
+@*
+
+ if (Session["sortOption"]=="priceAsc")
+        {
+            @Ajax.SpanActionLink("Цена", "up_caret", "List", "Product", new { sortOption = "priceDesc", category = Model.CurrentCategory, searcher = searcher }, 
+                             new AjaxOptions
+                                 {
+                                     UpdateTargetId = "content",
+                                     InsertionMode = InsertionMode.Replace,
+                                     HttpMethod = "POST"
+                                 }, new { @class = "btn btn-default active btn-md" }) 
+               
+            @Ajax.ActionLink("Новизна", "List", "Product", new { sortOption = "dateAsc", category = Model.CurrentCategory, searcher = searcher }, 
+            
+            *@

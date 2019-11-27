@@ -1,0 +1,40 @@
+﻿@model WebUI.Models.PagedViewModel<Domain.Entities.Mailing>
+
+
+@{
+    ViewBag.Title = "MailingList";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+
+<style type="text/css">
+    .grid-style {
+        margin-left: 10px;
+        width: 1280px;
+        
+        
+    }
+</style>
+
+<ul class="breadcrumb">
+    @{
+        <li><a href="@Url.Action("Actions", "Admin")">Главная</a> <span class="divider">/</span></li>
+        <li class="active"><a href="@Url.Action("MailingList", "Admin")">Рассылка</a> <span class="divider">/</span></li>
+    }
+</ul>
+
+<h2>История рассылки</h2>
+
+<div id="newsList">
+
+
+<div class="table-list">
+@{
+   Html.RenderPartial("MailingListGridPartial", Model);
+ }
+ </div>
+
+        
+</div>        
+
+@Html.Action("Mailing","Admin")

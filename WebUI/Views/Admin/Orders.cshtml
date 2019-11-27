@@ -1,0 +1,88 @@
+﻿@using MvcContrib.UI
+@using MvcContrib.UI.Grid
+@using WebUI.Infrastructure.ExtensionMethods
+@using SortDirection = MvcContrib.Sorting.SortDirection
+@*@model IEnumerable<Domain.Entities.Category>*@
+@model WebUI.Models.PagedViewModel<Domain.Entities.OrdersSummary>
+           
+@{
+    ViewBag.Title = "Заказы";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+@{TempData["Query"] = Model.Query;}
+
+
+<ul class="breadcrumb">
+    @{
+        <li><a href="@Url.Action("Actions", "Admin")">Главная</a> <span class="divider">/</span></li>
+        <li class="active"><a href="@Url.Action("Orders", "Admin")">Заказы</a> <span class="divider">/</span></li>
+    }
+</ul>
+
+<h2>Заказы</h2>
+
+
+@{
+    Html.RenderPartial("OrderSummarySearchBox");
+}
+
+<div class="table-list">
+@{
+   Html.RenderPartial("OrdersGridPartial", Model);
+ }
+ </div>
+
+ 
+
+
+@*
+@using (Html.BeginForm())
+{
+    
+    @Html.DropDownList("orderType", new SelectList(new[] { "Активные", "Выполненные" } ))
+    <input type="submit" value="Вывод списка"/>
+}
+
+@using (Html.BeginForm()) 
+{ 
+    <p> 
+        Find by name: @Html.TextBox("SearchString", ViewBag.CurrentFilter as string) &nbsp; 
+        <input type="submit" value="Search" /></p> 
+} 
+<table class="Grid">
+    <tr>
+        <th>Номер заказа</th>
+       <th>@Html.ActionLink("Имя клиента", "Orders", 
+             new { sortOrder=ViewBag.NameSortParm, currentFilter=ViewBag.CurrentFilter })</th>   
+        <th>Телефон</th>
+        <th>Адрес доставки</th>
+        <th>Email</th>
+        <th>@Html.ActionLink("Дата заказа", "Orders", 
+             new { sortOrder = ViewBag.DateSortParm, currentFilter = ViewBag.CurrentFilter })</th>
+        <th>Сумма</th>
+        <th></th>
+        <th></th>
+    </tr>
+    
+    @foreach (var item in Model.OrdersSummaries)
+    {
+
+        Html.RenderPartial("OrderSummaryPartial", item);
+    }
+       
+</table>
+
+
+<div class="pager">
+    @Html.PageLinks(Model.PagingInfo, x => Url.Action("Orders", new { page = x }))
+</div>
+
+<p>Всего к выполнению <b>@Model.OrdersSummaries.Count()</b> заказов на сумму  @Model.OrdersSummaries.Sum(summary => (int)summary.TotalValue) руб. </p>
+
+<p>@Html.ActionLink("Перейти в меню администратора", "Actions")</p>
+<p>@Html.ActionLink("Вернуться к списку заказов", "Orders", "Admin")</p>
+<p>@Html.ActionLink("Смотреть категории", "Categories")</p>
+<p>@Html.ActionLink("Смотреть товар", "Products")</p>
+<p>@Html.ActionLink("Смотреть учетные записи клиентов", "UsersView")</p>
+<p>@Html.ActionLink("Перейти в магазин", "List", "Product")</p>
+*@

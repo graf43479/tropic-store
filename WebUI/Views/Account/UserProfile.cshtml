@@ -1,0 +1,189 @@
+﻿@model WebUI.Models.RegisterViewModel 
+
+
+@*<script src="@Url.Content("~/Scripts/js/common3.js")" type="text/javascript"></script>*@
+
+
+@{
+    ViewBag.Title = "Ваш профиль";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Robots = "nofollow, noindex";   
+}
+<div id="crumbs" class="row">
+    <ul class="exbreadcrumb">
+        @{
+            <li><a href="@Url.Action("List", "Product")"  rel="nofollow, noindex">Главная</a></li>
+            <li class="active"><a href="@Url.Action("UserProfile", "Account")" rel="nofollow, noindex">Профиль</a></li>
+        }
+    </ul>
+</div>
+
+<div class="heading">
+    <h1>Просмотр профиля @Model.Login</h1>
+</div>
+
+
+
+
+@*
+<style>
+    .container-fluid{height:100%;display:table;width:100%;padding-right:0;padding-left: 0}   
+.row-fluid{height:100%;display:table-cell;vertical-align:middle;width:100%}
+.centering{float:none;margin:0 auto} 
+</style>
+
+<div class="container-fluid" style="display: table">
+    
+        <div class="col-md-6 col-sm-6 col-xs-12">
+            @using (Html.BeginForm("UserProfile", "Account"))
+            {
+                @Html.HiddenFor(model=>model.UserID)
+    
+                <div class="editor-label"> @Html.Label("Имя:  ") @Html.DisplayFor(model => model.UserName)</div>
+                <div class="editor-label"> @Html.Label("Логин:  ")  @Html.DisplayFor(model => model.Login)</div>
+                <div class="editor-label"> @Html.Label("Телефон:  ") @Html.DisplayFor(model => model.Phone)</div>
+                <div class="editor-label"> @Html.Label("Email:  ") @Html.DisplayFor(model => model.Email)</div>
+                <div class="editor-label"> @Html.Label("Дата регистрации:  ") @Html.DisplayFor(model => model.Created).ToString().Remove(10)</div>
+                <div class="editor-label"> @Html.Label("Рассылка:  ") @Html.DisplayFor(model => model.Mailing)</div>
+                <!--Html.EditorForModel()-->
+    
+                //<div>@Html.ActionLink("Редактировать учетную запись", "UserAccountEdit", "Account", new { @class = "user-account-edit btn btn-success btn-md" })</div>
+    
+            }
+        </div>
+    <div class="row-fluid">
+        <div class="col-md-6 col-sm-6 col-xs-12 centering">
+                <div class="user-account-edit btn btn-default btn-md">Редактировать учетную запись</div>
+            
+        </div>
+        </div>
+</div>
+*@
+
+
+
+<div class="" style="display: table; width: 100%">
+    
+        <div class="col-md-9 col-sm-9 col-xs-12" style="">
+            @using (Html.BeginForm("UserProfile", "Account"))
+            {
+                @Html.HiddenFor(model=>model.UserID)
+    
+                <div class="editor-label"> @Html.Label("Имя:  ") @Html.DisplayFor(model => model.UserName)</div>
+                <div class="editor-label"> @Html.Label("Логин:  ")  @Html.DisplayFor(model => model.Login)</div>
+                <div class="editor-label"> @Html.Label("Телефон:  ") @Html.DisplayFor(model => model.Phone)</div>
+                <div class="editor-label"> @Html.Label("Email:  ") @Html.DisplayFor(model => model.Email)</div>
+                <div class="editor-label"> @Html.Label("Дата регистрации:  ") @Html.DisplayFor(model => model.Created).ToString().Remove(10)</div>
+                <div class="editor-label"> @Html.Label("Рассылка:  ") @Html.DisplayFor(model => model.Mailing)</div>
+                <!--Html.EditorForModel()-->
+    
+                //<div>@Html.ActionLink("Редактировать учетную запись", "UserAccountEdit", "Account", new { @class = "user-account-edit btn btn-success btn-md" })</div>
+    
+            }
+        </div>
+    <div style="display:table-cell;vertical-align:middle;">
+        <div class="col-md-3 col-sm-3 col-xs-12 ">
+                <div class="user-account-edit btn btn-custom btn-md">Редактировать</div>
+            
+        </div>
+        </div>
+</div>
+
+
+
+<div id="accountOrdersWrapper" class="col-md-12 col-sm-12 col-xs-12">
+  <div id="accountOrders" class="">
+    @Html.Action("AccountOrdersList", "Account", new { userId = Model.UserID })
+</div>
+  
+  <div id="accountOrdersDetails">
+  @*  @Html.Action("AccountOrdersDetails", "Account")*@
+ @*   @Html.Action("AccountOrderStatus", "Account")*@
+</div>
+  </div>
+@*
+
+<div id="newsList">
+    <h2>Все новости</h2>
+    @Html.Action("NewsList","Admin")
+</div>
+
+<div id="newsDetails">
+<h2>Публикация новости</h2>
+@using (Html.BeginForm("CreateNews", "Admin"))
+{
+    <p>@Html.ValidationSummary(true)</p>
+
+    <p>Главный заголовок: @Html.EditorFor(x => x.Header1) @Html.ValidationMessageFor(x => x.Header1)</p>
+    <p>Подзаголовок: @Html.EditorFor(x => x.Header2) @Html.ValidationMessageFor(x => x.Header2)</p>
+    <p>Путь к изображению: @Html.EditorFor(x => x.ImgPath) @Html.ValidationMessageFor(x => x.ImgPath)</p>
+    <p>Дата новости: @Html.EditorFor(x => x.NewsDate) @Html.ValidationMessageFor(x => x.NewsDate)</p>        
+    <p>Текст: @Html.TextAreaFor(x => x.NewsText) @Html.ValidationMessageFor(x => x.NewsText)</p>
+    @Html.HiddenFor(x=>x.NewsID)
+    
+    <input type="submit" class="actionButtons" value="Готово"/>
+    
+}
+
+*@
+<div id="updateDialog2" title="Учетная запись"></div>
+
+        
+@*            
+<script type="text/javascript">
+    var linkObj2;
+    $(function () {
+        $('#updateDialog2').dialog({
+            autoOpen: false,
+            width: 300,
+            resizable: false,
+            modal: true,
+            buttons: {
+                "Редактировать": function () {
+                    $("#update-message2").html(''); 
+                    $("#updateAccountEditForm").submit();
+                },
+                "Отмена": function () {
+                    $(this).dialog("close");
+                }
+            }
+        });
+
+        $(".user-account-edit").click(function () {
+            linkObj2 = $(this);
+            var dialogDiv = $('#updateDialog2');
+            var viewUrl = linkObj2.attr('href');
+            $.get(viewUrl, function (data) {
+                dialogDiv.html(data);
+                var $form = $("#updateAccountEditForm");
+                $form.unbind();
+                $form.data("validator", null);
+                $.validator.unobtrusive.parse(document);
+                $form.validate($form.data("unobtrusiveValidation").options);
+                dialogDiv.dialog('open');
+            });
+            return false;
+        });
+    });
+
+    function updateSuccess2(data) {
+        //alert(data.toString);
+        //if ($("#update-message2").html() == "True") {
+        if (data.Success == true) {
+           // alert('Изменения внесены успешно!');
+            var parent = linkObj2.closest("div");
+            parent.find("#registerlogon").html($("#Logi2n").val());
+            $('#updateDialog2').dialog('close');
+            $('#commonMessage').html("Авторизация прошла успешно!");
+            $('#commonMessage').delay(400).slideDown(400).delay(3000).slideUp(400);
+            window.location.replace("/Product/List");
+        }
+        else {
+            $("#update-message2").html(data.ErrorMessage);
+            $("#update-message2").show();
+        }
+    }
+    
+</script>*@
+
+

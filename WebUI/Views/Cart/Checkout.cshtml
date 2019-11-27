@@ -1,0 +1,107 @@
+﻿@model Domain.Entities.ShippingDatails
+
+@{
+    ViewBag.Title = "Оформление заказа";
+    ViewBag.Robots = "nofollow, noindex";   
+}
+
+<div id="crumbs" class="row">
+ <ul class="exbreadcrumb">
+        @{
+                <li><a href="@Url.Action("List", "Product")"  rel="nofollow, noindex">Главная</a></li>
+                <li class=""><a href="@Url.Action("Index", "Cart")" rel="nofollow, noindex">Корзина</a> </li>
+                <li class="active"><a href="@Url.Action("Checkout", "Cart")" rel="nofollow, noindex">Оформление заказа</a></li>
+            }
+    </ul>
+    </div>
+<div class="heading">
+<h1>Оформление заказа</h1>
+</div>
+<p>Пожалуйста, заполните форму заказа</p>
+<div class="col-md-12 col-lg-12 col-xs-12 container">
+    <p>Сумма Вашего заказа без учета доставки составляет: @ViewBag.OrderPrice руб.</p>
+    @using (Html.BeginForm("Checkout","Cart", null, FormMethod.Post, new {@class="form-horizontal", @role="form"}))
+    {
+        @Html.ValidationSummary(true)
+        <div class="form-group has-feedback" style="margin: 2px 0; padding-top: 10px;">
+           <div>@Html.ValidationMessage("ShippingID")</div>
+            <label class="control-label col-md-2"  style="padding-top: 10px;">Доставка</label> 
+            <div class="editor-field col-md-10">@Html.DropDownListFor(x => x.DimShippingID, new SelectList(Model.DimShippings, "ShippingID", "ShippingType", "ShippingPrice"), "---Выберите место доставки---", new { @class = "form-control", @style = "margin: 2px 0;" })
+            </div>
+        </div>
+          <div class="form-group has-feedback" style="margin: 2px 0; padding-top: 10px;">
+             <div> @Html.ValidationMessageFor(x => x.ShippingName)</div>
+              <label class="control-label col-md-2" style="padding-top: 10px;">Имя:</label> 
+              <div class="col-md-10">
+                  @Html.TextBoxFor(x => x.ShippingName, new { @class = "form-control", @style = "margin: 2px 0;", @placeholder = "Ваше имя" })
+                  <span class="glyphicon glyphicon-pencil form-control-feedback"></span>
+              </div>
+          </div>
+            <div class="form-group has-feedback" style="margin: 2px 0; padding-top: 10px;">
+                <div>@Html.ValidationMessageFor(x => x.ShippingAddress)</div>
+                <label class="control-label col-md-2">Адрес доставки:</label>
+                <div class="col-md-10">
+                    @Html.TextAreaFor(x => x.ShippingAddress, new { @class = "form-control", @style = "margin: 2px 0;", @placeholder = "Адрес" })
+                </div>
+            </div>
+              <div class="form-group has-feedback" style="margin: 2px 0;">
+                  <div>@Html.ValidationMessageFor(x => x.ShippingPhone)</div>
+                  <label class="control-label col-md-2" style="padding-top: 10px;">Телефон:</label> 
+                  <div class="col-md-10">
+                      @Html.TextBoxFor(x => x.ShippingPhone, new { @class = "form-control", @style = "margin: 2px 0;", @placeholder = "Телефон" })
+                      <span class="glyphicon glyphicon-pencil form-control-feedback"></span>
+                  </div>
+              </div>
+        <div class="form-group  has-feedback" style="margin: 2px 0;">
+                  <div>@Html.ValidationMessageFor(x => x.ShippingEmail)</div>
+            <label class="control-label col-md-2" style="padding-top: 10px;">Email:</label>
+            <div class="col-md-10">
+                @Html.TextBoxFor(x => x.ShippingEmail, new { @class = "form-control", @style = "margin: 2px 0;", @placeholder = "Email" })
+                <span class="glyphicon glyphicon-pencil form-control-feedback"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-md-2" style="padding-top: 10px;"></label>
+            <div class="col-md-10 col-lg-10"  style="margin: 5px 0;">
+                @Html.EditorFor(x => x.GiftWrap)  Не связываться для уточнения деталей
+            </div>
+        </div>
+        <div class="form-group" style="margin: 2px 0;">
+            <div class="col-md-10 col-md-offset-2">
+                <button class="btn btn-custom btn-md " type="submit" value="Готово">Готово</button>
+            </div>
+        </div>
+    }
+</div>
+@*
+<script type="text/javascript">
+    $(function() {
+        $("#DimShippingID").change(function() {
+            var z = $(this).val();
+            if (z == '') {
+            } else {
+                var productIdValues = "";
+                var productId = $("#priceId").html(function() { productIdValues = this.value; });
+                $("#priceId").html(function() { this.value = z; });
+
+                $.ajax({
+                    type: "GET",
+                    url: "/Cart/SummaryPricePartial/?shippingId=" + z,
+                    success: function(info) {
+                        priceRequest(info);
+                    }
+                });
+            }
+            function priceRequest(info) {
+                $("#priceId").html(function() { this.value =  info.ErrorMessage; });
+            }
+        });
+    })
+</script>
+                        
+                        *@
+                        
+              
+                      
+  
+                     

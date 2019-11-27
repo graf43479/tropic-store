@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<combres>
+  <filters>
+    <filter type="Combres.Filters.FixUrlsInCssFilter, Combres"/>
+    <filter type="Combres.Filters.HandleCssVariablesFilter, Combres"/>
+  </filters>
+  <resourceSets url="~/combres.axd" defaultDuration="30" defaultVersion="1" defaultDebugEnabled="false">
+    <resourceSet name="siteCss" type="css" version="2" debugEnabled="true">
+      <resource path="~/Content/Site2.css"/>
+    </resourceSet>
+  </resourceSets>
+</combres>

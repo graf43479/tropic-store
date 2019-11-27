@@ -1,0 +1,97 @@
+﻿@model IEnumerable<Domain.Entities.OrdersSummary>
+
+<style>
+    .table th {
+        text-align: center;
+    }
+</style>
+
+@{
+    if (Model.Count() > 0)
+    {
+        <div class="heading">
+        <h2>Все заказы</h2>
+        </div>
+        <table class="table table-striped table-bordered table-hover table-condensed">
+                <tr>
+                    <th>Дата</th>
+                    <th>Номер заказа</th>
+                    <th>Сумма</th>
+                    @*<th>Имя клиента</th>
+                    <th>Телефон</th>*@
+                    <th>Заказ активен</th>
+                </tr>
+    
+                @{
+                    foreach (var p in Model)
+                    {
+                        <tr>
+                            <td style="text-align: center">@p.TransactionDate.ToShortDateString()</td>
+                            <td style="text-align: center">@Ajax.ActionLink(p.OrderNumber.ToString(), "AccountOrdersDetails", new { orderId = p.OrderSummaryID }, new AjaxOptions()
+                                    {
+                                        UpdateTargetId = "accountOrdersDetails",
+                                        HttpMethod = "POST",
+                                        InsertionMode = InsertionMode.Replace,
+                                        OnBegin = "gifLoaderBefore",
+                                        OnFailure = "gifLoaderAfter",
+                                        OnComplete = "gifLoaderAfter",
+                                        OnSuccess = "showModalData"
+                                    })</td>
+                                    @*   <div class="btn btn-success btn-xs orderDetails">p.OrderNumber.ToString()</div>*@
+                            <td style="text-align: right">@p.TotalValue</td>
+                            @*<td>@p.UserName</td>
+                            <td>@p.Phone</td>*@
+                            @{
+                                if (p.IsActive)
+                                {
+                                    <td style="text-align: center">Да</td>
+                                }
+                                else
+                                {
+                                    <td style="text-align: center">Нет</td>
+                                }
+  
+                            }
+                        </tr>
+                    }
+                }
+
+            </table>
+        
+    }
+}     
+
+
+<script type="text/javascript">
+    function showModalData(data, callback) {
+        $(".modal-backdrop").remove();
+        var popupWrapper = $("#accountOrdersDetails");
+        popupWrapper.empty();
+        popupWrapper.html(data);
+        var popup = $(".modal", popupWrapper);
+        $(".modal", popupWrapper).modal();
+        /* if (callback != undefined) {
+            callback(popup);
+        }*/
+    }
+    
+
+</script>
+
+
+
+@*
+<a href="#sendDialog" class="btn btn-info" data-toggle="modal">Show dialog</a>
+
+<div class="modal" id="sendDialog" tabindex="-1"></div>
+<div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            <a href="#" class="close" data-dismiss="modal">&times;</a>
+        </div>
+        <div class="modal-body">This is realy doesn't work</div>
+        <div class="modal-footer">
+            <button class="btn btn-success" data-dismiss="modal">Close</button>
+        </div>
+    </div>
+</div>*@

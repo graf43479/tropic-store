@@ -1,0 +1,188 @@
+﻿@model Domain.Entities.Product
+
+<style>
+    form {
+        border: none;
+    }
+    
+    ul, ul:hover {
+        border: none;
+    }
+    
+    li.additional-images:first-child {
+        opacity:0.3; -moz-opacity:0.3;
+        filter:alpha(opacity=40);
+    }
+    
+    
+    li.additional-images:first-child:hover {
+        opacity:1.0; -moz-opacity:1.0;
+        filter:alpha(opacity=100);
+    } 
+    
+    
+</style>
+
+
+@{
+    if ((Model.OldPrice > Model.Price) && (((Model.OldPrice - Model.Price) / Model.OldPrice * 100) > Domain.Constants.PRODUCT_SALE_PERCENT) && (Model.LastPriceChangeDate > DateTime.Now.AddMonths(-1)))
+    {
+        ViewBag.Sale = true;
+    }
+}
+
+<div id="cboxWrapper">
+    <div id="cboxContent">
+    <div class="modal" id="stack1" tabindex="-1" data-focus-on="input:first">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    @*<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>*@
+                    <a class="button btn btn-default btn-sm more-details" href="@Url.Action("ProductInfo", "Product", new { category = @Model.Category.ShortName.TrimEnd(), shortName = @Model.ShortName + "'" })">Узнать подробнее&nbsp;<i class="glyphicon caret"></i></a>
+                </div>
+                <div class="modal-body container-fluid">
+                    <div class="row">
+                        <div class="col-sm-6 col-md-6 col-xs-6">
+                            <div class="image">
+                                <div id="wrap-popup" style="top:0px;z-index:auto;position:relative;">
+                                  @*  <a><img src="@(Url.Content("~/Content"))/@(Domain.Constants.PRODUCT_IMAGE_FOLDER)/@Model.ProductID@(String.Format("_"))@Model.ProductImages.ProductImageID@item.ImageExt"  class="img-thumbnail"/></a> *@
+                                    @{
+                                        if (Model.ProductImages.Any(x => x.ProductID == @Model.ProductID) == true)
+                                            {
+                                                <a href="@Url.Action("ProductInfo", "Product", new { category = @Model.Category.ShortName.TrimEnd(), shortName = @Model.ShortName+"'" })">
+                                                    <img class="img-thumbnail" 
+                                                         src="@(Url.Content("~/Content"))/@(Domain.Constants.PRODUCT_IMAGE_FOLDER)/@Model.ProductID@(String.Format("_"))@Model.ProductImages.FirstOrDefault(x => x.Sequence == 1 & x.ProductID == Model.ProductID).ProductImageID@Model.ProductImages.FirstOrDefault(x => x.Sequence == 1 & x.ProductID == Model.ProductID).ImageExt" 
+                                                         alt="@Model.Name"/>
+                                                </a>
+                                        
+                         {
+                                                if (ViewBag.Sale == true)
+                                                {
+                                                    <span class="onsale" style="margin: 0;">Sale!</span>
+                                                }
+                                                    }
+                                        
+                                            }
+                                        else
+                                        {
+                                            <a href="@Url.Action("ProductInfo", "Product", new { category = @Model.Category.ShortName.TrimEnd(), shortName = @Model.ShortName+"'" })">
+                                                <img class="img-thumbnail"  
+                                                     src="@(Url.Content("~/Content"))/@(Domain.Constants.PRODUCT_IMAGE_FOLDER)/@String.Format("0.jpg")" 
+                                                     alt="@Model.Name"/>
+                                            </a>
+                                        }
+                                    }
+                                </div>
+                            </div>
+                            <div class="container col-md-12 col-xs-12" style="padding: 0;">
+                            <div class="image-additional col-md-12 col-xs-12">
+ <ul>
+    @foreach (var item in Model.ProductImages)
+{
+    <li class="additional-images"> 
+        <a class="example-image-link col-lg-4 col-md-4 col-sm-4 col-xs-6" 
+           href="@(Url.Content("~/Content"))/@(Domain.Constants.PRODUCT_IMAGE_FOLDER)/@item.ProductID@(String.Format("_"))@item.ProductImageID@item.ImageExt" 
+           data-lightbox="example-set" title="@item.Product.Name.TrimEnd()" 
+            style="padding: 0; margin: 0; "> 
+                <img src="@(Url.Content("~/Content"))/@(Domain.Constants.PRODUCT_IMAGE_FOLDER)/@(Domain.Constants.PRODUCT_IMAGE_PREVIEW_FOLDER)/@item.ProductID@(String.Format("_"))@item.ProductImageID@item.ImageExt" alt="@item.ProductID" class="img-thumbnail" style="padding: 0; "/>
+            </a>
+    </li>
+}
+</ul>
+    
+
+
+                  @*                  <ul>
+                                        <li>
+                                            <a class="example-image-link" href="@(Url.Content("~/Content"))/@(Domain.Constants.PRODUCT_IMAGE_FOLDER)/2_1119.jpg" data-lightbox="example-set" title="sasdasd"> 
+                                                <img src="@(Url.Content("~/Content"))/@(Domain.Constants.PRODUCT_IMAGE_FOLDER)/@(Domain.Constants.PRODUCT_IMAGE_PREVIEW_FOLDER)/2_1119.jpg" class="col-md-1" alt="asada"/>
+                                            </a>
+                                        </li>
+                                    
+                                        <li>
+                                            <a class="example-image-link" href="@(Url.Content("~/Content"))/@(Domain.Constants.PRODUCT_IMAGE_FOLDER)/2_1119.jpg" data-lightbox="example-set" title="sasdasd"> 
+                                                <img src="@(Url.Content("~/Content"))/@(Domain.Constants.PRODUCT_IMAGE_FOLDER)/@(Domain.Constants.PRODUCT_IMAGE_PREVIEW_FOLDER)/2_1119.jpg"class="col-md-2"  alt="asada"/>
+                                            </a>
+                                        </li>
+                                    
+                                        <li>
+                                            <a class="example-image-link" href="@(Url.Content("~/Content"))/@(Domain.Constants.PRODUCT_IMAGE_FOLDER)/2_1119.jpg" data-lightbox="example-set" title="sasdasd"> 
+                                                <img src="@(Url.Content("~/Content"))/@(Domain.Constants.PRODUCT_IMAGE_FOLDER)/@(Domain.Constants.PRODUCT_IMAGE_PREVIEW_FOLDER)/2_1119.jpg" class="col-md-3" alt="asada"/>
+                                            </a>
+                                        </li>
+                                    
+                                        <li>
+                                            <a class="example-image-link" href="@(Url.Content("~/Content"))/@(Domain.Constants.PRODUCT_IMAGE_FOLDER)/2_1119.jpg" data-lightbox="example-set" title="sasdasd"> 
+                                                <img src="@(Url.Content("~/Content"))/@(Domain.Constants.PRODUCT_IMAGE_FOLDER)/@(Domain.Constants.PRODUCT_IMAGE_PREVIEW_FOLDER)/2_1119.jpg"class="col-md-4"  alt="asada"/>
+                                            </a>
+                                        </li>*@
+                                        @*
+                                        a class="example-image-link" href="@(Url.Content("~/Content"))/@(Domain.Constants.PRODUCT_IMAGE_FOLDER)/@item.ProductID@(String.Format("_"))@item.ProductImageID@item.ImageExt" data-lightbox="example-set" title="@item.Product.Name.TrimEnd()"> 
+                <img src="@(Url.Content("~/Content"))/@(Domain.Constants.PRODUCT_IMAGE_FOLDER)/@(Domain.Constants.PRODUCT_IMAGE_PREVIEW_FOLDER)/@item.ProductID@(String.Format("_"))@item.ProductImageID@item.ImageExt" alt="@item.ProductID"/>
+            </a>*@
+            
+                                    
+                                    
+                                        @*
+                                    <li><a class="example-image-link" data-lightbox="example-set"><img src="@Url.Content("~/Content/ProductImages/Preview/2_1119.jpg")" class="img-thumbnail" alt="!!!"/></a></li>
+                                    <li><a class="example-image-link" data-lightbox="example-set"><img src="@Url.Content("~/Content/ProductImages/Preview/2_1119.jpg")" class="img-thumbnail" alt="!!!"/></a></li>
+                                    <li><a><img src="@Url.Content("~/Content/ProductImages/Preview/2_1119.jpg")" class="img-thumbnail"/></a></li>
+                                    <li><a><img src="@Url.Content("~/Content/ProductImages/Preview/2_1119.jpg")" class="img-thumbnail"/></a></li>
+                                    
+                                    </ul>*@
+
+                                </div>
+                                </div>
+                        </div>
+                        <div class="col-sm-6 rightcol">
+                            <p>@Html.Label("Товар"): @Html.DisplayFor(x => x.Name, new { @class = "form-control" })</p>
+                            <p>@Html.Label("Категория"): @Html.DisplayFor(x => x.Category.Name, new { @class = "form-control" })</p>
+                        
+                        
+         @{
+             if ((Model.OldPrice > Model.Price) && (((Model.OldPrice - Model.Price) / Model.OldPrice * 100) > Domain.Constants.PRODUCT_SALE_PERCENT) && (Model.LastPriceChangeDate > DateTime.Now.AddMonths(-1)))
+            {
+
+                { ViewBag.Sale = true; }
+                <p>@Html.Label("Цена"): @Html.DisplayFor(x => x.Price, new { @class = "form-control new-price price" }).ToString()р. <b class="old-price-border"><b class="old-price">@Model.OldPrice.ToString()р.</b></b></p>
+                
+                @*<div style="height: 372px;" class="grid-box"><div class="inner"><span class="onsale">Sale</span></div></div>*@
+            
+                @*
+                <p>@Html.Label("Старая цена"): @Html.DisplayFor(x => x.OldPrice.ToString(), new { @class = "form-control" })р.</p>
+                    <p class="price">
+                        <b class="old-price-border"><b class="old-price">@Model.OldPrice.ToString()р.</b></b>
+                        <b class="new-price">@Model.Price.ToString("c")</b>
+                    </p>*@
+            }
+            else
+            {
+                <p>@Html.Label("Цена"): @Html.DisplayFor(x => x.Price, new { @class = "form-control" }).ToString()р.</p>
+            }
+
+        }
+                        
+
+                            <p>@Html.Label("Описание"): @Html.DisplayFor(x=>x.Snippet, new { @class = "form-control" })</p>
+                        </div>
+                        
+                    </div>
+            
+                   @* <div id="ProductImagePreview2">
+                        @Html.Partial("_ProductImagePreview", Model.ProductImages.OrderBy(item => item.Sequence)/*.Take(Domain.Constants.PRODUCT_IMAGE_PREVIEW_COUNT)*/)
+                    </div>*@
+                    </div>
+                
+                <div class="modal-footer">
+                    <button class="btn btn-default" data-dismiss="modal" id="closeButton" aria-hidden="true">Закрыть</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</div>
+@*
+
+*@
+<script src="@Url.Content("~/Scripts/js/cloud-zoom.js")" type="text/javascript"></script>

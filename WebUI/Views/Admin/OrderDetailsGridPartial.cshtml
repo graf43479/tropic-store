@@ -1,0 +1,84 @@
+﻿@using MvcContrib.UI
+@using MvcContrib.UI.Grid
+@using WebUI.Infrastructure.ExtensionMethods
+@*@model IEnumerable<Domain.Entities.Category>*@
+@model WebUI.Models.PagedViewModel<WebUI.Models.OrderDetailsViewModel>
+
+
+     <style type="text/css">
+    .grid-style {
+        margin-left: -5px;
+        margin-right: 0;
+        
+    }
+</style>
+
+
+@{
+    Html.RenderPartial("Pager", Model.PagedList);
+}
+    
+    @using (Html.BeginForm("DeleteOrderDetail", "Admin", FormMethod.Post))
+    {
+        @Html.Grid(Model.PagedList).Columns(column =>
+            {
+                column.For(x => x.CategoryName).SortColumnName("CategoryName").Named("Категория").Attributes(x =>
+                    {
+                        return new Dictionary<string, object> {{"style", "text-align: left"}};
+                    }).InsertAt(0);
+                column.For(x => x.ProductName).SortColumnName("ProductName").Named("Товар").InsertAt(1);
+                column.For(x => x.PriceInOrder).SortColumnName("PriceInOrder").Named("Цена/ед.").InsertAt(2);
+                column.For(x => x.QuantityInOrder).SortColumnName("QuantityInOrder").Named("Кол-во").InsertAt(3);
+                column.For(x => x.TotalPrice).SortColumnName("TotalPrice").Named("Сумма").InsertAt(4);
+                column.For(x => x.QuantityInStore).SortColumnName("QuantityInStore").Named("На складе").InsertAt(5);
+                column.For(x => x.PriceNow).SortColumnName("PriceNow").Named("Цена сейчас").InsertAt(6);
+
+
+
+
+
+                column.Custom(x => Html.Raw("<a href = " + Url.Action("EditOrderDetail", "Admin", new {orderDetailsID = x.OrderDetailsID, quantity = x.QuantityInOrder}) + " class='glyphicon glyphicon-edit btn-xs btn btn-default' title='Редактировать'></a>")).Header(o => "<span class='glyphicon glyphicon-edit'> </span>").Encode(false)
+                      .Sortable(false);
+
+                column.Custom(x => Html.Raw("<a href = " + Url.Action("DeleteOrderDetail", "Admin", new { orderDetailsID = x.OrderDetailsID, orderSummaryID=x.OrderSummaryID }) + " class='linkButton glyphicon glyphicon-remove btn-xs btn btn-danger' title='Удалить' style='color: white'></a>")).Named("Options").Header(o => "<span class='glyphicon glyphicon-remove'> </span>").Encode(false)
+                      .Sortable(false);
+                ;
+
+
+                @*
+                column.Custom(x => MvcHtmlString.Create(string.Format("<form action='/Admin/DeleteOrderDetail' method='post'> " +
+                                                                      "<input id='orderDetailsID' name='orderDetailsID' type='hidden' value='{0}' />" +
+                                                                      "<input id='orderSummaryID' name='orderSummaryID' type='hidden' value='{1}' />" +
+                                                                      "<input type='submit' value='Удалить' /></form>", x.OrderDetailsID, x.OrderSummaryID)))
+                      .Named("Удалить").Sortable(false);
+                column.Custom(x => MvcHtmlString.Create(string.Format("<form action='/Admin/EditOrderDetailBegin' method='post'> <input id='OrderDetailsID' name='OrderDetailsID' type='hidden' value='{0}' /><input type='submit' value='Правка' /></form>", x.OrderDetailsID)))
+                      .Named("Правка").Sortable(false);*@
+            }).Sort(Model.GridSortOptions).Attributes(@class => "table table-striped table-bordered table-hover table-condensed grid-style")
+
+    }
+    
+    
+    
+    
+    <script type="text/javascript">
+        $(function () {
+            $(".linkButton").click(
+            function (event) {
+                if (!confirm('Are you sure?')) return false;
+                event.preventDefault();
+                var link = event.target;
+                var action = link.href;
+                //  alert(action);
+                while (link.tagName != 'FORM') {
+                    link = link.parentElement;
+                    if (!link) {
+                        return;
+                    }
+                }
+                link.action = action;
+                link.method = "POST";
+                link.submit();
+            });
+        });
+
+</script>

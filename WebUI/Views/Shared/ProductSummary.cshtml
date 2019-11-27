@@ -1,0 +1,92 @@
+﻿@model Domain.Entities.Product
+
+
+
+<div class="item col-lg-4 col-md-4 col-sm-4 col-xs-6"  style="">
+    <div class="grid-box">
+        <div class="item-header container" >
+            <h3 class="product-name">@Model.Name</h3>
+        </div>
+        <div class="inner">
+            @{
+                if ((Model.OldPrice > Model.Price) && (((Model.OldPrice - Model.Price)/Model.OldPrice*100) > 10) && (Model.LastPriceChangeDate > DateTime.Now.AddMonths(-1)))
+                {
+                            if (Model.ProductImages.Any(x => x.ProductID == @Model.ProductID) == true)
+                            {
+                                <div class="image sale" >
+                                    <a href="@Url.Action("ProductInfo", "Product", new { category = @Model.Category.ShortName.TrimEnd(), shortName = @Model.ShortName + "'" })" rel="follow, index" >
+                                        <img class="img-thumbnail" 
+                                             src="@(Url.Content("~/Content"))/@(Domain.Constants.PRODUCT_IMAGE_FOLDER)/@(Domain.Constants.PRODUCT_IMAGE_PREVIEW_FOLDER)/@Model.ProductID@(String.Format("_"))@Model.ProductImages.FirstOrDefault(x => x.Sequence == 1 & x.ProductID == Model.ProductID).ProductImageID@Model.ProductImages.FirstOrDefault(x => x.Sequence == 1 & x.ProductID == Model.ProductID).ImageExt" 
+                                             alt="@Model.Name.TrimEnd()"/>
+                                        <span class="onsale" style="position: absolute">Sale!</span>
+                                    </a>
+                                    </div>
+                            }
+                            else
+                            {
+                                <div class="image">
+                                    <a href="@Url.Action("ProductInfo", "Product", new { category = @Model.Category.ShortName.TrimEnd(), shortName = @Model.ShortName + "'" })" rel="follow, index" >
+                                        <img class="img-thumbnail"  
+                                             src="@(Url.Content("~/Content"))/@(Domain.Constants.PRODUCT_IMAGE_FOLDER)/@(Domain.Constants.PRODUCT_IMAGE_PREVIEW_FOLDER)/@String.Format("0.jpg")" 
+                                             alt="@Model.Name.TrimEnd()"/>
+                                    </a>
+                                </div>
+                            }
+                    <div style="visibility: hidden; margin-top: -38px;" class="quickview"><a id="qv98" class="button btn btn-default" onclick=" _this.showPopupPreview('@Url.Action("ProductPreview", "Product", new { productId = Model.ProductID })') ">+ Превью</a></div>
+                    <div class="item-legend">
+                                <p class="price">
+                                    <b class="old-price-border"><b class="old-price">@Model.OldPrice.ToString()р.</b></b>
+                                    <b class="new-price">@Model.Price.ToString()р.</b>
+                                </p>
+                        <p class="description" style="visibility: hidden">@Model.Snippet</p>
+    
+                        @using (Html.BeginForm("AddToCart", "Cart", FormMethod.Post, new { @class = "cart-form" }))
+                        {
+                            @Html.HiddenFor(x => x.ProductID)
+                            @Html.Hidden("returnUrl", Request.Url.PathAndQuery)
+                            @Html.Hidden("login", (User.Identity.IsAuthenticated != true) ? Domain.Constants.ANONYMOUS_LOGIN : User.Identity.Name)
+                            <button type="submit" class="btn btn-custom btn-md"  value="В корзину"><span class="glyphicon glyphicon-shopping-cart"><b class="glyph-bug">&nbsp;В&nbsp;корзину</b></span></button>
+                        }
+                    </div>
+                }
+                else
+                {
+                    <div class="image">
+                        @{
+                    if (Model.ProductImages.Any(x => x.ProductID == @Model.ProductID) == true)
+                    {
+                        <a href="@Url.Action("ProductInfo", "Product", new { category = @Model.Category.ShortName.TrimEnd(), shortName = @Model.ShortName + "'" })" rel="follow, index" >
+                            <img class="img-thumbnail" 
+                                 src="@(Url.Content("~/Content"))/@(Domain.Constants.PRODUCT_IMAGE_FOLDER)/@(Domain.Constants.PRODUCT_IMAGE_PREVIEW_FOLDER)/@Model.ProductID@(String.Format("_"))@Model.ProductImages.FirstOrDefault(x => x.Sequence == 1 & x.ProductID == Model.ProductID).ProductImageID@Model.ProductImages.FirstOrDefault(x => x.Sequence == 1 & x.ProductID == Model.ProductID).ImageExt" 
+                                 alt="@Model.Name.TrimEnd()"/>
+                        </a>
+                    }
+                    else
+                    {
+                        <a href="@Url.Action("ProductInfo", "Product", new { category = @Model.Category.ShortName.TrimEnd(), shortName = @Model.ShortName + "'" })" rel="follow, index" >
+                            <img class="img-thumbnail"  
+                                 src="@(Url.Content("~/Content"))/@(Domain.Constants.PRODUCT_IMAGE_FOLDER)/@(Domain.Constants.PRODUCT_IMAGE_PREVIEW_FOLDER)/@String.Format("0.jpg")" 
+                                 alt="@Model.Name.TrimEnd()"/>
+                        </a>
+                    }
+                        }
+                    </div>
+                    <div style="visibility: hidden; margin-top: -38px;" class="quickview"><a id="qv98" class="button btn btn-default" onclick=" _this.showPopupPreview('@Url.Action("ProductPreview", "Product", new { productId = Model.ProductID })') ">+ Превью</a></div>
+                    <div class="item-legend">
+                               <p class="price">
+                                    <b>@Model.Price.ToString()р.</b>
+                                </p>
+                    <p class="description" style="visibility: hidden">@Model.Snippet</p>
+                        @using (Html.BeginForm("AddToCart", "Cart", FormMethod.Post, new { @class = "cart-form" }))
+                        {
+                            @Html.HiddenFor(x => x.ProductID)
+                            @Html.Hidden("returnUrl", Request.Url.PathAndQuery)
+                            @Html.Hidden("login", (User.Identity.IsAuthenticated != true) ? Domain.Constants.ANONYMOUS_LOGIN : User.Identity.Name)
+                            <button type="submit" class="btn btn-custom btn-md"  value="В корзину"><span class="glyphicon glyphicon-shopping-cart"><b class="glyph-bug">&nbsp;В&nbsp;корзину</b></span></button>
+                        }
+                    </div>
+                }
+            } 
+        </div> 
+    </div>
+</div>

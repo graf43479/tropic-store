@@ -1,0 +1,38 @@
+﻿@model Domain.Entities.NewsTape
+
+@{
+    ViewBag.Title = @Model.Header1;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Robots = "follow, index";   
+}
+
+<div id="crumbs" class="row">
+    <ul class="exbreadcrumb">
+        @{
+            <li><a href="@Url.Action("List", "Product")"  rel="follow, index">Главная</a></li>
+            <li class=""><a href="@Url.Action("NewsPreviews", "News")" rel="follow, index">Все новости</a></li>
+            <li class="active"><a href="@Url.Action("NewsArticle", "News", new {newsId=@Model.NewsID})" rel="follow, index">@Model.Header1</a></li>
+        }
+    </ul>
+</div>
+
+<div class="heading">
+<h1>@Model.Header1</h1>
+</div>
+<h2 class="heading-h2" style="padding-left: 15px"><span class="fa fa-fire" style="color: #1D9D74; padding-right: 5px;"></span>@Model.Header2</h2>
+ @*@{
+                if (System.IO.File.Exists(System.IO.Path.Combine(Server.MapPath
+                               (@Url.Content("~/Content")), Domain.Constants.NEWS_MINI_IMAGES_FOLDER, @Model.NewsID.ToString() + @Model.ImgPath)) != true)
+                        {
+                        }
+                else
+                {
+                    string filename = string.Format("{0}{1}?{2}", @Model.NewsID, @Model.ImgPath.TrimEnd(), DateTime.Now); 
+                    <img class="example-image-link img-thumbnail" src='@(Url.Content("~/Content"))/@(Domain.Constants.NEWS_MINI_IMAGES_FOLDER)/@(filename)' alt='@Model.NewsDate'/> 
+                }
+ }*@
+ <br/>
+@MvcHtmlString.Create(@Model.NewsText)
+<div class="news-footer">
+<p class="news-date">@Model.NewsDate.ToShortDateString()</p>
+</div>

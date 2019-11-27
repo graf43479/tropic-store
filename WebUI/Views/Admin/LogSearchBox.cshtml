@@ -1,0 +1,121 @@
+﻿    <style type="text/css">
+        .form-group {
+            margin-bottom: 5px;
+        }
+    
+    </style>
+    @*
+@using (Html.BeginForm("Nlog", "Admin", FormMethod.Get))
+{
+
+<label>
+Поиск&nbsp;&nbsp; @Html.TextBox("searchWord")
+
+ <label>
+&nbsp;&nbsp;Уровень @Html.DropDownList("level", new SelectList(new[] { "Все", "Info", "Warn", "Debug", "Error", "Fatal"}))
+
+  <label>
+            C: @Html.TextBox("startDate", String.Format("{0:d}", DateTime.Now.AddYears(-5)))
+            По: @Html.TextBox("endDate", String.Format("{0:d}", DateTime.Now))
+  </label>
+
+ </label>       
+        &nbsp;&nbsp;<input class="button" value="Поиск" type="submit" />
+ </label>
+}
+*@
+
+
+
+
+
+
+
+
+
+
+<div class="row" style="margin-top: 7px">
+    <div class="col-lg-12 col-md-12 col-sm-12" style="padding:0;">
+        @using (Html.BeginForm("Nlog", "Admin", FormMethod.Get, new { @class = "form-horizontal", @style = "margin: 0 20px; padding: 0 20px;" })) 
+        {
+
+            <div>
+        
+                <div class="form-group">
+                    <label class="col-lg-1 col-md-1 form-control-static" >Поиск</label>
+                    <div class="col-lg-5 col-md-5" style="padding: 7px 0 0 0;">@Html.TextBox("searchWord", null, new { @class = "form-control", @placeholder = "Введите поисковый запрос" })</div>
+                
+                    <label class=" col-lg-2 col-md-2 form-control-static" style="text-align: right; padding-right:5px;">Уровень:</label>
+                    <div class="col-lg-4 col-md-4" style="padding: 7px 0 0 0">
+                        @Html.DropDownList("level", new SelectList(new[] { "Все", "Info", "Warn", "Debug", "Error", "Fatal"}))
+                    </div>
+                </div>
+        
+        
+
+                <div class="form-group" style="">
+                    <label  class="col-lg-1 col-md-1 form-control-static">С:</label>
+                    <div class="col-lg-2 col-md-2"  style="padding: 0;">
+                        @Html.TextBox("startDate", String.Format("{0:d}", DateTime.Now.AddYears(-1)), new { @class = "form-control" })
+                    </div>
+                    
+                    <label class="col-lg-1 col-md-1 form-control-static" style="text-align: right">По:</label>
+                    <div class="col-lg-2 col-md-2" style="padding: 0;">
+                        @Html.TextBox("endDate", String.Format("{0:d}", DateTime.Now), new { @class = "form-control" })
+                    </div>
+                    <input class="btn btn-info col-lg-offset-2 col-md-offset-2 col-md-4 col-lg-4 " value="Поиск" type="submit" />
+
+                    @*      <label class="col-lg-2 col-md-2" style="padding: 0; text-align: right">Уровень:</label>
+                    <div class="col-lg-4 col-md-4" style="padding: 0;">
+                        @Html.DropDownList("level", new SelectList(new[] { "Все", "Info", "Warn", "Debug", "Error", "Fatal"}))
+                    </div>
+            *@
+            
+                </div>
+
+
+                @*<label>Поиск
+            &nbsp;&nbsp; @Html.TextBox("searchWord")
+        
+            &nbsp;&nbsp; 
+        </label>
+        <label>
+            C: @Html.TextBox("startDate", String.Format("{0:d}", DateTime.Now.AddDays(-5)))
+            По: @Html.TextBox("endDate", String.Format("{0:d}", DateTime.Now))
+        </label>
+        <label>&nbsp;&nbsp; @Html.CheckBox("isActive") Активные заказы </label>
+        *@
+            </div>
+        
+        
+
+
+    
+        }
+    </div>
+</div>
+
+
+
+
+
+<script>
+
+    $(document).ready(function () {
+        $("#level").addClass("form-control");
+
+    });
+</script>
+
+
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#startDate').datepicker({ firstDay: 1, dateFormat: 'dd.mm.yy' });
+        $('#endDate').datepicker({ firstDay: 1, dateFormat: 'dd.mm.yy' });
+        $('.datePicker').datepicker({ firstDay: 1, dateFormat: 'dd.mm.yy' });
+        $.datepicker.setDefaults({ dayNamesMin: ['Вс', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб'] });
+        $.datepicker.setDefaults({ monthNames: ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'] });
+    });
+</script>

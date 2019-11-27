@@ -1,0 +1,13 @@
+﻿@model IEnumerable<Domain.Entities.DimShipping>
+
+
+@using (Html.BeginForm("", "Admin"))
+{
+    <!--<div class="editor-label"> @Html.Label("ID")</div>    -->
+    
+    <div class="editor-label">@Html.Label("Выбранная надкатегория")</div>
+    <div class="multi-line">  @Html.DropDownListFor(model => model.SelectedSuperCategoryID,
+           new SelectList(Model.SuperCategories, "SuperCategoryID", "Name"), "--Выберите надкатегорию--")</div>
+   <!--@Html.EditorForModel()-->
+    <input type="submit" value="Сохранить" />
+}

@@ -1,0 +1,44 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebUI", "WebUI\WebUI.csproj", "{367D3EC0-9EE5-4D3A-AD35-AAFBEC6D0B10}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Domain", "Domain\Domain.csproj", "{EB82B000-0F90-4D04-8353-48AEF4161BBB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTest", "UnitTest\UnitTest.csproj", "{61860D6F-A1C4-40B1-B442-4D9576B208D0}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{4571AB0D-970A-49A0-A593-F316F360AD84}"
+	ProjectSection(SolutionItems) = preProject
+		Local.testsettings = Local.testsettings
+		SportsStore4.vsmdi = SportsStore4.vsmdi
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(TestCaseManagementSettings) = postSolution
+		CategoryFile = SportsStore4.vsmdi
+	EndGlobalSection
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{367D3EC0-9EE5-4D3A-AD35-AAFBEC6D0B10}.Debug|Any CPU.ActiveCfg = Release|Any CPU
+		{367D3EC0-9EE5-4D3A-AD35-AAFBEC6D0B10}.Debug|Any CPU.Build.0 = Release|Any CPU
+		{367D3EC0-9EE5-4D3A-AD35-AAFBEC6D0B10}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{367D3EC0-9EE5-4D3A-AD35-AAFBEC6D0B10}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EB82B000-0F90-4D04-8353-48AEF4161BBB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EB82B000-0F90-4D04-8353-48AEF4161BBB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EB82B000-0F90-4D04-8353-48AEF4161BBB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EB82B000-0F90-4D04-8353-48AEF4161BBB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{61860D6F-A1C4-40B1-B442-4D9576B208D0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{61860D6F-A1C4-40B1-B442-4D9576B208D0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{61860D6F-A1C4-40B1-B442-4D9576B208D0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{61860D6F-A1C4-40B1-B442-4D9576B208D0}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(Performance) = preSolution
+		HasPerformanceSessions = true
+	EndGlobalSection
+EndGlobal

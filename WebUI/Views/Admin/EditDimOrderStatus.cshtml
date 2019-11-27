@@ -1,0 +1,94 @@
+﻿@model Domain.Entities.DimOrderStatus
+           
+
+@*<h2>EditDimOrderStatus</h2>*@
+
+<div class="modal" id="stack5" tabindex="-1" data-focus-on="input:first">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            </div>
+          
+                       @using (Html.BeginForm("EditDimOrderStatus", "Admin", FormMethod.Post, new { @id = "updateStatusForm" }))
+                {
+                    <div class="modal-body container-fluid">
+                        @Html.ValidationSummary(true)
+                   
+
+
+                        <div class="col-md-12">
+                            <fieldset>
+                                @{if (Model != null)
+                                  {
+                                      @Html.HiddenFor(x => x.DimOrderStatusID)
+                                  }
+                                  else
+                                  {
+                                      @Html.Hidden("DimOrderStatusID", 0)
+                                  }
+  
+                                }
+                                @Html.HiddenFor(x => x.Sequence)
+                                <div id="update-message" class="error invisible"></div>
+                                <div class="control-group">
+                                    <label class="col-lg-2 col-md-2 form-control-static">Статус</label> 
+                                    <div class="col-lg-10 col-md-10">
+                                        @Html.TextBoxFor(x => x.OrderStatusDesc, new { @class = "form-control" }) 
+                                        @*<p class="help-block">Введите логин</p>*@
+                                        @Html.ValidationMessageFor(x => x.OrderStatusDesc)
+                                        
+                                    </div>
+                                </div>
+                            </fieldset>   
+                        
+                        </div>
+                    </div>
+                           
+                           <div class="modal-footer">
+                               <button class="btn" data-dismiss="modal" id="closeButton" aria-hidden="true">Закрыть</button>
+                               <button class="btn btn-primary" id="statusButton">OK</button>
+                            </div>
+                }
+
+            
+            
+    
+        </div>
+    </div>
+</div>
+
+@*
+@using (Ajax.BeginForm("AjaxUserEnter", "Account", null, new AjaxOptions
+    {
+        UpdateTargetId = "update-message",
+        InsertionMode = InsertionMode.Replace,
+        HttpMethod = "POST",
+        OnSuccess = "updateSuccess"
+    }, new {@id="updateLoginForm"}))
+*@
+
+
+
+
+
+@*
+@using (Ajax.BeginForm("EditDimOrderStatus", "Admin", null, new AjaxOptions
+    {
+        UpdateTargetId = "update-message",
+        InsertionMode = InsertionMode.Replace,
+        HttpMethod = "POST",
+        OnSuccess = "updateSuccess"
+    }, new {@id="updateStatusForm"}))
+{
+    
+    <fieldset>
+        <legend>  Статус  </legend>
+        <div id="update-message" class="error invisible"></div>
+        <!--<div class="editor-label"> @Html.Label("ID")</div>    -->
+        <div class="editor-field"> @Html.HiddenFor(model => model.DimOrderStatusID) </div>    
+        
+        <div class="editor-field"> @Html.TextBoxFor(model => model.OrderStatusDesc) @Html.ValidationMessageFor(x => x.OrderStatusDesc)</div>    
+        <div class="editor-field"> @Html.HiddenFor(model => model.Sequence)</div>   
+</fieldset>
+*@

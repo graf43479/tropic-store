@@ -1,0 +1,132 @@
+﻿@model Domain.Entities.Mailing
+
+
+
+<style>
+    form {
+        background-color: #FFFFFF;
+        border: none;
+        margin: 0;
+    }
+</style>
+
+@{ AjaxOptions ajax = new AjaxOptions
+   {
+       UpdateTargetId = "newsDetails",
+       //Url = Url.Action("ChangeQuantity"),
+       Url = Url.Action("Mailing"),
+       /*HttpMethod = "Post",*/
+       InsertionMode = InsertionMode.Replace,
+       HttpMethod = "POST",
+       OnBegin = "gifLoaderBefore",
+       OnSuccess = "gifLoaderAfter",
+       OnFailure = "gifLoaderAfter",
+       OnComplete = "gifLoaderAfter"
+
+
+   }; 
+}
+
+
+@*
+ @using (Ajax.BeginForm(ajax))
+                                    {
+                                        <button class="btn btn-custom btn-sm" title="+1" name="action"  type="submit" value="+" ><span class="glyphicon glyphicon-plus"></span></button>
+                                        <br/>
+                                        @Html.TextBox("quantity", line.Quantity, new { disabled = "disabled", @style = "width: 30px; text-align: center", @id = "cartSummary" })
+                                        @Html.Hidden("quantity", line.Quantity)
+                                        @Html.Hidden("productId", line.Product.ProductID)
+                                        @Html.Hidden("userId", line.UserID)
+                                        @Html.HiddenFor(x => x.Cart)
+                                        @Html.HiddenFor(x => x.ReturnUrl)
+                                        <br/>
+                                        <button class="btn btn-custom btn-sm" title="-1" name="action"  type="submit" value="-"><span class="glyphicon glyphicon-minus"></span></button>
+                                    }
+*@
+
+<div id="newsDetails" class="col-lg-12 col-md-12">
+    <h2>Рассылка </h2>
+    <div class="row">
+        <div class="col-lg-12 col-md-12">
+    @using (Ajax.BeginForm(ajax))
+    {
+        <p>@Html.ValidationSummary(true)</p>
+        @Html.HiddenFor(x => x.MailingID)
+        @Html.HiddenFor(x=>x.IsSent)
+        <div class="col-lg-12 col-md-12" style="padding: 0;">
+        <div class="form-group" style="padding: 0; margin-bottom: 12px">
+            <label class="col-lg-1 col-md-1 form-control-static">Тема</label>
+            <div class="col-lg-8 col-md-8" style="padding: 0 0 4px 0;">@Html.EditorFor(x => x.Subject) @Html.ValidationMessageFor(x => x.Subject)</div>
+            
+            <label class="col-lg-1 col-md-1 form-control-static" style="text-align: right">Дата</label>
+            <div class="col-lg-2 col-md-2" style="padding: 0 0 4px 0;">@Html.EditorFor(x => x.UpdateDate) @Html.ValidationMessageFor(x => x.UpdateDate)</div>
+        </div></div>
+        
+        <div class="form-group">
+            <label class="col-lg-1 col-md-1 form-control-static">Текст</label>
+            <div class="col-lg-11 col-md-11" style="padding: 0;">@Html.TextAreaFor(x => x.Body) @Html.ValidationMessageFor(x => x.Body)</div>
+        </div>
+             @*   <p>Главный заголовок: @Html.EditorFor(x => x.Header1) @Html.ValidationMessageFor(x => x.Header1)</p>
+        <p>Подзаголовок: @Html.EditorFor(x => x.Header2) @Html.ValidationMessageFor(x => x.Header2)</p>
+        <p>Путь к изображению: @Html.EditorFor(x => x.ImgPath) @Html.ValidationMessageFor(x => x.ImgPath)</p>
+        <p>Дата новости: @Html.EditorFor(x => x.NewsDate) @Html.ValidationMessageFor(x => x.NewsDate)</p>        
+        <p>Анонс: @Html.TextAreaFor(x => x.NewsPreview) @Html.ValidationMessageFor(x => x.NewsPreview)</p>
+        <p>Текст: @Html.TextAreaFor(x => x.NewsText) @Html.ValidationMessageFor(x => x.NewsText)</p>
+    *@
+     @*<input class="button" value="Готово" type="submit" style="height: 27;"/>*@
+         <div class="form-group">
+             <label class="col-lg-10 col-md-10">&nbsp;</label>
+             <div class="btn-group ">
+             <input class="btn btn-info" value="Сохранить" name="action" type="submit" style="margin: 10px 0 10px 0px; padding-right: 10px !important"/>
+                 <input class="btn btn-info" value="Отправить" name="action" type="submit" style="margin: 10px 0 10px 0px; padding-right: 10px !important" />
+                 </div>
+         </div>
+     @*   <input type="submit" class="actionButtons" value="Готово"/>*@
+    
+    }
+    </div>
+    </div>
+
+    @using (Html.BeginForm("DeleteMailing", "Admin"))
+    {
+        @Html.HiddenFor(x => x.MailingID)
+         <div class="form-group" style="margin:0;">
+        <label class="col-lg-9 col-md-9">&nbsp;</label>
+            <input class="btn btn-danger col-lg-3 col-md-3" value="Удалить" type="submit" style="margin: 0 0 10px 0;"/>
+         </div>}
+</div>
+
+
+<link href="@Url.Content("~/Content/jquery.cleditor.css")" rel="stylesheet" type="text/css" />
+@*<script src="@Url.Content("~/Scripts/jquery.cleditor.js")" type="text/javascript"></script>*@
+<script src="@Url.Content("~/Scripts/jquery.cleditor.min.js")" type="text/javascript"></script>
+<script type="text/javascript">
+    $("#Body").cleditor();
+</script>
+
+
+
+
+    <br/>
+   
+   
+    
+    
+            <script type="text/javascript">
+                $(document).ready(function () {
+                    $('#UpdateDate').datepicker({ firstDay: 1, dateFormat: 'dd.mm.yy' });
+                 @*   $('.datePicker').datepicker({ firstDay: 1, dateFormat: 'dd.mm.yy' });*@
+                    $.datepicker.setDefaults({ dayNamesMin: ['Вс', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб'] });
+                    $.datepicker.setDefaults({ monthNames: ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'] });
+                });
+            </script> 
+            
+            
+            <script>
+
+                $(document).ready(function () {
+                    $("#UpdateDate").addClass("form-control");
+                    $("#Body").addClass("form-control");
+                    $("#Subject").addClass("form-control");
+                });
+            </script>   

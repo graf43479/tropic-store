@@ -1,0 +1,80 @@
+﻿@model WebUI.Models.DashboardViewModel
+
+@using System.Web.Optimization
+
+@{
+    ViewBag.Title = "Статистика";
+    Layout = null;
+}
+
+<ul class="breadcrumb">
+        @{
+                <li class="active"><a href="@Url.Action("Actions", "Admin")" >Главная</a> <span class="divider">/</span></li>
+               
+            }
+    </ul>
+
+    
+    
+
+
+<div class="dashboard-parts col-lg-12 col-md-12">
+    <div class="col-lg-6 col-md-6" style="padding-left: 0">
+        <p class="dashboard-header"><span class="glyphicon glyphicon-stats" style="padding-right: 5px;"></span>Статусы заказов и количество</p>
+        @*@Html.Action("DasboardOrderStatusCount")*@
+        @Html.Partial("DasboardOrderStatusCount", Model.DasboardOrderStatusCount)
+    </div>
+
+    @*<div class="col-lg-6 col-md-6" style="padding-left: 0">
+        <p class="dashboard-header"><span class="glyphicon glyphicon-stats" style="padding-right: 5px;"></span>Статусы заказов и общая стоимость</p>
+        @Html.Action("DasboardOrderStatusCharges")
+    </div>
+</div>
+
+
+
+<div class="dashboard-parts col-lg-12 col-md-12">
+    <div class="col-lg-6 col-md-6" style="padding-left: 0">
+        <p class="dashboard-header"><span class="glyphicon glyphicon-stats" style="padding-right: 5px;"></span>Бестселлеры по объему выручке</p>
+        @Html.Action("DasboardBestsellerByRevenue")
+    </div>
+
+    <div class="col-lg-6 col-md-6" style="padding-left: 0">
+        <p class="dashboard-header"><span class="glyphicon glyphicon-stats" style="padding-right: 5px;"></span>Бестселлеры по количеству продаж</p>
+        @Html.Action("DasboardBestsellerByQuantity")
+    </div>
+</div>
+
+<div class="dashboard-parts col-lg-12 col-md-12">
+    <div class="col-lg-4 col-md-4" style="padding-left: 0">
+        <p class="dashboard-header"><span class="glyphicon glyphicon-stats" style="padding-right: 5px;"></span>Товары, непроданные ни разу</p>
+        @Html.Action("DasboardProductsUnsale")
+    </div>
+
+    <div class="col-lg-4 col-md-4" style="padding-left: 0">
+        <p class="dashboard-header"><span class="glyphicon glyphicon-stats" style="padding-right: 5px;"></span>Самые дорогие товары </p>
+        @Html.Action("DasboardGoodsByExpensive")
+    </div>
+    
+        <div class="col-lg-4 col-md-4" style="padding-left: 0">
+            <p class="dashboard-header"><span class="glyphicon glyphicon-stats" style="padding-right: 5px;"></span>Самые дешевые товары</p>
+            @Html.Action("DasboardGoodsByCheapness")
+        </div>
+</div>
+
+<div  class="dashboard-parts col-lg-12 col-md-12" style="clear: left">
+    <div class="col-lg-4 col-md-4" style="padding-left: 0">
+        <p class="dashboard-header"><span class="glyphicon glyphicon-stats" style="padding-right: 5px;"></span>Общая информация по товарам</p>
+        @Html.Action("DasboardProductExistence")
+    </div>
+
+    <div class="col-lg-4 col-md-4" style="padding-left: 0">
+        <p class="dashboard-header"><span class="glyphicon glyphicon-stats" style="padding-right: 5px;"></span>Количество зарегистрированных пользователей</p>
+        @Html.Action("DasboardUsersRegistered")
+    </div>
+    
+    <div class="col-lg-4 col-md-4" style="padding-left: 0">
+        <p class="dashboard-header"><span class="glyphicon glyphicon-stats" style="padding-right: 5px;"></span>Количество пользователей в ролях</p>
+        @Html.Action("DasboardInRoleCount")
+    </div>*@
+</div>

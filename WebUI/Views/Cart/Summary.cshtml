@@ -1,0 +1,224 @@
+﻿@model Domain.Entities.Cart
+@{
+    Layout = null;
+}
+<div id="cartSummary2" class="container col-lg-12 col-md-12 col-xs-12" style="margin: 0; padding: 0;">
+    <div id="cart" style="margin: 0; padding: 0;" class="col-lg-12 col-md-12 col-xs-12">
+        <div id="registerlogon" class="col-lg-5 col-md-5  col-xs-6" style="margin: 0; padding: 0;">
+            @if((User.Identity.IsAuthenticated) && (Request.IsAuthenticated)) 
+            {
+                <div class="btn-group">
+                    @Html.ActionLink("" + User.Identity.Name + "", "UserProfile", "Account", null, new { @class = "btn btn-default btn-lg", @title="Смотреть учетную запись "+ User.Identity.Name })
+                    @Html.ActionLink(" ", "Logout", "Account", null, new { @class = "btn btn-default btn-lg glyphicon glyphicon-off", @title = "Выйти из учетной записи" })
+                </div>
+            }
+            else
+            {
+                <a href="@Url.Action("UserEnter","Account")" class="logonEnter btn btn-default" style="height: 40px;" title="Авторизация" rel="nofollow"><i class="fa fa-user"></i> Войти</a>
+            }
+        </div>
+        <div id="cartLegend" class="col-lg-5 col-md-5 visible-lg visible-md" style="margin: 0; padding: 0;">
+            <span class="caption">
+                <b>В Вашей корзине</b> <br/>
+                @Model.Lines.Sum(x => x.Quantity) товар(ов),
+                @Model.ComputeTotalValue().ToString()р.
+            </span>
+        </div>
+        <div class="col-lg-2 col-md-2 col-xs-6" style="margin: 0; padding: 0;">
+            <div id="cartImage" class="" style="float: right">
+                <a href="#" id="submenu-button" class="btn-lg btn-info navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse"><span class="glyphicon glyphicon-align-justify"></span></a>    
+                @Html.ActionLink(" ", "Index", "Cart", null, null, "cart-anchor", new { returnUrl = Request.Url.PathAndQuery }, new { @class = "btn btn-default glyphicon glyphicon-shopping-cart btn-lg", @title="Перейти в корзину" }) @{
+                                                                                                                                                                                                                                             if (@Model.Lines.Sum(x => x.Quantity) != 0)
+                                                                                                                                                                                                                                             {
+                                                                                                                                                                                                                                                 <b>+@Model.Lines.Sum(x => x.Quantity)</b>
+                                                                                                                                                                                                                                             }
+                                                                                                                                                                                                                                         }
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(".logonEnter").click(function (event) { event.preventDefault(); showPopup("/Account/AjaxUserEnter", initLoginPopup); }); showPopup = function (url, callback) { $.ajax({ type: "GET", url: url, onbegin: gifLoaderBeforeUE(), success: function (data) { gifLoaderAfterUE(); showModalDataUE(data, callback); } }); }; function initLoginPopup(modal) { $("#LoginButton").click(function () { $("#loadingElement").css('display', 'inline'); $.ajax({ type: "POST", url: "/Account/AjaxUserEnter", data: $("#updateLoginForm").serialize(), success: function (data) { initLoginPopup(modal); updateSuccess(data); loadingElementInterrupt(); } }); }); }
+    function loadingElementInterrupt() { $("#loadingElement").css('display', 'none'); }
+    function showModalDataUE(data, callback) {
+        $(".modal-backdrop").remove(); var popupWrapper = $("#updateDialog"); popupWrapper.empty(); try { popupWrapper.html(data); } catch (e) { popupWrapper.html(data); }
+        var popup = $(".modal", popupWrapper); $(".modal", popupWrapper).modal(); if (callback != undefined) { callback(popup); }
+    }
+    function updateSuccess(data) { if (data.Success == true) { window.location.reload(); } else { if (data.ErrorMessage == "Capcha") { window.location.replace("/Account/UserEnter"); } else { $("#update-message").html(data.ErrorMessage); $("#update-message").show(); } } }
+    function gifLoaderAfterUE() { var p = $('#jquery-loader'); p.removeClass('blue-with-image'); var z = $('#jquery-loader-background'); z.removeClass('loader-bg'); }; function gifLoaderBeforeUE() { var p = $('#jquery-loader'); p.addClass('blue-with-image'); var z = $('#jquery-loader-background'); z.addClass('loader-bg'); var lefter = $(window).width() / 2 - 60; var upper = $(window).height() / 2 - 60; p.css('left', lefter); p.css('top', upper); }
+</script>
+@*
+<script>
+        $(".logonEnter").click(function (event) {
+          //  alert('!!');
+            event.preventDefault();
+           showPopup("/Account/AjaxUserEnter", initLoginPopup);
+        });
+        
+        showPopup = function (url, callback) {
+            $.ajax({
+                type: "GET",
+                url: url,
+                onbegin: gifLoaderBeforeUE(),
+                success: function (data) {
+                    gifLoaderAfterUE();
+                    showModalDataUE(data, callback);
+                }
+            });
+        };
+
+        function initLoginPopup(modal) {
+            $("#LoginButton").click(function() {
+
+                $("#loadingElement").css('display', 'inline');
+
+                $.ajax({
+                    type: "POST",
+                    url: "/Account/AjaxUserEnter",
+                    data: $("#updateLoginForm").serialize(),
+                    success: function(data) {
+                        // showModalData(data);
+                        initLoginPopup(modal);
+                        updateSuccess(data);
+                        loadingElementInterrupt();
+                    }
+                });
+            });
+        }
+
+        function loadingElementInterrupt() {
+            $("#loadingElement").css('display', 'none');
+        }
+        
+        function showModalDataUE(data, callback) {
+            $(".modal-backdrop").remove();
+            var popupWrapper = $("#updateDialog");
+            popupWrapper.empty();
+            try {
+                popupWrapper.html(data);
+            } catch (e) {
+                popupWrapper.html(data);
+            }
+            var popup = $(".modal", popupWrapper);
+            $(".modal", popupWrapper).modal();
+            if (callback != undefined) {
+                callback(popup);
+            }
+        }
+
+        function updateSuccess(data) {
+            if (data.Success == true) {
+                window.location.reload();
+            } else {
+                if (data.ErrorMessage == "Capcha") {
+                    window.location.replace("/Account/UserEnter");
+                } else {
+                    $("#update-message").html(data.ErrorMessage);
+                    $("#update-message").show();
+                }
+            }
+        }
+        
+        function gifLoaderAfterUE() {
+           var p = $('#jquery-loader');
+            p.removeClass('blue-with-image');
+            var z = $('#jquery-loader-background');
+            z.removeClass('loader-bg');
+        };
+
+        function gifLoaderBeforeUE() {
+            var p = $('#jquery-loader');
+            p.addClass('blue-with-image');
+            var z = $('#jquery-loader-background');
+            z.addClass('loader-bg');
+            var lefter = $(window).width() / 2 - 60;
+            var upper = $(window).height() / 2 - 60;
+            p.css('left', lefter);
+            p.css('top', upper);
+        }
+</script>*@
+
+@*<script>
+    $(".logonEnter").click(function (event) { event.preventDefault(); _this.showPopup("/Account/AjaxUserEnter", initLoginPopup); }); this.showPopup = function (url, callback) { $.ajax({ type: "GET", url: url, onbegin: gifLoaderBefore(), success: function (data) { gifLoaderAfter(); showModalData(data, callback); } }); }; function initLoginPopup(modal) { $("#LoginButton").click(function () { $("#loadingElement").css('display', 'inline'); $.ajax({ type: "POST", url: "/Account/AjaxUserEnter", data: $("#updateLoginForm").serialize(), success: function (data) { initLoginPopup(modal); updateSuccess(data); loadingElementInterrupt(); } }); }); }
+    function loadingElementInterrupt() { $("#loadingElement").css('display', 'none'); }
+    function showModalData(data, callback) {
+        $(".modal-backdrop").remove(); var popupWrapper = $("#updateDialog"); popupWrapper.empty(); try { popupWrapper.html(data); } catch (e) { popupWrapper.html(data); }
+        var popup = $(".modal", popupWrapper); $(".modal", popupWrapper).modal(); if (callback != undefined) { callback(popup); }
+    }
+    function updateSuccess(data) { if (data.Success == true) { window.location.reload(); } else { if (data.ErrorMessage == "Capcha") { window.location.replace("/Account/UserEnter"); } else { $("#update-message").html(data.ErrorMessage); $("#update-message").show(); } } }
+</script>*@
+@* 
+Max content
+<script>
+    
+        $(".logonEnter").click(function(event) {
+            event.preventDefault();
+            _this.showPopup("/Account/AjaxUserEnter", initLoginPopup);
+        });
+
+        this.showPopup = function(url, callback) {
+            $.ajax({
+                type: "GET",
+                url: url,
+                onbegin: gifLoaderBefore(),
+                success: function(data) {
+                    gifLoaderAfter();
+                    showModalData(data, callback);
+                }            
+            });
+        };
+        
+       function initLoginPopup(modal) {
+            $("#LoginButton").click(function() {
+
+                $("#loadingElement").css('display', 'inline');
+
+                $.ajax({
+                    type: "POST",
+                    url: "/Account/AjaxUserEnter",
+                    data: $("#updateLoginForm").serialize(),
+                    success: function(data) {
+                        initLoginPopup(modal);
+                        updateSuccess(data);
+                        loadingElementInterrupt();
+                    }
+                });
+            });
+        }
+
+
+        function loadingElementInterrupt() {
+            $("#loadingElement").css('display', 'none');
+        }
+
+        function showModalData(data, callback) {
+            $(".modal-backdrop").remove();
+            var popupWrapper = $("#updateDialog");
+            popupWrapper.empty();
+            try {
+                popupWrapper.html(data);
+            } catch(e) {
+                popupWrapper.html(data);
+            }
+            var popup = $(".modal", popupWrapper);
+            $(".modal", popupWrapper).modal();
+            if (callback != undefined) {
+                callback(popup);
+            }
+        }
+
+        function updateSuccess(data) {
+            if (data.Success == true) {
+                window.location.reload();
+            } else {
+                if (data.ErrorMessage == "Capcha") {
+                    window.location.replace("/Account/UserEnter");
+                } else {
+                    $("#update-message").html(data.ErrorMessage);
+                    $("#update-message").show();
+                }
+            }
+        }
+</script>
+*@

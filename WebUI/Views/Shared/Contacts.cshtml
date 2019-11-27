@@ -1,0 +1,224 @@
+﻿@{
+    ViewBag.Title = "Контакты";
+    ViewBag.Keywords = "ул. Айвазовского, д.5, корп.1 tropic-store.ru ";
+    ViewBag.Snippet = "ул. Айвазовского, д.5, корп.1 tropic-store.ru ";
+    ViewBag.Robots = "follow, index";   
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<script src="http://api-maps.yandex.ru/2.0/?load=package.standard&lang=ru-RU" type="text/javascript"></script>
+
+
+<script type="text/javascript">
+    var myMap;
+    ymaps.ready(init);
+    function init() {
+        myMap = new ymaps.Map('map', {
+            center: [55.61, 37.54], // Москва
+            zoom: 15,
+            behaviors: ["default", "scrollZoom"]
+        }),
+        myPlacemark1 = new ymaps.Placemark([55.615463, 37.542150], {
+                iconContent: '1',
+                balloonContent: 'ул. Айвазовского, д.5, корп.1' + '<br>' + 'tropic-store.ru',
+                hintContent: 'ул. Айвазовского, д.5, корп.1'
+            }, {
+                preset: 'twirl#violetIcon'
+            })
+        myMap.geoObjects
+            .add(myPlacemark1);
+        myMap.events.add("click",
+            function (e) {
+                myMap.balloon.open(
+                    // Позиция балуна
+                    e.get("coordPosition"), {
+                        contentBody: "Значение: " +
+                            e.get("coordPosition")
+                    }
+                )
+            }
+        );
+        myMap.panTo(
+            // Координаты нового центра карты
+            [55.615, 37.542], {
+                flying: true
+            }
+        )
+        // Добавление стандартного набора кнопок
+        myMap.controls.add("mapTools")
+            .add("zoomControl")
+            .add("typeSelector");
+    }
+
+
+
+</script>
+
+<style>
+    #map {
+        font-family:Tahoma, Geneva, sans-serif;
+        font-size: 10px;
+        min-height:426px;
+        border: #0098CA 2px solid;
+        padding: 0 2px 0 0;
+        margin: 0;
+    }
+	
+	
+    #legend ul li{
+        list-style: none; 
+	
+    }
+</style>
+
+<div id="id">
+    <div id="crumbs" class="row">
+        <ul class="exbreadcrumb">
+            @{
+                <li><a href="@Url.Action("List", "Product")"  rel="follow, index">Главная</a></li>
+                <li class="active"><a href="@Url.Action("Contacts", "Account")" rel="follow, index">Контакты</a></li>
+            }
+        </ul>
+        </div>
+</div>
+
+<div class="heading">
+    <h1>Контакты</h1>
+</div>
+
+<div id="contact" class="col-lg-12 col-md-12 "  style="padding: 0;">
+    
+    <div>
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <label class="">Выбор офиса</label> 
+            </div>
+            <div class="col-lg-10 col-md-10 col-sm-8 col-xs-12" style="padding: 0; margin-top: 5px;">
+        
+            <form style="padding: 0; margin: 0;" class="col-lg-12 col-md-12"  style="padding: 0;">
+    	
+                <select name="mySelect" id="mySelect" class="form-control mySelect" > 
+                    <option value="0">	Выберите офис	</option>
+                    <option value="1" selected="selected" onclick="mapActivator()" >	г. Москва, Главный офис	</option>
+                    <option value="2" onclick="mapActivator()">п. Томилино, ул. Есенина, д.3</option>
+                    <option value="3" onclick="mapActivator()">	г. Видное. ул. Вокзальная 23	</option>
+                </select>
+            
+
+                <script language="javascript" type="text/javascript">
+
+                    function mapChange(legend, coord1, coord2, labelHint, balloonText, labelNum, color) {
+                        //legend - текстовое наполнение под картой
+                        //coord1 - широта
+                        //coord2 - долгота
+                        //labelHint - текст при наведении на метку
+                        //balloonText - текст при нажатии на метку
+                        //labelNum - номер метки
+                        //color - цвет метки
+
+                        var x = document.getElementById("legend");
+                        x.innerHTML = legend;
+                        /*x.style.backgroundColor="red";*/
+                        myMap.panTo([parseFloat(coord1), parseFloat(coord2)], {
+                                flying: true
+                            }
+                        ),
+
+                        myPlacemark1 = new ymaps.Placemark([coord1, coord2], {
+                                iconContent: labelNum,
+                                balloonContent: labelHint,
+                                hintContent: balloonText
+                            }, {
+                                preset: color
+                            })
+                        myMap.geoObjects
+                            .add(myPlacemark1);
+                    }
+                </script>
+            </form>
+        </div>
+        
+        <div class="col-lg-2 col-md-2 col-sm-4 col-xs-12"  style="padding: 0;">
+            <button id="TMP2" onclick="mapActivator()" class="col-lg-12 col-md-12 col-sm-12 col-xs-12 btn btn-custom" style="margin-top: 5px;">Перейти</button>
+        </div>
+        
+        <script type="text/javascript">
+
+            var address = new Array(3);
+            var phone = new Array(3);
+            var fax = new Array(3);
+            var email = new Array(3);
+
+            address[0] = 'Адрес: Россия, Москва, ул. Айвазовского, д.5, корп.1';
+            phone[0] = 'Телефон: 8(968)813-83-44';
+            /*fax[0] = 'Факс: 8(968)813-83-44';*/
+            email[0] = 'Email: coconutmsk@ya.ru';
+
+            address[1] = 'Адрес: Россия, 140070, п. Томилино, ул. Есенина, д.3 ';
+            phone[1] = 'Телефон: 8(968)813-83-44';
+            /*fax[1] = 'Факс: 8(968)813-83-44';*/
+            email[1] = 'Email: coconutmsk@ya.ru';
+
+            address[2] = 'Адрес: Россия, Московская область, Ленинский район, <br> г.Видное, Вокзальная улица, 23  ';
+            phone[2] = 'Телефон: 8(968)813-83-44';
+            /*fax[2] = 'Факс: 8(968)813-83-44';*/
+            email[2] = 'Email: promgaz@promgaz.ru';
+            
+            
+
+           // $("#TMP2").click(function (event) {
+            function mapActivator (event) {
+              //  alert('ewew');
+                //event.preventDefault();
+                var b = $("#mySelect :selected").val();
+                var a = new Array(7);
+              
+                if(b==2)
+                        {
+                            a[0] = '<ul><li>'+ address[1] +'</li><li>'+phone[1]+'</li><li>'+fax[1]+'</li><li>'+email[1]+'</li></ul>';
+                            a[1] = '55.655358';
+                            a[2] = '37.964275';
+                            a[3] = address[1];
+                            a[4] = address[1];
+                            a[5] = '2';
+                            a[6] = 'twirl#violetIcon';
+                        } else if(b==3){
+                            a[0] = '<ul><li>' + address[2] + '</li><li>' + phone[2] + '</li><li>' + fax[2] + '</li><li>' + email[2] + '</li></ul>';
+                            a[1] = '55.544442';
+                            a[2] = '37.681854';
+                            a[3] = address[2];
+                            a[4] = address[2];
+                            a[5] = '3';
+                            a[6] = 'twirl#violetIcon';
+                        } else {
+                            a[0] = '<ul><li>' + address[0] + '</li><li>' + phone[0] + '</li><li>' + fax[0] + '</li><li>' + email[0] + '</li></ul>';
+                            a[1] = '55.615463';
+                            a[2] = '37.542150';
+                            a[3] = address[0];
+                            a[4] = address[0];
+                            a[5] = '1';
+                            a[6] = 'twirl#violetIcon';
+                        }
+                mapChange(a[0], a[1], a[2], a[3], a[4], a[5], a[6]);
+            };
+    
+        </script>
+        
+    </div>
+    <div id="contacts" class="col-md-12 col-lg-12 col-xs-12" style="padding: 0;">
+
+        <div id="legend"> 
+            <ul style="">
+                <li>Адрес: Россия, Москва, ул. Айвазовского, д.5, корп.1</li>
+                <li>Телефон: +7(968) 813-83-44</li>
+                <li>Факс: +7(968) 813-83-44</li>
+                <li>E-mail: coconutmsc@ya.ru</li>
+            </ul>
+        </div>
+    
+        @*a href="@Url.Action("Contacts", "Account")" class="btn btn-md btn-custom" style="f2loat:  right; margin-bottom: 10px;"><span class="glyphicon glyphicon-screenshot" style="padding-right: 5px;"></span>В главный офис</a>*@
+           
+        <div id="map" class="col-lg-12 col-md-12"></div>
+    </div>
+
+</div>

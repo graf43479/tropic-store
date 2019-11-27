@@ -1,0 +1,7 @@
+﻿@model Domain.Entities.ProductImage
+
+@*<script src="@Url.Content("~/Scripts/js/jquery-1.10.2.min.js")" type="text/javascript"></script>*@
+<script src="@Url.Content("~/Scripts/js/lightbox-2.6.min.js")" type="text/javascript"></script>
+<link href="@Url.Content("~/Content/LightBox/lightbox.css")" rel="stylesheet" type="text/css" />
+ 
+<a href="@(Url.Content("~/Content"))/@(Domain.Constants.PRODUCT_IMAGE_FOLDER)/@Model.ProductID@(String.Format("_"))@Model.ProductImageID@Model.ImageExt" alt="@Model.ProductImageID" data-lightbox="roadtrip"><img src="@(Url.Content("~/Content"))/@(Domain.Constants.PRODUCT_IMAGE_FOLDER)/@Model.ProductID@(String.Format("_"))@Model.ProductImageID@Model.ImageExt" alt="@Model.ProductImageID" /></a>

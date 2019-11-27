@@ -1,0 +1,107 @@
+﻿@using MvcContrib.UI.Grid;
+@using WebUI.Infrastructure.ExtensionMethods
+@*@model IEnumerable<Domain.Entities.User>*@
+@model WebUI.Models.PagedViewModel<Domain.Entities.User>
+@{
+    ViewBag.Title = "Клиенты";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+
+<ul class="breadcrumb">
+    @{
+        <li><a href="@Url.Action("Actions", "Admin")">Главная</a> <span class="divider">/</span></li>
+        <li class="active"><a href="@Url.Action("UsersView", "Admin")">Учетные записи клиентов</a> <span class="divider">/</span></li>
+    }
+</ul>
+
+<h2>Учетные записи клиентов</h2>
+
+@{
+    Html.RenderPartial("UserSearchBox");
+}
+
+<div class="table-list">
+@{
+   Html.RenderPartial("UserGridPartial", Model);
+ }
+ </div>
+
+ 
+
+@*
+Attributes(x => {
+                          if (x.Item.IsActive==true)
+                          {
+        return new Dictionary<string, object> {{"style", "color:red"}};
+                          }
+        return new Dictionary<string, object> { { "style", "color:grey" } };
+        })
+*@
+
+
+@*@Html.Grid(Model.PagedList).AutoGenerateColumns().Columns(column =>
+    {
+        column.For(x => Html.ActionQueryLink(x.Login, "EditUser", new {userId = x.UserID})).Named("Login").InsertAt(1);
+  
+    }).Sort(Model.GridSortOptions).Attributes(@class => "grid-style")
+    *@
+
+
+
+@*
+@Html.Grid(Model.PagedList).AutoGenerateColumns().Columns(column =>{
+    column.For(x => Html.ActionQueryLink(x.AlbumTitle, "Details", new { id = x.AlbumId })).Named("AlbumTitle").InsertAt(2);
+}).Sort(Model.GridSortOptions).Attributes(@class => "grid-style")
+*@
+
+
+
+
+
+
+
+
+
+@*
+<table class="Grid">
+    <tr>
+        <th>ID</th>
+        <th>Имя</th>
+        <th>Логин</th>
+        <th>Пароль</th>
+        <th>Email</th>
+        <th>Телефон</th>
+        <th>Активный</th>
+        <th>Создан</th>
+    </tr>
+    @foreach (var item in Model) {
+        <tr>
+            <td>@item.UserID</td>
+            <td>@item.UserName</td>
+            <td>@Html.ActionLink(item.Login, "EditUser", new { item.UserID })</td>
+            <td>@item.Password</td>
+            <td>@item.Email</td>
+            <td>@item.Phone</td>
+            <td>@item.IsActive</td>
+            <td>@item.Created.ToShortDateString()</td>
+            
+           
+
+            <td>
+                @using (Html.BeginForm("DeleteUser", "Admin"))  {
+                    @Html.Hidden("UserID", item.UserID)
+                    <input type="submit" value="Удалить"/>
+                    } 
+
+            </td>
+        </tr>
+    }
+</table>
+<br/>
+<p>@Html.ActionLink("Добавить категорию", "CreateCategory")</p>
+<p>@Html.ActionLink("Перейти в меню администратора", "Actions")</p>
+
+
+
+*@

@@ -1,0 +1,374 @@
+﻿@model WebUI.Models.RegisterViewModel 
+@*<script src="@Url.Content("~/Scripts/js/common3.js")" type="text/javascript"></script>*@
+
+
+<div class="modal" id="stack5" tabindex="-1" data-focus-on="input:first">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+               <div class="heading" style="margin-top: 20px; margin-bottom: 0;">
+                    <h2 id="myModalLabel">Редактировать</h2>
+                    </div>
+            </div>
+            <div class="modal-body container-fluid">
+                
+               @using (Ajax.BeginForm("UserAccountEdit", "Account", null, new AjaxOptions
+               {
+                   UpdateTargetId = "update-message2",
+                   InsertionMode = InsertionMode.Replace,
+                   HttpMethod = "POST",
+                   OnBegin = "gifLoaderBefore",
+                   OnFailure = "gifLoaderAfter",
+                   OnComplete = "gifLoaderAfter",
+                   OnSuccess = "updateSuccess2"
+               }, new { @id = "updateAccountEditForm" }))
+               {
+
+                   //    @Html.ValidationSummary(true, "Неудачная попытка авторизации. Пожалуйста попробуйте ещё раз.")
+                    <div class="col-md-12">
+                        <fieldset>
+                            
+                            <p>@Html.ValidationSummary(true)</p>
+                            @Html.HiddenFor(model => model.UserID)
+                            @Html.HiddenFor(model => model.OldPassword, "************")
+                            @Html.HiddenFor(model => model.Password)
+                            @Html.HiddenFor(model => model.PasswordSalt)
+                            @Html.HiddenFor(model => model.Created)
+                            @Html.HiddenFor(model => model.ConfirmPassword, "***")
+    
+        
+
+                            <div id="update-message2" class="error invisible"></div>
+                          
+                            <div class="form-group has-feedback">
+                                <label class="control-label">Имя:</label> 
+                                <div class="">
+                                    @Html.TextBoxFor(x => x.UserName, new { @placeholder = "Введите Ваше имя", @class = "form-control" }) 
+                                    @*<p class="help-block">Введите Ваше имя</p>*@
+                                  <span class="glyphicon glyphicon-pencil form-control-feedback"></span>
+                                    @Html.ValidationMessageFor(x => x.UserName)
+                                </div>
+                            </div>
+                
+                            <div class="form-group has-feedback">
+                                <label class="control-label">Логин:</label> 
+                                <div class="">
+                                    @Html.TextBoxFor(x => x.Login, new { @placeholder = "Введите логин", @class = "form-control" }) 
+                                    <span class="glyphicon glyphicon-pencil form-control-feedback"></span>
+                                    @Html.ValidationMessageFor(x => x.UserName)
+                                </div>
+                            </div>
+                
+                            <div class="form-group has-feedback">
+                                <label class="control-label">Телефон:</label> 
+                                <div class="">
+                                    @Html.TextBoxFor(x => x.Phone, new { @placeholder = "Введите номер телефона", @class = "form-control" }) 
+                                    <span class="glyphicon glyphicon-pencil form-control-feedback"></span>
+                                    @Html.ValidationMessageFor(x => x.Phone)
+                                </div>
+                            </div>
+                
+                            <div class="form-group has-feedback">
+                                <label class="control-label">Email:</label> 
+                                <div class="controls">
+                                    @Html.TextBoxFor(x => x.Email, new { @placeholder = "Введите Email", @class = "form-control", @id = "email" }) 
+                                    <span class="glyphicon glyphicon-pencil form-control-feedback"></span>
+                                    @Html.ValidationMessageFor(x => x.Email)
+                                </div>
+                            </div>
+                            
+                            <div class="control-group">
+                                <div class="editor-label">@Html.CheckBoxFor(x => x.Mailing) Запомнить меня</div>
+                            </div>
+                        </fieldset>    
+                    </div>
+               }
+            </div>
+    
+            <div class="modal-footer">
+                @*<div style="float: left;" class="">@Html.ActionLink("Изменить пароль", "ChangePassword", null, new { @class = "btn btn-default btn-md change-password", @style = "float: right;" })</div>*@
+                  <div class="change-password btn btn-custom btn-md">Изменить пароль</div>
+                <button class="btn" data-dismiss="modal" id="closeButton" aria-hidden="true">Закрыть</button>
+                <button class="btn btn-custom" id="AccountEditButton">OK</button>
+                @*<button id="tmps">Гы</button>*@
+                @*<a id="tmps" href="" class="btn btn-primary">Zapisz</a>*@
+    
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="updateDialog3" title="Смена пароля"></div>
+
+
+
+<script>
+    $(".change-password").click(function () {
+       showPopup("/Account/ChangePassword", initChangePasswordPopup);
+    });
+
+    this.showPopup = function (url, callback) {
+        $.ajax({
+            type: "GET",
+            url: url,
+            onbegin: gifLoaderBefore(),
+            success: function (data) {
+                gifLoaderAfter();
+                showModalData(data, callback);
+            }
+
+        });
+    };
+
+    /*
+    $("#AccountEditButton").click(function () {
+            $.ajax({
+                type: "POST",
+                url: "/Account/UserAccountEdit",
+                data: $("#updateAccountEditForm").serialize(),
+                success: function (data) {
+                    //  showModalData(data);
+                    initProfilePopup(modal);
+                    updateSuccessProfile(data);
+                }
+    */
+
+    function initChangePasswordPopup(modal) {
+        $("#ChangePasswordButton").click(function () {
+            $.ajax({
+                type: "POST",
+                url: "/Account/ChangePassword",
+                data: $("#ChangePasswordForm").serialize(),
+                success: function (data) {
+                    //  showModalData(data);
+                    initChangePasswordPopup(modal);
+                    updateSuccessPwd(data);
+                }
+            });
+        });
+    }
+
+    function showModalData(data, callback) {
+        $(".modal-backdrop").remove();
+        var popupWrapper = $("#updateDialog");
+        popupWrapper.empty();
+        try {
+            popupWrapper.html(data);
+        } catch (e) {
+            popupWrapper.html(data);
+        }
+        var popup = $(".modal", popupWrapper);
+        $(".modal", popupWrapper).modal();
+        if (callback != undefined) {
+            callback(popup);
+        }
+    }
+
+    function updateSuccessPwd(data) {
+        
+        if (data.Success == true) {
+            //window.location.replace("/Product/List");
+            window.location.reload();
+        } else {
+            
+            //$("#update-message3").html('someShit');
+            //alert(data.ErrorMessage.toString());
+            $("#update-message3").show();
+        }
+    }
+</script>
+
+@*
+
+<script type="text/javascript">
+
+/*    $("#tmps").click(function (e) {
+        e.preventDefault();
+        var form = $("#updateAccountEditForm")
+            .removeData("validator")
+            .removeData("unobtrusiveValidation");
+        alert('!!');
+        $.validator.unobtrusive.parse(form);
+
+
+        $.validator.unobtrusive.parse($("#contact-add-popup"));
+
+        if ($('#contact-add-popup').valid()) {
+            alert('AJAX');
+        }
+    });*/
+
+    $('#updateAccountEditForm').on('shown', function () {
+        $("#contact-add-popup").removeData("validator");
+        $("#contact-add-popup").removeData("unobtrusiveValidation");
+        $.validator.unobtrusive.parse("#updateAccountEditForm");
+    });
+
+    $('#AccountEditButton').click(function (e) {
+        e.preventDefault();
+
+        $.validator.unobtrusive.parse($("#updateAccountEditForm"));
+
+        if ($('#updateAccountEditForm').valid()) {
+            //alert('AJAX');
+        }
+    }); 
+
+</script>
+*@
+
+@*<h2>Редактировать профиль @Model.Login</h2>*@
+
+@*@using (Ajax.BeginForm("UserAccountEdit", "Account", null, new AjaxOptions
+    {
+        UpdateTargetId = "update-message2",
+        InsertionMode = InsertionMode.Replace,
+        HttpMethod = "POST",
+        OnSuccess = "updateSuccess2"
+    }, new { @id = "updateAccountEditForm" }))
+{
+// @Html.ValidationSummary(true)   
+    <div id="update-message2" class="error invisible"></div>
+    
+    <fieldset class="col-md-12 col-lg-12 col-xs-12">
+        
+        <legend>Редактирование</legend>
+        @Html.HiddenFor(model => model.UserID)
+        @Html.HiddenFor(model => model.OldPassword, "************")
+        @Html.HiddenFor(model => model.Password)
+        @Html.HiddenFor(model => model.PasswordSalt)
+        @Html.HiddenFor(model => model.Created)
+        @Html.HiddenFor(model => model.ConfirmPassword, "***")
+    
+        
+        <div class="editor-label"> @Html.Label("Имя:")</div> <div class="editor-field">@Html.TextBoxFor(model => model.UserName, new { @class = "form-control" }) @Html.ValidationMessageFor(x => x.UserName)</div>
+        <div class="editor-label"> @Html.Label("Логин:")</div>
+        <div class="editor-field"> @Html.TextBoxFor(model => model.Login, new { @class = "form-control" })  @Html.ValidationMessageFor(x => x.Login)</div>
+        <div class="editor-field"> @Html.HiddenFor(model => model.Password, new { @class = "form-control" }) @Html.ValidationMessageFor(x => x.Password)</div>
+        <div class="editor-label"> @Html.Label("Телефон:")</div>
+        <div class="editor-field">@Html.TextBoxFor(model => model.Phone, new { @class = "form-control" })  @Html.ValidationMessageFor(x => x.Phone)</div>
+        <div class="editor-label"> @Html.Label("Email:")</div>
+        <div class="editor-field"> @Html.TextBoxFor(model => model.Email, new { @class = "form-control" })  @Html.ValidationMessageFor(x => x.Email) </div>
+        <div class="editor-field"> @Html.CheckBoxFor(model => model.Mailing) @Html.ValidationMessageFor(x => x.Mailing) @Html.Label("Рассылка")</div>
+    
+    </fieldset>
+        <!--Html.EditorForModel()-->
+<div style="font-size: small;" class="change-password">@Html.ActionLink("Изменить пароль", "ChangePassword", null, new { @class = "btn btn-success btn-md", @style = "float: right;" })</div>
+}        
+
+
+<button class="btn" data-dismiss="modal" id="closeButton" aria-hidden="true">Закрыть</button>
+      <button class="btn btn-primary" id="AccountEditButton">Войти</button>
+
+<div id="updateDialog3" title="Смена пароля"></div>
+
+        *@
+       @*
+
+<script type="text/javascript">
+    $('form').submit(function () {
+        alert('Clicked');
+        if ($(this).valid()) {
+            $(this).find('div.control-group').each(function () {
+                if ($(this).find('span.field-validation-error').length == 0) {
+                    $(this).removeClass('error');
+                }
+            });
+        }
+        else {
+            $(this).find('div.control-group').each(function () {
+                if ($(this).find('span.field-validation-error').length > 0) {
+                    $(this).addClass('error');
+                }
+            });
+        }
+
+
+        $('form').each(function () {
+            $(this).find('div.control-group').each(function () {
+                if ($(this).find('span.field-validation-error').length > 0) {
+                    $(this).addClass('error');
+                }
+            });
+        });
+    });
+</script>
+
+*@
+
+@*
+               
+<script type="text/javascript">
+    var linkObj3;
+    $(function () {
+        //$(".logOnEnter").button();
+
+        $('#updateDialog3').dialog({
+            autoOpen: false,
+            //width: 250,
+            resizable: false,
+            modal: true,
+            buttons: {
+                "OK": function () {
+                    $("#update-message3").html(''); //make sure there is nothing on the message before we continue                         
+                    $("#changePasswordForm").submit();
+                },
+                "Отмена": function () {
+                    $(this).dialog("close");
+                }
+            }
+        });
+
+        $(".change-password").click(function () {
+            
+            e.preventDefault();
+            //change the title of the dialgo
+            $("#closeButton").click();
+            linkObj3 = $(this);
+
+            var dialogDiv = $('#updateDialog3');
+            var viewUrl = "ChangePassword";  //linkObj3.attr('href'); //"ChangePassword";
+            $.get(viewUrl, function (data) {
+                dialogDiv.html(data);
+                //validation
+                var $form = $("#changePasswordForm");
+                // Unbind existing validation
+                $form.unbind();
+                $form.data("validator", null);
+                // Check document for changes
+                $.validator.unobtrusive.parse(document);
+                // Re add validation with changes
+                //    $form.validate($form.data("unobtrusiveValidation").options);
+                //open dialog
+                dialogDiv.dialog('open');
+            });
+            return false;
+        });
+
+    });
+
+
+    function updateSuccess3(data) {
+        if (data.Success==true) {
+            alert('Изменения внесены успешно');
+        
+            //we update the table's info
+            // var parent = linkObj3.closest("div");
+            // parent.find("#registerlogon").html($("#Logi2n").val());
+            //now we can close the dialog
+            $('#updateDialog3').dialog('close');
+
+            //twitter type notification
+            //     $('#commonMessage').html("Изменения внесены успешно!!");
+            //   $('#commonMessage').delay(400).slideDown(400).delay(3000).slideUp(400);
+            //window.location.replace("http://localhost:57600/Product/List");
+
+        }
+        else {
+            $("#update-message3").html(data.ErrorMessage);
+            $("#update-message3").show();
+        }
+    }
+    
+</script>*@

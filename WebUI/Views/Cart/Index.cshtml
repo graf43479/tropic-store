@@ -1,0 +1,26 @@
+﻿@model WebUI.Models.CartIndexViewModel
+@{
+    ViewBag.Title = "Корзина";
+    ViewBag.Robots = "nofollow, noindex";   
+}
+
+@ViewBag.CartError
+
+<div id="crumbs" class="row">
+    <ul class="exbreadcrumb">
+        @{
+            
+            <li><a href="@Url.Action("List", "Product")"  rel="nofollow, noindex">Главная</a></li>
+            <li class="active"><a href="@Url.Action("Index", "Cart")" rel="nofollow, noindex">Корзина</a></li>
+        }
+                
+    </ul>
+</div>
+
+<div class="heading" id="cart-anchor">
+<h1>Ваша корзина товаров</h1>
+</div>
+
+<div id="cartSummary" style="margin: 0; padding: 0;">
+  @Html.Partial("CartDetailsPartial", Model)
+</div>

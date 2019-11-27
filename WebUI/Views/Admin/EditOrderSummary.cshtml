@@ -1,0 +1,149 @@
+﻿@model Domain.Entities.OrdersSummary
+
+@{
+    ViewBag.Title = "Admin: Редактирование " + @Model.OrderNumber;
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+  
+  <style type="text/css">
+        form 
+        {
+            border: 0;
+    }
+</style>
+
+<ul class="breadcrumb">
+    @{
+        <li><a href="@Url.Action("Actions", "Admin")">Главная</a> <span class="divider">/</span></li>
+        <li class=""><a href="@Url.Action("Orders", "Admin")">Заказы</a> <span class="divider">/</span></li>
+        <li class="active"><a href="@Url.Action("EditOrderSummary", "Admin", new { orderSummaryID = @Model.OrderSummaryID })"   class = "linkButton">Редактировать заказ №@Model.OrderNumber</a> <span class="divider">/</span></li>
+    }
+</ul>
+@{
+
+@*    <p>@DateTime.Now</p>*@
+}
+<h2>Редактировать заказ</h2>
+<div class="col-lg-12 col-md-12" style="padding: 0"> 
+@using (Html.BeginForm("EditOrderSummary", "Admin", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    <div class="editor-field"> @Html.HiddenFor(model => model.OrderSummaryID) </div>
+    <div class="editor-field"> @Html.HiddenFor(model => model.UserID)</div>
+      <div class="editor-field"> @Html.HiddenFor(model => model.TotalValue)</div>    
+
+    <div class="col-lg-12 col-md-12" style="padding: 2px 0"> 
+     <div class="form-group" style="padding: 0"> 
+   
+    <div class="col-lg-2 col-md-2" style="padding: 0"> @Html.Label("Номер заказа")</div>    
+         <div class="col-lg-4 col-md-4" style="padding: 0"> @Html.TextBoxFor(model => model.OrderNumber, new { @class = "form-control" })</div>    
+  
+         <div class="col-lg-2 col-md-2" style="padding: 0 5px 0 0; text-align:  right"> @Html.Label("Cумма без доставки")</div>    
+         <div class="col-lg-4 col-md-4" style="padding: 0">  @Html.TextBoxFor(model => model.TotalValue, new { disabled = "disabled", @class = "form-control" })</div>    
+         </div>
+     </div>
+    
+
+    <div class="col-lg-12 col-md-12" style="padding: 2px 0"> 
+     <div class="form-group" style="padding: 0"> 
+         <div class="col-lg-2 col-md-2" style="padding: 0;"> @Html.Label("Имя клиента")</div>    
+        <div class="col-lg-4 col-md-4" style="padding: 0"> @Html.TextBoxFor(model => model.UserName, new { @class = "form-control" })</div>    
+
+        <div class="col-lg-2 col-md-2" style="padding: 0 5px 0 0; text-align: right"> @Html.Label("Телефон")</div>    
+         <div class="col-lg-4 col-md-4" style="padding: 0"> @Html.TextBoxFor(model => model.Phone, new { @class = "form-control" })</div>    
+         </div>
+     </div>
+
+             
+         <div class="col-lg-12 col-md-12" style="padding: 2px 0"> 
+     <div class="form-group" style="padding: 0"> 
+        <div class="col-lg-2 col-md-2" style="padding: 0"> @Html.Label("Адрес доставки")</div>    
+     <div class="col-lg-10 col-md-10" style="padding: 0"> @Html.TextAreaFor(model => model.UserAddress, new { @class = "form-control" })</div>    
+   </div></div>
+      
+    
+    <div class="col-lg-12 col-md-12" style="padding: 2px 0"> 
+     <div class="form-group" style="padding: 0"> 
+   
+        <div class="col-lg-2 col-md-2" style="padding: 0"> @Html.Label("Email")</div>    
+        <div class="col-lg-4 col-md-4" style="padding: 0"> @Html.TextBoxFor(model => model.Email, new { @class = "form-control" })</div>    
+
+        <div class="col-lg-2 col-md-2" style="padding: 0 5px 0 0; text-align: right"> @Html.Label("Дата заказа")</div>    
+         <div class="col-lg-4 col-md-4" style="padding: 0"> @Html.TextBoxFor(model => model.TransactionDate, new { @class = "form-control" })</div>    
+         </div>
+     </div>
+    
+    
+    <div class="col-lg-12 col-md-12" style="padding: 2px 0"> 
+        <div class="form-group" style="padding: 0"> 
+   
+            <div class="col-lg-2 col-md-2 form-control-static" style="padding: 0"> @Html.Label("Способ доставки")</div>    
+            <div class="col-lg-4 col-md-4" style="padding: 0"> @Html.TextBoxFor(model => model.ShippingType, new { @class = "form-control" })</div>    
+
+             <div class="col-lg-offset-2 col-md-offset-2 col-lg-1 col-md-1 " style="padding: 0"> @Html.CheckBoxFor(model => model.IsActive)</div>    
+         <div class="col-lg-2 col-md-2 form-control-static" style="padding: 0"> @Html.Label("Активен")</div>    
+        </div>
+    </div>
+    
+    <div class="col-lg-12 col-md-12" style="padding: 0"> 
+     <div class="form-group" style="padding: 0"> 
+   
+       @* <div class="col-lg-2 col-md-2" style="padding: 0"> @Html.Label("Стоимость без доставки")</div>    
+        <div class="col-lg-4 col-md-4" style="padding: 0"> @Html.TextBoxFor(model => model.TotalValue, new {  disabled = "disabled", @class = "form-control" })</div>    
+        *@
+        <div class="col-lg-2 col-md-2 form-control-static" style="padding: 0"> @Html.Label("Стоимость доставки")</div>    
+         <div class="col-lg-4 col-md-4" style="padding: 0"> @Html.TextBoxFor(model => model.ShippingPrice, new { @class = "form-control" })</div>    
+          <div class=""><input type="submit" value="Сохранить" class="btn-warning btn col-lg-offset-2 col-md-offset-2 col-lg-4 col-md-4"/></div>
+     </div>
+     </div>
+    
+<div class="col-lg-12 col-md-12" style="padding: 0"> 
+     <div class="form-group" style="padding: 0"> 
+   
+       
+
+        
+         
+        
+     </div>
+     </div>
+    
+         
+    @*
+    <p>   Введите дату: @Html.TextBox("exampleDateTime")
+    </p>
+    
+<p>
+    Введите первую дату: @Html.TextBox("exampleDateTime2", null, new { @class = "datePicker" })
+    *@
+    
+   
+   
+  
+    
+   @* <input class="check-box" data-val="@Html.CheckBoxFor(model=>model.IsActive)"/>
+        <td><input type="checkbox" data-val="@item.IsActive"/></td>
+            
+              <input class="check-box" data-val="true" data-val-required="Требуется поле GiftWrap." id="GiftWrap" name="GiftWrap" type="checkbox" value="true" /><input name="GiftWrap" type="hidden" value="false" />  Не связываться для уточнения деталей
+              *@
+           
+  
+}
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#TransactionDate').datepicker({ firstDay: 1, dateFormat: 'dd.mm.yy' });
+        $('.datePicker').datepicker({ firstDay: 1, dateFormat: 'dd.mm.yy' });
+        $.datepicker.setDefaults({ dayNamesMin: ['Вс', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб'] });
+        $.datepicker.setDefaults({ monthNames: ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'] });
+    });
+</script>
+
+
+
+<script>
+    var p = $("#menu li a[href='/Admin/Orders']");
+    p.parent().addClass("selected");
+</script>
+
+    

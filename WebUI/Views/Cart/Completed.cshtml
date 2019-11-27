@@ -1,0 +1,21 @@
+﻿@using Domain
+@model Domain.Entities.ShippingDatails
+
+@{
+    ViewBag.Title = "Заказ подтвержден";
+    ViewBag.Robots = "nofollow, noindex";   
+}
+
+<div id="crumbs">
+    <ul class="exbreadcrumb" class="row">
+        @{
+            <li><a href="@Url.Action("List", "Product")"  rel="nofollow, noindex">Главная</a></li>
+            <li class="active"><a href="#" rel="nofollow, noindex">Заказ оформлен</a></li>
+        }
+    </ul>
+</div>
+
+<div class="heading">
+<h1>Спасибо!</h1>
+</div>
+<p>Спасибо, что воспользовались услугами нашего магазина! Мы свяжемся с вами для уточнения деталей заказа</p>

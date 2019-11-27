@@ -1,0 +1,103 @@
+﻿@using MvcContrib.UI.Grid
+@model WebUI.Models.PagedViewModel<Domain.Entities.NLog_Error>
+           
+ @{
+    Html.RenderPartial("Pager", Model.PagedList);
+}
+@using(Html.BeginForm())
+           {
+@Html.Grid(Model.PagedList).Columns(column =>
+    {
+        /*column.For(x => Html.ActionQueryLink(x.User.Login, "EditProduct", new { productId = x.ProductID })).SortColumnName("Name").Named("Наименование товара").Attributes(x =>
+        {
+            return new Dictionary<string, object> { { "style", "text-align: left; padding-left: 20px;" } };
+        }).InsertAt(0);*/
+        //column.For(x => @Html.ActionLink(x.Login, "EditUserRole", new {userRoleId = x.UserRoleID}, new { @class = "change" })).SortColumnName("Login").Named("Логин");
+        column.For(x => x.ID).SortColumnName("ID").Named("ID").Attributes(x =>
+        {
+            return new Dictionary<string, object> { { "style", "font-size: 0.7em;" } };
+        });
+
+        column.For(x => x.Time_stamp).SortColumnName("Time_stamp").Named("Дата").Attributes(x =>
+        {
+            return new Dictionary<string, object> { { "style", "text-align: left; word-wrap: break-word; font-size: 0.7em" } };
+        });
+
+        column.For(x => x.Host).SortColumnName("Host").Named("Хост").Attributes(x =>
+        {
+            return new Dictionary<string, object> { { "style", "text-align: left; word-wrap: break-word; font-size: 0.7em" } };
+        });
+
+        column.For(x => x.Type).SortColumnName("Type").Named("Тип").Attributes(x =>
+        {
+            return new Dictionary<string, object> { { "style", "text-align: left; word-wrap: break-word; font-size: 0.7em" } };
+        }); 
+        
+        column.For(x => x.Source).SortColumnName("Source").Named("Источник").Attributes(x =>
+        {
+            return new Dictionary<string, object> { { "style", "text-align: left; word-wrap: break-word; font-size: 0.7em;" } };
+        });
+        
+        column.For(x => x.Message).SortColumnName("Message").Named("Сообщение").Attributes(x =>
+        {
+            return new Dictionary<string, object> { { "style", "text-align: left; word-wrap: break-word; font-size: 0.7em" } };
+        });
+
+        column.For(x => x.Level).SortColumnName("Level").Named("Уровень").Attributes(x =>
+        {
+            return new Dictionary<string, object> { { "style", "font-size: 0.7em" } };
+        }); 
+        
+        @*column.For(x => x.Logger).SortColumnName("Logger").Named("Логгер").Attributes(x =>
+        {
+            return new Dictionary<string, object> { { "style", "text-align: left; word-wrap: break-word; font-size: 0.7em; overflow: hidden" } };
+        });
+        *@
+        column.For(x => x.Stacktrace).SortColumnName("Stacktrace").Named("Stacktrace").Attributes(x =>
+        {
+            return new Dictionary<string, object> { { "style", "text-align: left; word-wrap: break-word; font-size: 0.7em" } };
+        }); 
+        
+        @*
+        column.For(x => x.Allxml).SortColumnName("Allxml").Named("Allxml").Attributes(x =>
+        {
+            return new Dictionary<string, object> { { "style", "text-align: left; word-wrap: break-word; font-size: 0.7em" } };
+        }); 
+        *@
+        //column.Custom(x => MvcHtmlString.Create(string.Format("<form action='/Admin/DeleteProduct' method='post'> <input id='productId' name='productId' type='hidden' value='{0}' /><input type='submit' value='Удалить' /></form>", x.ProductID)))
+         // .SortColumnName("Name").Sortable(false).Named("Действие");
+    }
+           ).Sort(Model.GridSortOptions).Attributes(@class => "table table-striped table-bordered table-hover table-condensed grid-style").Empty("Нет данных")
+           
+         
+               Session["LogDeleter"] = Model;
+
+          //     @Html.EditorForModel();
+                @*<input type="submit" class="actionButtons" value="Готово"/>*@
+            }
+            
+             @* @Html.ActionLink("Очистить логи", "NlogClear")*@
+@*         
+<div class="col-lg-12" style="padding: 0; margin: 10px 0 0 0;">
+    <a href="@Url.Action("NlogClear","Admin", null, new { @class = "btn btn-md btn-danger col-lg-offset-8 col-md-offset-8 col-lg-4 col-md-4 glyphicon glyphicon-edit btn-xs btn btn-default" )"></a>
+    
+    <button type="submit" class="btn btn-md btn-danger col-lg-offset-8 col-md-offset-8 col-lg-4 col-md-4" style="margin-bottom: 10px"><span class="glyphicon glyphicon-remove">&nbsp;</span>Очистить логи</button>
+</div>
+*@
+
+
+<div class="col-lg-12" style="padding: 0; margin: 0 0 10px 0;">
+    @* <button type="submit" class="btn btn-md btn-danger col-lg-offset-8 col-md-offset-8 col-lg-4 col-md-4" style="margin-bottom: 10px"><span class="glyphicon glyphicon-remove">&nbsp;</span></button>*@
+    <a id="log-clear" href="@Url.Action("NlogClear", "Admin")" style="color: white; margin: 0 10px 10px 0; float: right"><span class="glyphicon glyphicon-remove">&nbsp;</span>Очистить логи</a>
+</div>
+         
+       
+         
+         <script type="text/javascript">
+
+             $(document).ready(function () {
+                 $("#log-clear").addClass("btn btn-md btn-danger col-lg-offset-8 col-md-offset-8 col-lg-4 col-md-4");
+                 $("#log-clear").css("color: white;");
+
+             });
+</script>

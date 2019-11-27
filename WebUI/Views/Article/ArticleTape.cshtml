@@ -1,0 +1,90 @@
+﻿@model IEnumerable<Domain.Entities.Article>
+
+@helper Truncate(string input, int length)
+ {
+    if (input.Length <= length) {
+        @input
+    } else {
+        @input.Substring(0, length)<text>...</text>
+    }
+}
+<div id="articleContent">
+<div class="panel panel-default event" style="padding: 0">
+    
+    <div class="panel-heading" style="background-color: #0098CA;color: white">
+        <h2 style="font-size: 1.3em; margin: 0">Полезные статьи</h2>
+    </div>
+
+    @{
+        foreach (var p in Model)
+        {
+            <div class="panel-body article-tape-item" >
+                <a href="@Url.Action("Article","Article", new {shortLink=@p.ShortLink})">
+                    <h3>@p.Header</h3>
+                    <p>@p.ArticlePreview</p>
+                </a>
+            </div>    
+        }
+    }
+        
+    @{
+        Html.RenderAction("RandomArticle", "Article");
+     }
+     
+    <div class="panel-footer" style="background-color: #0098CA; padding: 0;">
+        <a 
+            href="@Url.Action("ArticlePreviews","Article")" 
+            style="text-decoration: none; padding: 8px; font-size: 1.3em; color: white; display: block" >Все статьи
+            <span class="fa fa-chevron-circle-right" style="float: right; padding: 8px"></span>
+        </a>
+    </div>
+</div>
+
+
+</div>
+@*
+
+<h2 class="" style="text-align: center">Полезные статьи</h2>
+@{
+    foreach (var p in Model)
+    {
+        
+        
+        <div class="panel panel-default event" style="padding-bottom: 10px;">
+        
+            <div class="panel-heading" style="background-color: #0098CA;  color: white" ></div>
+            <div class="panel-body" style="padding:0">
+                <h3>@p.Header</h3>
+               
+                <div class="news-preview-main">
+                    @{
+                        if (System.IO.File.Exists(System.IO.Path.Combine(Server.MapPath
+                                                                             (@Url.Content("~/Content")), Domain.Constants.ARTICLE_MINI_IMAGES_FOLDER, @p.ArticleID.ToString() + @p.ImgPath)) != true)
+                        {
+                        }
+                        else
+                        {
+                            string filename = string.Format("{0}{1}?{2}", p.ArticleID, p.ImgPath.TrimEnd(), DateTime.Now); 
+                            <img class="example-image-link img-thumbnail" 
+                                 src='@(Url.Content("~/Content"))/@(Domain.Constants.NEWS_MINI_IMAGES_FOLDER)/@(filename)' 
+                                 alt='@p.ArticleDate'
+                                 style="margin-top: 5px;"/> 
+                        }
+                    }
+    
+                    @MvcHtmlString.Create(@p.ArticlePreview)
+            
+            
+            
+            
+            
+
+                    
+                </div>
+            </div>
+            
+        </div>
+        
+    }
+}
+*@

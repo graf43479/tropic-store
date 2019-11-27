@@ -1,0 +1,14 @@
+﻿body 
+{
+    color: red;
+}
+
+
+#banner {
+    display: none !important;
+    visibility: hidden;
+}
+
+#news {
+    display: none;
+}

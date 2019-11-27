@@ -1,0 +1,27 @@
+﻿@model Domain.Entities.OrdersSummary
+     
+           
+<tr>
+     
+            <td>@Html.ActionLink(@Model.OrderNumber.ToString(), "OrdersDetails", "Admin", new { @Model.OrderSummaryID }, new { @Model.OrderSummaryID })</td>
+            <td>@Model.UserName</td>
+            <td>@Model.Phone</td>
+            <td>@Model.UserAddress</td>
+            <td>@Model.Phone</td>
+            <td>@Model.TransactionDate</td>
+            <td>@Model.TotalValue</td>
+           <td>
+                @using (Html.BeginForm("DeleteOrderSummary", "Admin", FormMethod.Post, new { onsubmit = "javascript:return confirm('Вы уверены?');" }))
+                {
+                    @Html.Hidden("orderSummaryID", Model.OrderSummaryID)
+                    <input type="submit" value="Удалить"/>
+                }
+            </td>
+            <td>
+                @using (Html.BeginForm("EditOrderSummaryBegin", "Admin"))
+            {
+                @Html.Hidden("OrderSummaryID", Model.OrderSummaryID)
+                <input type="submit" value="Редактировать"/>
+            }
+          </td> 
+</tr>

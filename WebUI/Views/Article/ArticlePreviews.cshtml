@@ -1,0 +1,59 @@
+﻿@using WebUI.Infrastructure.ExtensionMethods
+@model WebUI.Models.ArticlesListViewModel
+
+@{
+    ViewBag.Title = "Анонсы статей";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Robots = "follow, index";   
+}
+
+
+<div id="crumbs" class="row">
+<ul class="exbreadcrumb">
+    @{
+        <li><a href="@Url.Action("List", "Product")"  rel="follow, index">Главная</a></li>
+        <li class="active"><a href="@Url.Action("ArticlePreviews", "Article")" rel="follow, index">Все статьи</a></li>
+    }
+</ul>
+</div>
+
+<div class="heading">
+    <h1>Статьи</h1>
+</div>
+
+<div class="news-wrap">
+    @foreach (var p in @Model.Articles)
+    {
+        <div class="news-preview">
+            <div class="col-md-12 col-sm-12 col-xs-12">
+                <div class="heading-h2">
+                    <h2><span class="fa fa-fire" style="color: #1D9D74; padding-right: 5px;"></span>@p.Header</h2>
+                </div>
+            </div>
+            <div class="col-md-4 col-sm-5 col-xs-4">
+                @{
+                    if (System.IO.File.Exists(System.IO.Path.Combine(Server.MapPath
+                                                                         (@Url.Content("~/Content")), Domain.Constants.ARTICLE_MINI_IMAGES_FOLDER, @p.ArticleID.ToString() + @p.ImgPath)) != true)
+                    {
+                    }
+                    else
+                    {
+                        string filename = string.Format("{0}{1}?{2}", p.ArticleID, p.ImgPath.TrimEnd(), DateTime.Now); 
+                        <img class="example-image-link img-thumbnail" src='@(Url.Content("~/Content"))/@(Domain.Constants.ARTICLE_MINI_IMAGES_FOLDER)/@(filename)' alt='@p.ShortLink'/> 
+                    }
+                }
+            </div>
+            <div class="col-md-8 col-sm-7 col-xs-8" style="padding-left: 8px;">
+                @MvcHtmlString.Create(@p.ArticlePreview)
+            </div>
+            <div class="news-footer col-md-12 col-sm-12 col-xs-12">
+                <div class="news-date">@p.ArticleDate.ToShortDateString()</div>
+                <div class="news-to-article-link"><a href="@Url.Action("Article", "Article", new { shortLink = @p.ShortLink })" style="text-decoration: none"><b class="" style="padding-right: 4px;">Подробнее</b><span class="fa fa-chevron-right"></span></a></div>
+            </div>
+        </div>
+        <div class="news-divider col-lg-12 col-md-12 col-xs-12"></div>
+    }
+   </div> 
+<div class="pager col-md-12 col-lg-12 col-xs-12">
+    <ul class="pagination">@Html.PageLinks(Model.PagingInfo, x => Url.Action("ArticlePreviews", new { page = x }))</ul>
+</div>

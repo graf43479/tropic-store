@@ -1,0 +1,33 @@
+﻿@using MvcContrib.UI.Grid;
+@using WebUI.Infrastructure.ExtensionMethods
+@*@model IEnumerable<Domain.Entities.User>*@
+@model WebUI.Models.PagedViewModel<Domain.Entities.DimOrderStatus>
+@*
+<script src="@Url.Content("~/Scripts/jquery-1.7.1.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/MicrosoftAjax.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/MicrosoftMvcAjax.js")" type="text/javascript"></script>
+*@
+@{
+    ViewBag.Title = "Статусы заказа";
+    Layout = null;
+}
+
+
+<h2>Статусы заказа</h2>
+
+
+
+<div class="table-list">
+    <div id="sequence2">
+    @{
+        Html.RenderPartial("DimOrderStatusPartial", Model);
+    }
+    </div>
+    
+</div>
+
+
+ 
+ 
+ 
+ 

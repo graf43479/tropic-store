@@ -1,0 +1,182 @@
+﻿  @using WebUI.Infrastructure.ExtensionMethods  
+  @model WebUI.Models.ProductsListViewModel
+  
+  
+<div class="product-filter">
+    <div class="btn-group display" data-toggle="buttons">
+        <label title="Отобразить таблицей" class="btn btn-default btn-sm active" onclick="display('grid');"><input checked="checked" name="options" id="grid" type="radio"/><i class="glyphicon glyphicon-th"></i></label>
+        <label title="Отобразить списком" class="btn btn-default btn-sm" onclick="display ('list');"><input name="options" id="list" type="radio"/><i class="glyphicon glyphicon-th-list"></i></label>
+    </div>
+    
+    
+    <div class="sort">
+								Сортировать по:
+								
+                                <div id="sorter" class="btn-group">
+    @{
+        string searcher = (ViewBag.Searcher == null) ? "" : ViewBag.Searcher;
+    @*if (Model.Products.Count()==0)
+    {
+        <div id="sorter">
+            К сожалению поиск результата не дал!
+        </div>
+    }
+    
+        else*@ 
+    
+        if (Session["sortOption"]=="priceAsc")
+        {
+            @*
+              public static IHtmlString SpanActionLink(this AjaxHelper helper, string linkText,
+  string classText, /*int num,*/ string actionName, object routeValues, AjaxOptions ajaxOptions,
+        object htmlAttributes)
+            *@
+            @Ajax.SpanActionLink("Цена", "fa fa-caret-up", "List", "Product", new { sortOption = "priceDesc", category = Model.CurrentCategory, searcher = searcher }, 
+                             new AjaxOptions
+                                 {
+                                     UpdateTargetId = "content",
+                                     InsertionMode = InsertionMode.Replace,
+                                     HttpMethod = "POST",
+                                     OnBegin = "gifLoaderBefore",
+                                     OnSuccess = "gifLoaderAfter",
+                                     OnFailure = "gifLoaderAfter",
+                                     OnComplete = "gifLoaderAfter"
+                                 }, new { @class = "btn btn-default active btn-md", @rel="nofollow, noindex" }) @*<span class="caret"></span> *@
+               
+            @Ajax.ActionLink("Новизна", "List", "Product", new { sortOption = "dateAsc", category = Model.CurrentCategory, searcher = searcher },
+                             new AjaxOptions
+                             {
+                                 UpdateTargetId = "content",
+                                 InsertionMode = InsertionMode.Replace,
+                                 HttpMethod = "POST",
+                                 OnBegin = "gifLoaderBefore",
+                                 OnSuccess = "gifLoaderAfter",
+                                 OnFailure = "gifLoaderAfter",
+                                 OnComplete = "gifLoaderAfter"
+                             }, new { @class = "btn btn-default btn-md" }) 
+        }
+        else if (Session["sortOption"] == "priceDesc")
+        {
+            @Ajax.SpanActionLink("Цена", "fa fa-caret-down", "List", "Product", new { sortOption = "priceAsc", category = Model.CurrentCategory, searcher = searcher },
+                             new AjaxOptions
+                             {
+                                 UpdateTargetId = "content",
+                                 InsertionMode = InsertionMode.Replace,
+                                 HttpMethod = "POST",
+                                 OnBegin = "gifLoaderBefore",
+                                 OnSuccess = "gifLoaderAfter",
+                                 OnFailure = "gifLoaderAfter",
+                                 OnComplete = "gifLoaderAfter"
+                             }, new { @class = "btn btn-default active btn-md", @rel = "nofollow, noindex" }) 
+
+            @Ajax.ActionLink("Новизна", "List", "Product", new { sortOption = "dateAsc", category = Model.CurrentCategory, searcher = searcher }, 
+                             new AjaxOptions
+                                 {
+                                     UpdateTargetId = "content",
+                                     InsertionMode = InsertionMode.Replace,
+                                     HttpMethod = "POST",
+                                     OnBegin = "gifLoaderBefore",
+                                     OnSuccess = "gifLoaderAfter",
+                                     OnFailure = "gifLoaderAfter",
+                                     OnComplete = "gifLoaderAfter"
+                                 }, new { @class = "btn btn-default btn-md", @rel="nofollow, noindex" }) 
+        }
+        else if (Session["sortOption"] == "dateAsc")
+        {
+            @Ajax.ActionLink("Цена", "List", "Product", new { sortOption = "priceDesc", category = Model.CurrentCategory, searcher = searcher }, 
+                             new AjaxOptions
+                                 {
+                                     UpdateTargetId = "content",
+                                     InsertionMode = InsertionMode.Replace,
+                                     HttpMethod = "POST",
+                                     OnBegin = "gifLoaderBefore",
+                                     OnSuccess = "gifLoaderAfter",
+                                     OnFailure = "gifLoaderAfter",
+                                     OnComplete = "gifLoaderAfter"
+                                 }, new { @class = "btn btn-default btn-md", @rel="nofollow, noindex" }) 
+
+                
+            @Ajax.SpanActionLink("Новизна", "fa fa-caret-up", "List", "Product", new { sortOption = "dateDesc", category = Model.CurrentCategory, searcher = searcher }, 
+                             new AjaxOptions
+                                 {
+                                     UpdateTargetId = "content",
+                                     InsertionMode = InsertionMode.Replace,
+                                     HttpMethod = "POST",
+                                     OnBegin = "gifLoaderBefore",
+                                     OnSuccess = "gifLoaderAfter",
+                                     OnFailure = "gifLoaderAfter",
+                                     OnComplete = "gifLoaderAfter"
+                                 }, new { @class = "btn btn-default active btn-md", @rel="nofollow, noindex" }) 
+        }
+        else if (Session["sortOption"] == "dateDesc")
+        {
+            @Ajax.ActionLink("Цена", "List", "Product", new { sortOption = "priceDesc", category = Model.CurrentCategory, searcher = searcher }, 
+                             new AjaxOptions
+                                 {
+                                     UpdateTargetId = "content",
+                                     InsertionMode = InsertionMode.Replace,
+                                     HttpMethod = "POST",
+                                     OnBegin = "gifLoaderBefore",
+                                     OnSuccess = "gifLoaderAfter",
+                                     OnFailure = "gifLoaderAfter",
+                                     OnComplete = "gifLoaderAfter"
+                                 }, new { @class = "btn btn-default btn-md", @rel="nofollow, noindex" }) 
+
+              
+            @Ajax.SpanActionLink("Новизна", "fa fa-caret-down", "List", "Product", new { sortOption = "dateAsc", category = Model.CurrentCategory, searcher = searcher }, 
+                             new AjaxOptions
+                                 {
+                                     UpdateTargetId = "content",
+                                     InsertionMode = InsertionMode.Replace,
+                                     HttpMethod = "POST",
+                                     OnBegin = "gifLoaderBefore",
+                                     OnSuccess = "gifLoaderAfter",
+                                     OnFailure = "gifLoaderAfter",
+                                     OnComplete = "gifLoaderAfter"
+                                 }, new { @class = "btn btn-default active btn-md", @rel="nofollow, noindex" }) 
+        }
+        else
+        {
+            @Ajax.ActionLink("Цена", "List", "Product", new { sortOption = "priceAsc", category = Model.CurrentCategory, searcher = searcher }, 
+                             new AjaxOptions
+                                 {
+                                     UpdateTargetId = "content",
+                                     InsertionMode = InsertionMode.Replace,
+                                     HttpMethod = "POST",
+                                     OnBegin = "gifLoaderBefore",
+                                     OnSuccess = "gifLoaderAfter",
+                                     OnFailure = "gifLoaderAfter",
+                                     OnComplete = "gifLoaderAfter"
+                                 }, new { @class = "btn btn-default btn-md", @title="Упорядочить по цене", @rel="nofollow, noindex" }) 
+
+            
+                
+            @Ajax.ActionLink("Новизна", "List", "Product", new { sortOption = "dateDesc", category = Model.CurrentCategory, searcher = searcher },
+                             new AjaxOptions
+                             {
+                                 UpdateTargetId = "content",
+                                 InsertionMode = InsertionMode.Replace,
+                                 HttpMethod = "POST",
+                                 OnBegin = "gifLoaderBefore",
+                                 OnSuccess = "gifLoaderAfter",
+                                 OnFailure = "gifLoaderAfter",
+                                 OnComplete = "gifLoaderAfter"
+                             }, new { @class = "btn btn-default btn-md", @title = "Упорядочить по новизне", @rel="nofollow, noindex" }) 
+        }
+        
+    }
+     
+
+
+</div>
+
+    </div>
+    
+
+</div>
+
+
+
+
+
+@* *@

@@ -1,0 +1,143 @@
+﻿@model Domain.Entities.Product
+
+@*<script src="@Url.Content("~/Scripts/jquery.unobtrusive-ajax.min.js")" type="text/javascript"></script>*@
+
+
+
+@{
+    ViewBag.Title = Model.CategoryName + ": "+ Model.Name;
+    ViewBag.Keywords = Model.Keywords;
+    ViewBag.Snippet = Model.Snippet;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Robots = "follow, index";   
+}
+
+@{
+    if ((Model.OldPrice > Model.Price) && (((Model.OldPrice - Model.Price) / Model.OldPrice * 100) > Domain.Constants.PRODUCT_SALE_PERCENT) && (Model.LastPriceChangeDate > DateTime.Now.AddMonths(-1)))
+    {
+        ViewBag.Sale = true;
+    }
+}
+<div id="crumbs" class="row">
+<ul class="exbreadcrumb">
+    @{
+        <li><a href="@Url.Action("List")"  rel="follow, index">Главная</a></li>
+        <li><a href="@Url.Action("List", new { category = @Model.Category.ShortName })" rel="follow, index">@Model.Category.Name</a></li>
+        <li class="active"><a href="@Url.Action("ProductInfo", "Product", new { category = @Model.Category.ShortName.TrimEnd(), shortName = @Model.ShortName + "'" })" rel="follow, index">@Model.Name</a></li>
+    }
+</ul>
+</div>
+<div class="heading">
+    <h1>@Html.DisplayFor(x => x.Name)</h1>
+</div>
+<div class="col-lg-12 col-md-12 col-sm-12 container" style="padding: 0; margin: 0 auto">
+    <div class="col-lg-6 col-md-6 col-sm-12" style="padding: 0; margin: 0 auto">
+        <div id="" style="">
+            @{
+                if (Model.ProductImages.Any(x => x.ProductID == @Model.ProductID) == true)
+                {
+                    <a href="@(Url.Content("~/Content"))/@(Domain.Constants.PRODUCT_IMAGE_FOLDER)/@Model.ProductID@(String.Format("_"))@Model.ProductImages.FirstOrDefault(x => x.Sequence == 1 & x.ProductID == Model.ProductID).ProductImageID@Model.ProductImages.FirstOrDefault(x => x.Sequence == 1 & x.ProductID == Model.ProductID).ImageExt"
+                       class="example-image-link col-lg-12 col-md-12 col-sm-8 col-xs-12"
+                       data-lightbox="example-set"
+                       style="padding: 0; margin: 0;"> 
+                 @{
+                    if (ViewBag.Sale == true)
+                    {
+                        <span class="onsale" style="margin: 0;">Sale!</span>
+                    }
+                  }
+                        <img class="img-thumbnail" 
+                             src="@(Url.Content("~/Content"))/@(Domain.Constants.PRODUCT_IMAGE_FOLDER)/@Model.ProductID@(String.Format("_"))@Model.ProductImages.FirstOrDefault(x => x.Sequence == 1 & x.ProductID == Model.ProductID).ProductImageID@Model.ProductImages.FirstOrDefault(x => x.Sequence == 1 & x.ProductID == Model.ProductID).ImageExt" 
+                             alt="@Model.Name.TrimEnd()"
+                             style="padding: 0"/>
+                    </a>
+                }
+                else
+                {
+                    <a href="@Url.Action("ProductInfo", "Product", new { category = @Model.Category.ShortName.TrimEnd(), shortName = @Model.ShortName + "'" })">
+                        @{
+                            if (ViewBag.Sale == true)
+                            {
+                             <span class="onsale" style="margin: 0;">Sale!</span>
+                            }
+                        }
+                        <img class="img-thumbnail example-image-link"  
+                             src="@(Url.Content("~/Content"))/@(Domain.Constants.PRODUCT_IMAGE_FOLDER)/@String.Format("0.jpg")" 
+                             alt="@Model.Name.TrimEnd()"
+                             style="padding: 0"/>
+                    </a>
+                }
+            }
+        </div>
+        <div id="ProductImagePreview" style="margin: 10px 0 0 0 ; padding: 0" class="col-lg-12 col-md-12 col-xs-12">
+        <div id="ProductImagePreview2">
+             @Html.Partial("_ProductImagePreview", Model.ProductImages.OrderBy(item => item.Sequence)/*.Take(Domain.Constants.PRODUCT_IMAGE_PREVIEW_COUNT)*/)
+         </div>
+     </div> 
+    </div>
+    <div class="col-lg-6 col-md-6 col-sm-12" style="padding: 0 0 0 10px; margin: 0 auto">
+        <p>@Html.Label("Товар"): @Html.DisplayFor(x => x.Category.Name, new { @class = "form-control" })</p>
+        <p>@Html.Label("Артикул"): @Html.DisplayFor(x => x.ArticleNumber, new { @class = "form-control" })</p>
+        @*<p>@Html.Label("Цена"): @Html.DisplayFor(x => x.Price, new { @class = "form-control" })</p>*@
+        @{
+            if ((Model.OldPrice > Model.Price) && (((Model.OldPrice - Model.Price) / Model.OldPrice * 100) > Domain.Constants.PRODUCT_SALE_PERCENT) && (Model.LastPriceChangeDate > DateTime.Now.AddMonths(-1)))
+            {
+                { ViewBag.Sale = true; }
+                <p>@Html.Label("Цена"): @Html.DisplayFor(x => x.Price, new { @class = "form-control new-price price" })р. <b class="old-price-border"><b class="old-price">@Model.OldPrice.ToString()р.</b></b></p>
+            }
+            else
+            {
+                <p>@Html.Label("Цена"): @Html.DisplayFor(x => x.Price, new { @class = "form-control" })р.</p>
+            }
+        }
+        
+        <div class="" style="padding: 0; margin: 0 auto">
+        @{
+            if ((Model.Quantity == 0) || (Model.IsDeleted == true) || (Model.IsActive == false))
+            {
+                TempData["message"] = string.Format("Нет в наличии");
+                TempData["messageType"] = "error-msg";
+                <div class="message" style="margin-bottom: 20px;"><p style="padding: ; margin: 0" class="@TempData["messageType"]">@TempData["message"]</p></div>
+            }
+            else
+            {
+                using (Html.BeginForm("AddToCart", "Cart"))
+                {
+                    <p>@Html.HiddenFor(x => x.ProductID)</p>
+                    <p>@Html.Hidden("returnUrl", Request.Url.PathAndQuery)</p>
+                    <p>@Html.Hidden("login", (User.Identity.IsAuthenticated != true) ? Domain.Constants.ANONYMOUS_LOGIN : User.Identity.Name)</p>
+                    <button type="submit" class="btn btn-custom btn-sm"  value="В корзину"><span class="glyphicon glyphicon-shopping-cart float-left"><b class="glyph-bug">&nbsp;В&nbsp;корзину</b></span></button>
+                }
+            }
+        }
+    </div>
+
+        <p style="display: none">@Model.Snippet</p>
+        @*<p>@Html.Label("Описание"): </p>*@
+        <div class="" style="padding-top: 15px;">
+            @MvcHtmlString.Create(@Model.Description)
+        </div>
+    </div>
+</div>    
+    <div class="col-lg-12 col-md-12 col-xs-12"  style="padding: 0;">
+    <div id="popularProducts" class="col-lg-12 col-md-12 col-sm-12 container"  style="padding-bottom: 30px;">
+        @{
+            Html.RenderAction("UsefulProducts", new {productId = Model.ProductID});
+            }
+    </div>
+    </div>
+   
+@*
+<!-- Put this script tag to the <head> of your page -->
+<script type="text/javascript" src="//vk.com/js/api/openapi.js?115"></script>
+
+<script type="text/javascript">
+    VK.init({ apiId: 4522845, onlyWidgets: true });
+</script>
+
+<!-- Put this div tag to the place, where the Like block will be -->
+<div id="vk_like"></div>
+<script type="text/javascript">
+    VK.Widgets.Like("vk_like", { type: "button" });
+</script>
+*@

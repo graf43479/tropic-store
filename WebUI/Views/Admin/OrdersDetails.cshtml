@@ -1,0 +1,320 @@
+﻿@using System.Collections
+@using System.Web.Mvc.Html
+@using Domain.Entities
+@using MvcContrib.UI
+@using MvcContrib.UI.Grid
+@using WebUI.Infrastructure.ExtensionMethods
+@*@model IEnumerable<Domain.Entities.Category>*@
+@model WebUI.Models.PagedViewModel<WebUI.Models.OrderDetailsViewModel>
+@{
+    ViewBag.Title = "Детализация заказа";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+@{TempData["Query"] = Model.Query;}
+
+@{
+    var s = TempData.Peek("OrderSummaryID");
+    var orderNum = @Model.Query.First().OrdersSummary.OrderNumber;
+}
+
+
+<ul class="breadcrumb">
+    @{
+        <li><a href="@Url.Action("Actions", "Admin")">Главная</a> <span class="divider">/</span></li>
+        <li class=""><a href="@Url.Action("Orders", "Admin")">Заказы</a> <span class="divider">/</span></li>
+        <li class="active"><a href="@Url.Action("OrdersDetails", "Admin", new { orderSummaryID = @Model.Query.First().OrderSummaryID })">Детализация заказа №@orderNum</a> <span class="divider">/</span></li>
+      }
+</ul>
+
+<h2>Детализация заказа №@orderNum</h2>
+
+@{
+    //Html.RenderPartial("OrderDetailsSearchBox");
+}
+
+<div class="table-list">
+@{
+    Html.RenderPartial("OrderDetailsGridPartial", Model);
+ }
+ </div>
+
+
+
+<div class="col-lg-12  col-md-12">
+<div class="col-lg-4 col-md-4">
+<div><strong>Номер заказа: </strong>@Model.Query.First().OrdersSummary.OrderNumber</div>
+<div><strong>Имя: </strong>@Model.Query.First().OrdersSummary.UserName</div>
+<div><strong>Адрес: </strong>@Model.Query.First().OrdersSummary.UserAddress</div>
+<div><strong>Телефон: </strong>@Model.Query.First().OrdersSummary.Phone</div>
+<div><strong>Email: </strong>@Model.Query.First().OrdersSummary.Email</div>
+</div>
+    <div class="col-lg-4 col-md-4">
+    <div><strong>Дата заказа: </strong>@Model.Query.First().OrdersSummary.TransactionDate.ToShortDateString()</div>
+<div><strong>Время заказа: </strong>@Model.Query.First().OrdersSummary.TransactionDate.ToShortTimeString()</div>
+        <div><strong>Сумма заказа: </strong>@ViewBag.OrderSummaryTotalValueFloor руб. @ViewBag.OrderSummaryTotalValueMod коп.</div>
+        
+        <div><strong>Стоимость достaвки: </strong>@Model.Query.First().OrdersSummary.ShippingPrice руб.</div>
+        
+        @{
+            int p =  Convert.ToInt32(@ViewBag.TotalSum);
+            string cent = (@ViewBag.TotalSum - (int)@p).ToString();
+            string mod = (cent).Remove(0, cent.LastIndexOf(",") + 1);
+        }
+
+        <div><strong>Итого: </strong>@p руб. @mod коп.</div>
+        
+        <div><strong>Вид доставки: </strong>@Model.Query.First().OrdersSummary.ShippingType</div>
+
+        <div><strong>Статус заказа:</strong> 
+             
+             @{ if ((bool)@Model.Query.First().OrdersSummary.IsActive)
+                {
+                    <text>Активен</text>;
+                }
+                else
+                {
+                    <text>Не активен</text>;
+                } }
+             
+</div>             
+</div>
+
+<div class="col-lg-4 col-md-4">
+    
+    <a href="@Url.Action("ChangeOrderStatus", new { orderId = Model.Query.FirstOrDefault().OrderSummaryID, header = "updated" })" class = "btn btn-default btn-md form-control" style="margin-bottom: 4px;" title="Направить клиенту уведомление об изменении статуса или суммы заказа"><i class=" fa fa-envelope" style="color: #f4a460">&nbsp;</i>Оповестить</a>
+    <a href="@Url.Action("ChangeOrderStatus", new { orderId = Model.Query.FirstOrDefault().OrderSummaryID, header = "succeeded" })" class = "btn btn-default btn-md form-control" style="margin-bottom: 4px;" title="Направить клиенту уведомление о выполнении заказа. Статус заказа изменится на выполненный"><i class=" fa fa-check-circle-o" style="color: #dc143c">&nbsp;</i>Заказ выполнен</a>
+
+    <div style="padding:0" class="col-lg-6 col-md-6">
+        <a class="btn btn-md btn-default form-control" href="@Url.Action("Export2", "Admin", new { query = "orderDetails" })" style="margin-bottom: 4px;"><i class="fa fa-file-excel-o" style="color: darkgreen">&nbsp;</i>В Excel</a>
+    </div>
+    <div style="padding:0" class="col-lg-6 col-md-6">
+        <a class="btn btn-md btn-default form-control" href="@Url.Action("Print", "Admin", new { id = @Model.Query.First().OrderSummaryID })" style="margin-bottom: 4px; "><i class="fa fa-file-word-o" style="color: blue">&nbsp;</i>В Word</a>
+    </div>
+    
+    <div style="padding:0" class="col-lg-12 col-md-12">
+        <a class="btn btn-md btn-default form-control add-order" href="@Url.Action("AddProductIntoOrder", "Admin", new { orderSummaryID = Model.Query.FirstOrDefault().OrderSummaryID })" style="margin-bottom: 4px; "><i class="fa fa-plus-square" style="color: blue">&nbsp;</i>Добавить товар в заказ</a>
+    </div>
+
+    @* @Html.ActionLink("Экспорт отчетов в Excel", "Export2", "Admin", new { query = "orderDetails" }, null)*@
+
+</div>
+</div>
+@{
+    //int orderSummaryId = Model.Query.Select(x => x.OrderSummaryID).Single(); 
+    
+    
+}
+
+<div class="col-lg-12 col-md-12">   @{
+    Html.RenderPartial("OrderStatus", new { orderSummaryID = s });
+    }
+ </div>
+ 
+ 
+
+
+@*<table class="Grid">
+   <tr>
+       <th>Товар</th>
+       <!--<th>Category</th> -->
+       <th>Количество</th>
+       <th>Цена за шт. при покупке</th>
+       <th>Сумма</th>
+       <th>Количество на складе</th>
+        <th class="NumericCol">Цена сейчас</th>
+       <th></th>
+       <th></th>
+    </tr>
+   
+@foreach (var item in Model) {
+    <tr>
+        <td>@item.Product.Name</td>
+        <td>@item.Quantity</td>
+        <td>@item.Price</td>
+        <td>@(item.Quantity*item.Price)</td>
+        <td>@item.Product.Quantity</td>
+     
+        <td class="NumericCol">@item.Price.ToString("c")</td>
+        <td>
+            @using (Html.BeginForm("DeleteOrderDetail", "Admin"))
+            {
+                @Html.Hidden("orderDetailsID", item.OrderDetailsID)
+                @Html.Hidden("orderSumaryID", item.OrderSummaryID)
+                <input type="submit" value="Удалить"/>
+            }
+        </td>
+          <td>
+                @using (Html.BeginForm("EditOrderDetailBegin", "Admin"))
+            {
+                @Html.Hidden("OrderDetailsID", item.OrderDetailsID)
+                <input type="submit" value="Редактировать"/>
+            }
+            </td>
+    </tr>
+}
+
+</table>
+<br/>
+
+<p>@Html.ActionLink("Перейти в меню администратора", "Actions")</p>
+<p>@Html.ActionLink("Вернуться к списку заказов", "Orders", "Admin")</p>
+<p>@Html.ActionLink("Смотреть категории", "Categories")</p>
+<p>@Html.ActionLink("Смотреть товар", "Products")</p>
+<p>@Html.ActionLink("Смотреть учетные записи клиентов", "UsersView")</p>
+<p>@Html.ActionLink("Перейти в магазин", "List", "Product")</p>
+
+*@
+
+@*
+<div class="editor-field"> 
+    <table style="width: 100%"> 
+        <tr> 
+            @{ 
+                int cnt = 0; 
+                List<ContosoUniversity.ViewModels.AssignedCourseData> courses = ViewBag.Courses; 
+ 
+                foreach (var course in courses) { 
+                    if (cnt++ % 3 == 0) { 
+                        @:  </tr> <tr>  
+                    } 
+                    @: <td>  
+                        <input type="checkbox"  
+                               name="selectedCourses"  
+                               value="@course.CourseID"  
+                               @(Html.Raw(course.Assigned ? "checked=\"checked\"" : "")) />  
+                        @course.CourseID @:&nbsp; @course.Title 
+                    @:</td> 
+                } 
+                @: </tr> 
+            } 
+    </table> 
+</div>
+*@
+
+<ul class="sidemenu col-lg-12 col-md-12">
+    @* <li>@Html.ActionQueryLink("Вернуться к списку заказов", "Orders", new { searchWord, page, startDate, endDate, isActive })</li>*@
+    <li>@Html.ActionLink("Смотреть категории", "Categories")</li>
+    <li>@Html.ActionLink("Смотреть список товаров", "Products")</li>
+    <li>@Html.ActionLink("Перейти в меню администратора", "Actions")</li>
+    <li>@Html.ActionLink("Перейти в магазин", "List", "Product")</li>
+</ul>
+
+
+
+
+
+@*
+<script>
+    function Common() {
+        _this = this;
+
+        this.init = function () {
+            $(".add-order").click(function (event) {
+
+                event.preventDefault();
+                //alert('ewew');
+
+                _this.showPopup("/Admin/AddProductIntoOrderModal", initProductPopup);
+            });
+
+          
+        }
+
+        this.showPopup = function (url, callback) {
+            $.ajax({
+                type: "GET",
+                url: url,
+                //error: alert('Error'),
+                success: function (data) {
+                    showModalData(data, callback);
+                }
+            });
+        }
+     }
+     
+        function initProductPopup(modal) {
+            $("#AddProductButton").click(function () {
+
+                $("#loadingElement").css('display', 'inline');
+
+                $.ajax({
+                    type: "POST",
+                    url: "/Admin/AddProductIntoOrderModal",
+                    data: $("#addProductForm").serialize(),
+                    success: function (data) {
+                        // showModalData(data);
+                        initProductPopup(modal);
+                        updateSuccessProduct(data);
+                        loadingElementInterrupt();
+                    }
+                });
+            });
+        }
+
+        function loadingElementInterrupt() {
+            $("#loadingElement").css('display', 'none');
+        }
+
+        
+
+        function showModalData(data, callback) {
+
+            $(".modal-backdrop").remove();
+            var popupWrapper = $("#updateDialog");
+           popupWrapper.empty();
+            
+            try {
+                popupWrapper.html(data);
+            } catch (e) {
+             popupWrapper.html(data);
+            }
+
+            var popup = $(".modal", popupWrapper);
+
+            $(".modal", popupWrapper).modal();
+
+            if (callback != undefined) {
+                callback(popup);
+            }
+        }
+
+        function updateSuccessProduct(data) {
+            alert('sucess');
+           // _this.showPopup("/Admin/AddProductIntoOrderModal", initProductPopup);
+            //alert('sucess');
+            //$(".add-order").click();
+            
+
+            if (data.Success == true) {
+                //window.location.replace("/Product/List");
+                alert('Спасибо Ваш запрос отправлен! Мы обязательно свяжемся с Вами в ближайшее время!');
+                window.location.reload();
+            } else {
+                {
+                    $("#update-message").html(data.ErrorMessage);
+                    $("#update-message").show();
+                }
+            }
+        }
+        
+
+
+    var common = null;
+    $().ready(function () {
+        common = new Common();
+        common.init();
+    });
+
+
+
+
+</script>
+
+*@
+
+
+
+<script>
+    var p = $("#menu li a[href='/Admin/Orders']");
+    p.parent().addClass("selected");
+</script>

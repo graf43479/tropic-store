@@ -1,0 +1,56 @@
+﻿@using MvcContrib.UI
+@using MvcContrib.UI.Grid
+@using WebUI.Infrastructure.ExtensionMethods
+@*@model IEnumerable<Domain.Entities.Category>*@
+@model WebUI.Models.PagedViewModel<Domain.Entities.SuperCategory>
+           
+@{
+    ViewBag.Title = "Категории";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<ul class="breadcrumb">
+    @{
+        <li><a href="@Url.Action("Actions", "Admin")">Главная</a> <span class="divider">/</span></li>
+        <li class="active"><a href="@Url.Action("SuperCategories", "Admin")">Надкатегории</a> <span class="divider">/</span></li>
+    }
+</ul>
+
+<h2>Список категорий</h2>
+         
+        
+
+@{
+    Html.RenderPartial("SuperCategorySearchBox");
+}
+
+<div class="table-list" id="sequence">
+    
+    @{
+        Html.RenderPartial("SuperCategoryGridPartial", Model);
+    }
+    
+</div>
+ @*
+@{
+    Html.RenderPartial("Pager", Model.PagedList);
+}
+
+@Html.Grid(Model.PagedList).Columns(column =>
+{
+    column.Custom(x => MvcHtmlString.Create(string.Format("<a href='{0}'><img class='example-image-link' src='{1}/{2}/{3}' alt='{4}'/></a>",
+                                                          Url.Action("EditCategory", "Admin", new { categoryId = x.CategoryID }),
+                                                          Url.Content("~/Content"),
+                                                          Domain.Constants.CATEGORY_MINI_IMAGES_FOLDER,
+                                                          (string.IsNullOrWhiteSpace(x.ImageExt) || (System.IO.File.Exists(System.IO.Path.Combine(Server.MapPath
+                                                                                                                                                      (@Url.Content("~/Content")),
+                                                                                                                                                  Domain.Constants.CATEGORY_MINI_IMAGES_FOLDER, x.CategoryID.ToString() + x.ImageExt)))) != true ? "0.jpg" : x.CategoryID + x.ImageExt,
+                                                          x.Name
+                                                ))).Named("Изображение").Sortable(false).InsertAt(0);
+
+    column.For(x => Html.ActionQueryLink(x.Name, "EditCategory", new { categoryId = x.CategoryID })).SortColumnName("Name").Named("Категория").InsertAt(1);
+    column.Custom(x => MvcHtmlString.Create(string.Format("<form action='/Admin/DeleteCategory' method='post'> <input id='categoryId' name='categoryId' type='hidden' value='{0}' /><input type='submit' value='Удалить' /></form>", x.CategoryID)))
+          .Named("Действие").Sortable(false);
+}).Sort(Model.GridSortOptions).Attributes(@class => "grid-style").Empty("Нет данных")
+
+  *@

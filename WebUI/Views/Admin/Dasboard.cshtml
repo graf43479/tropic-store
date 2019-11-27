@@ -1,0 +1,73 @@
+﻿@model WebUI.Models.DashboardViewModel
+
+@using System.Web.Optimization
+
+@{
+    Layout = null;
+}
+
+
+    
+    
+
+
+<div class="dashboard-parts col-lg-12 col-md-12">
+    <div class="col-lg-6 col-md-6" style="padding-left: 0">
+        <p class="dashboard-header"><span class="glyphicon glyphicon-stats" style="padding-right: 5px;"></span>Статусы заказов и количество</p>
+        @*@Html.Action("DasboardOrderStatusCount")*@
+        @Html.Partial("DasboardOrderStatusCount", Model.DasboardOrderStatusCount)
+    </div>
+    
+    <div class="col-lg-6 col-md-6" style="padding-left: 0">
+        <p class="dashboard-header"><span class="glyphicon glyphicon-stats" style="padding-right: 5px;"></span>Статусы заказов и общая стоимость</p>
+        @Html.Partial("DasboardOrderStatusCharges", Model.DasboardOrderStatusCharges)
+    </div>
+</div>
+
+
+
+<div class="dashboard-parts col-lg-12 col-md-12">
+    <div class="col-lg-6 col-md-6" style="padding-left: 0">
+        <p class="dashboard-header"><span class="glyphicon glyphicon-stats" style="padding-right: 5px;"></span>Бестселлеры по объему выручке</p>
+        @Html.Partial("DasboardBestsellerByRevenue", Model.DasboardBestsellerByRevenue)
+    </div>
+
+    <div class="col-lg-6 col-md-6" style="padding-left: 0">
+        <p class="dashboard-header"><span class="glyphicon glyphicon-stats" style="padding-right: 5px;"></span>Бестселлеры по количеству продаж</p>
+        @Html.Partial("DasboardBestsellerByQuantity", Model.DasboardBestsellerByQuantity)
+    </div>
+</div>
+
+<div class="dashboard-parts col-lg-12 col-md-12">
+    <div class="col-lg-4 col-md-4" style="padding-left: 0">
+        <p class="dashboard-header"><span class="glyphicon glyphicon-stats" style="padding-right: 5px;"></span>Товары, непроданные ни разу</p>
+        @Html.Partial("DasboardProductsUnsale", Model.DasboardProductsUnsale)
+    </div>
+
+    <div class="col-lg-4 col-md-4" style="padding-left: 0">
+        <p class="dashboard-header"><span class="glyphicon glyphicon-stats" style="padding-right: 5px;"></span>Самые дорогие товары </p>
+        @Html.Partial("DasboardGoodsByExpensive", Model.DasboardGoodsByExpensive)
+    </div>
+    
+        <div class="col-lg-4 col-md-4" style="padding-left: 0">
+            <p class="dashboard-header"><span class="glyphicon glyphicon-stats" style="padding-right: 5px;"></span>Самые дешевые товары</p>
+            @Html.Partial("DasboardGoodsByExpensive", Model.DasboardGoodsByCheapness)
+        </div>
+</div>
+
+<div  class="dashboard-parts col-lg-12 col-md-12" style="clear: left">
+    <div class="col-lg-4 col-md-4" style="padding-left: 0">
+        <p class="dashboard-header"><span class="glyphicon glyphicon-stats" style="padding-right: 5px;"></span>Общая информация по товарам</p>
+        @Html.Partial("DasboardProductExistence", Model.DasboardProductExistence)
+    </div>
+
+    <div class="col-lg-4 col-md-4" style="padding-left: 0">
+        <p class="dashboard-header"><span class="glyphicon glyphicon-stats" style="padding-right: 5px;"></span>Количество зарегистрированных пользователей</p>
+        @Html.Partial("DasboardUsersRegistered", Model.DasboardUsersRegistered)
+    </div>
+    
+    <div class="col-lg-4 col-md-4" style="padding-left: 0">
+        <p class="dashboard-header"><span class="glyphicon glyphicon-stats" style="padding-right: 5px;"></span>Количество пользователей в ролях</p>
+        @Html.Partial("DasboardInRoleCount", Model.DasboardInRoleCount)
+    </div>
+</div>

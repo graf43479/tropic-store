@@ -1,0 +1,135 @@
+﻿@using MvcContrib.UI
+@using MvcContrib.UI.Grid
+@using WebUI.Infrastructure.ExtensionMethods
+@*@model IEnumerable<Domain.Entities.Category>*@
+@*@model WebUI.Models.PagedViewModel<Domain.Entities.Category>*@
+@model WebUI.Models.PagedViewModel<WebUI.Models.CategoryViewModel>
+           
+           
+     <style type="text/css">
+    .grid-style {
+        margin-left: 10px;
+        margin-right: 0;
+     
+    }
+</style>
+
+<div id="sequence">
+@{
+    Html.RenderPartial("Pager", Model.PagedList);
+}
+
+@using (Html.BeginForm("DeleteCategory", "Admin", FormMethod.Post))
+{
+    @Html.Grid(Model.PagedList).Columns(column =>
+        {
+          @*  column.Custom(x => MvcHtmlString.Create(string.Format("<a href='{0}'><img class='example-image-link' src='{1}/{2}/{3}' alt='{4}'/></a>",
+                                                                  Url.Action("EditCategory", "Admin", new {categoryId = x.CategoryID}),
+                                                                  Url.Content("~/Content"),
+                                                                  Domain.Constants.CATEGORY_MINI_IMAGES_FOLDER,
+                                                                  (string.IsNullOrWhiteSpace(x.ImageExt) == false || (System.IO.File.Exists(System.IO.Path.Combine(Server.MapPath
+                                                                                                                                                                       (@Url.Content("~/Content")),
+                                                                                                                                                                   Domain.Constants.CATEGORY_MINI_IMAGES_FOLDER, x.CategoryID.ToString() + x.ImageExt)))) != true ? "0.jpg" : x.CategoryID + x.ImageExt,
+                                                                  x.Name
+                                                        ))).Named("Изображение").Sortable(false).InsertAt(0);*@
+        
+            column.Custom(x => MvcHtmlString.Create(string.Format("<img class='example-image-link' src='{0}/{1}/{2}' alt='{3}'/></a>",
+                                                                    Url.Content("~/Content"),
+                                                                    Domain.Constants.CATEGORY_MINI_IMAGES_FOLDER,
+                                                                    (@*string.IsNullOrWhiteSpace(x.ImageExt) == false ||*@ (System.IO.File.Exists(System.IO.Path.Combine(Server.MapPath
+                                                                                                                                                                         (@Url.Content("~/Content")),
+                                                                                                                                                                     Domain.Constants.CATEGORY_MINI_IMAGES_FOLDER, x.CategoryID.ToString() + x.ImageExt)))) != true ? "0.jpg" : x.CategoryID + x.ImageExt,
+                                                                    x.Name
+                                                          ))).Named("Изображение").Sortable(false).InsertAt(0);
+
+            @*column.For(x => Html.ActionQueryLink(x.Name, "EditCategory", new {categoryId = x.CategoryID})).SortColumnName("Name").Named("Категория").InsertAt(1);*@
+        column.For(x => x.Name).SortColumnName("Name").Named("Категория").Attributes(x=>
+              {
+                  return new Dictionary<string, object> { { "style", "vertical-align: middle" } };
+        }).InsertAt(1);
+
+            // column.For(x => x.Sequence).SortColumnName("Sequence").Named("Приоритет");
+            //column.For(x => x.CategoryID).Named("ID").SortColumnName("CategoryID");
+    @*column.For(x => Ajax.ActionLink("Вверх", "CategorySequence", new { categoryId = x.CategoryID, actionType = "Up" }, new AjaxOptions
+    {
+        UpdateTargetId = "sequence",
+        InsertionMode = InsertionMode.Replace,
+        HttpMethod = "POST"
+    })).Sortable(false).Named("Вверх");*@
+
+        
+        
+        
+        
+            column.For(x => (x.IsDeleted == true) ? Html.Raw("<i class='fa fa-check-square-o fa-2x' style='color: red' title='Категория " + x.Name + " числится удаленной'></i>") : Html.Raw("<i class='fa fa-square-o fa-2x' title='Категория " + x.Name + " не числится удаленной' style='color: #8EB50C;'></i>")).SortColumnName("IsDeleted").Named("Удаленная");
+            column.For(x => x.UpdateDate.ToShortDateString()).SortColumnName("UpdateDate").Named("Дата изменения");
+
+
+
+            if (User.IsInRole("Admin") || (User.IsInRole("SEO")))
+            {
+                column.For(x => (x.CategoryKeywords == null) ? Html.Raw("<i class='fa fa-square-o fa-2x' title='Ключевые слова не заданы' style='color: red'></i>") : Html.Raw("<i class='fa fa-check-square-o fa-2x' style='color: #8EB50C;' title='Ключевые слова присутствуют'></i>")).SortColumnName("Keywords").Named("Keywords");
+                column.For(x => (x.CategorySnippet == null) ? Html.Raw("<i class='fa fa-square-o fa-2x' title='Сниппет не задан' style='color: red'></i>") : Html.Raw("<i class='fa fa-check-square-o fa-2x' style='color: #8EB50C;' title='Сниппет в наличии'></i>")).SortColumnName("Snippet").Named("Snippet");
+            }
+
+            column.Custom(x => Html.Raw("<a href = " + Url.Action("EditCategory", "Admin", new { categoryId = x.CategoryID }) + " class='' title='Редактировать'><i class='fa fa-pencil-square-o fa-2x'></i></a>")).Header(o => "<span class='glyphicon glyphicon-edit'> </span>").Encode(false)
+                  .Attributes(x =>
+                  {
+                      return new Dictionary<string, object> { { "style", "vertical-align: middle" } };
+                  }).Sortable(false);
+
+            if (User.IsInRole("Admin") || (User.IsInRole("ContentManager")))
+            {
+                column.Custom(x => Html.Raw("<a href = " + Url.Action("DeleteCategory", "Admin", new {categoryId = x.CategoryID}) + " class='linkButton glyphicon glyphicon-remove btn-xs btn btn-danger' title='Удалить'></a>")).Named("Options").Header(o => "<span class='glyphicon glyphicon-remove'> </span>").Encode(false)
+                      .Attributes(x =>
+                          {
+                              return new Dictionary<string, object> {{"style", "vertical-align: middle"}};
+                          }).Sortable(false);
+            }
+
+
+            @*column.Custom(x => MvcHtmlString.Create(string.Format("<form action='/Admin/DeleteCategory' method='post'> <input id='categoryId' name='categoryId' type='hidden' value='{0}' /><input type='submit' value='Удалить' /></form>", x.CategoryID)))
+                  .Named("Действие").Sortable(false);*@
+        }).Sort(Model.GridSortOptions).Attributes(@class => "table table-striped table-bordered table-hover table-condensed grid-style", @style => "margin-left:0;").Empty("Нет данных")
+
+}
+</div>
+
+@*
+
+column.For(x => Ajax.ActionLink("Вверх", "DimOrderStatusSequence", new { dimOrderStatusId = x.DimOrderStatusID, actionType = "Up"}, new AjaxOptions
+               {
+                   UpdateTargetId = "sequence",
+                   InsertionMode = InsertionMode.Replace,
+                   HttpMethod = "POST"
+               })).Sortable(false).Named("Вверх");
+*@
+
+
+
+
+            
+<script type="text/javascript">
+    $(function () {
+        $(".linkButton").click(
+            function (event) {
+                if (!confirm('Вы уверены, что хотите удалить выбранную запись?')) return false;
+                event.preventDefault();
+                var link = event.target;
+                var action = link.href;
+                while (link.tagName != 'FORM') {
+                  //  alert(link.tagName);
+                    link = link.parentElement;
+                    //alert(link);
+                    if (!link) {
+                        //return alert('TROUBLE');
+                        break;
+                    }
+                }
+                link.action = action;
+                link.method = "POST";
+                link.submit();
+            });
+    });
+
+</script>

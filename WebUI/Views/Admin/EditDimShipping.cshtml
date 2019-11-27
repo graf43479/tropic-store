@@ -1,0 +1,81 @@
+﻿@model Domain.Entities.DimShipping
+
+@{
+    ViewBag.Title = "Новый вид доставки";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<style>
+    form {
+        border: none;
+    }
+</style>
+
+
+<ul class="breadcrumb">
+    @{
+        <li><a href="@Url.Action("Actions", "Admin")">Главная</a> <span class="divider">/</span></li>
+        <li class="active"><a href="@Url.Action("DimsParameters", "Admin")">Разное</a> <span class="divider">/</span></li>
+           <li class="active"><a href="@Url.Action("EditDimShipping", "Admin", new { dimShippingId = @Model.ShippingID })">@Model.ShippingType</a> <span class="divider">/</span></li>
+    }
+</ul>
+
+<h2>Варианты доставки</h2>
+
+@using (Html.BeginForm("EditDimShipping", "Admin", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    <div class="editor-field"> @Html.HiddenFor(model => model.ShippingID) </div>
+    
+    
+    <div class="col-lg-12 col-md-12" style="padding: 10px 0 4px">
+        <div class="form-group" style="padding: 0">
+            <div class="col-lg-1 col-md-1 form-control-static" style="padding: 0">@Html.Label("Название")</div>    
+            <div class="col-lg-6 col-md-6"> @Html.TextBoxFor(model => model.ShippingType, new { @class = "form-control" })</div>        
+        
+            <div class="col-lg-1 col-md-1 form-control-static" style="padding: 0">@Html.Label("Стоимость")</div>    
+            <div class="col-lg-2 col-md-2"> @Html.TextBoxFor(model => model.ShippingPrice, new { @class = "form-control" })</div>        
+            
+            <div class="col-lg-1 col-md-1"> @Html.CheckBoxFor(model => model.isActive, new { @style = "float: right" })</div>        
+            <div class="col-lg-1 col-md-1 form-control-static" style="padding: 0">@Html.Label("Активен")</div>    
+            
+   
+        </div>    </div>
+        
+        
+    <div class="col-lg-12 col-md-12" style="padding: 4px 0">
+        <div class="form-group" style="padding:  0">
+            <div class="col-lg-1 col-md-1 form-control-static" style="padding: 0">@Html.Label("Описание")</div>    
+            <div class="col-lg-11 col-md-11" style="padding-right: 0;"> @Html.TextAreaFor(model => model.ShippingDesc, new { @class = "form-control", @style = "min-height: 100px; " })</div>        
+        </div>
+        
+        @*
+
+        <div class="editor-label"> @Html.Label("Описание")</div>    
+        <div class="editor-field"> @Html.EditorFor(model => model.ShippingDesc)</div>    
+   *@
+        @*  <div class="editor-label"> @Html.Label("Стоимость")</div>    
+        <div class="editor-field"> @Html.EditorFor(model => model.ShippingPrice)</div>    *@
+    
+        @* <div class="editor-field"> @Html.CheckBoxFor(model => model.isActive) &nbsp; Активен</div>*@
+    
+    
+        @* <div class="editor-field"> @Html.HiddenFor(model => model.TotalValue)</div>    
+    
+       *@
+   
+        
+        
+    </div>
+    
+    <div class="col-lg-12 col-md-12" style="padding: 4px 0 10px 0 ">
+    <input type="submit" class="col-lg-offset-10 col-md-offset-10 col-lg-2 col-md-2 btn btn-info btn-md" value="Сохранить" />
+    </div>
+   @*<p>@Html.ActionLink("Перейти в меню администратора", "Actions")</p>*@
+}
+
+
+
+<script>
+    var p = $("#menu li a[href='/Admin/DimsParameters']");
+    p.parent().addClass("selected");
+</script>

@@ -1,0 +1,402 @@
+﻿ @model WebUI.Models.CartIndexViewModel
+
+@{ AjaxOptions ajax = new AjaxOptions
+   {
+       UpdateTargetId = "cartSummary",
+       //Url = Url.Action("ChangeQuantity"),
+       Url = Url.Action("Index"),
+       /*HttpMethod = "Post",*/
+       InsertionMode = InsertionMode.Replace,
+       HttpMethod = "POST",
+       OnBegin = "gifLoaderBefore",
+       OnSuccess = "gifLoaderAfter",
+       OnFailure = "gifLoaderAfter",
+       OnComplete = "gifLoaderAfter"
+
+
+   }; 
+}
+
+<style>
+    th {
+        text-align: center
+    }
+    
+    table img {
+        padding: 0 !important;
+    }
+</style>
+ 
+
+@{
+    if (@Model.Cart.Lines.Count() == 0)
+    {
+            <p>В Вашей корзине ещё нет товаров</p>
+            <p align="center">
+                <a class="btn btn-custom btn-md" href="@Model.ReturnUrl">Продолжить покупки</a></p>
+    }
+    else
+    {
+        <div class="row">
+        <div class="col-md-12 col-lg-12">
+            <div class="table-responsive">
+                <table id="cart-table" class="table table-striped table-bordered thumbnails table-hover table-condensed">
+                    <thead>
+                        <tr>
+                            <th class="visible-lg visible-md">Категория</th>
+                            <th>Товар</th>
+                            <th>Изображение</th>
+                            <th>Цена</th>
+                            <th>Количество</th>
+                            <th>Сумма</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                
+                    <tbody>
+                        @foreach (var line in Model.Cart.Lines)
+                        {
+                            <tr>
+                                @*  <td>@line.Product.Category.Name</td>*@
+                                <td class="visible-lg visible-md"><a href="@Url.Action("List", "Product", new { category = @line.Product.Category.ShortName.TrimEnd(), page = 1 })">@line.Product.Category.Name</a></td>
+                                <td align="left"><a href="@Url.Action("ProductInfo", "Product", new { category = @line.Product.Category.ShortName.TrimEnd(), shortName = @line.Product.ShortName + "'" })">@line.Product.Name</a></td>
+         
+                                @{
+                                    if (line.Product.ProductImages.Any(x => x.ProductID == @line.Product.ProductID) == true)
+                                    {
+                                        <td  align="center">
+                                            <div class="" style="background: none; border: none; ">
+                                                <a class="example-image-link" href="@Url.Action("ProductInfo", "Product", new {category = @line.Product.Category.ShortName.TrimEnd(), shortName = @line.Product.ShortName + "'"})"><img class="col-md-12 col-lg-12 col-sm-12, col-xs-12" src="@(Url.Content("~/Content"))/@(Domain.Constants.PRODUCT_IMAGE_FOLDER)/@(Domain.Constants.PRODUCT_IMAGE_PREVIEW_FOLDER)/@line.Product.ProductID@(String.Format("_"))@line.Product.ProductImages.FirstOrDefault(x => x.Sequence == 1 & x.ProductID == line.Product.ProductID).ProductImageID@line.Product.ProductImages.FirstOrDefault(x => x.Sequence == 1 & x.ProductID == line.Product.ProductID).ImageExt" alt="@line.Product.Name"/></a>
+                                            </div>
+                                        </td>
+                                    }
+                                    else
+                                    {
+                                        <td>
+                                            <div class="" style="background: none; border: none;" >
+                                                <a class="example-image-link" href="@Url.Action("ProductInfo", "Product", new {category = @line.Product.Category.ShortName.TrimEnd(), shortName = @line.Product.ShortName + "'"})"><img class="col-md-12 col-lg-12 col-sm-12, col-xs-12" src="@(Url.Content("~/Content"))/@(Domain.Constants.PRODUCT_IMAGE_FOLDER)/@(Domain.Constants.PRODUCT_IMAGE_PREVIEW_FOLDER)/@String.Format("0.jpg")" alt="@line.Product.Name"/></a>
+                                            </div>
+                                        </td>
+                                    }
+                                }
+                                <td align="right">@line.Product.Price.ToString()р.</td>
+                            
+                                <td align="center">
+                                    @using (Ajax.BeginForm(ajax))
+                                    {
+                                        <button class="btn btn-custom btn-sm" title="+1" name="action"  type="submit" value="+" @*style="width: 5px; margin: 0; padding-right: 10px; padding-left: 10px; "*@><span class="glyphicon glyphicon-plus"></span></button>
+                                        <br/>
+                                        @Html.TextBox("quantity", line.Quantity, new { disabled = "disabled", @style = "width: 30px; text-align: center", @id = "cartSummary" })
+                                        @Html.Hidden("quantity", line.Quantity)
+                                        @Html.Hidden("productId", line.Product.ProductID)
+                                        @Html.Hidden("userId", line.UserID)
+                                        @Html.HiddenFor(x => x.Cart)
+                                        @Html.HiddenFor(x => x.ReturnUrl)
+                                        <br/>
+                                        <button class="btn btn-custom btn-sm" title="-1" name="action"  type="submit" value="-" @*style="width: 5px; margin: 0; padding-right: 10px; padding-left: 10px;"*@><span class="glyphicon glyphicon-minus"></span></button>
+                                    }
+                                       
+                                    @*public ActionResult ChangeQuantity(Cart cart, int productId, string returnUrl, int Quantity)*@
+                                </td>
+                
+                                <td align="right">@((line.Quantity * line.Product.Price).ToString())р.</td>
+                                <td align="center">
+                                    @using (Html.BeginForm("RemoveFromCart", "Cart"))
+                                    {
+                                        @Html.Hidden("ProductId", line.Product.ProductID)
+                                        @Html.HiddenFor(x => x.ReturnUrl)
+                                        <button class="btn btn-danger btn-sm" type="submit" value="Удалить" title="Убрать из корзины"><span class="glyphicon glyphicon-remove"></span></button>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                        @*<tr>
+                            <td><div class="multi-line">@Html.DropDownListFor(x => x.Cart.ShippingID, new SelectList(Model.dimShipping, "ShippingID", "ShippingName", "!121"), "---Выберите место доставки---")</div></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>*@
+                        
+                        
+                       @* <script type="text/javascript">
+                            $(function()
+                            {
+                            $("#Cart_ShippingID").change(function () {
+                                var z = $(this).val();
+                                if (z!='')
+                                    {alert(z);   
+                                     @Model.Cart.ShippingID = z;}
+                                 
+                            })
+                            
+                                // var z = 0;
+                                // var p = $(".multi-line").find('select option').html(function () { z = this.value; });
+                                
+                            });
+                        /*
+                            var productIdValues, loginValues, returnUrl = "";
+                          var productId = $(element).find('.cart-form input[type=hidden]#ProductID').html(function () { productIdValues = this.value; }); //first(function () { str += this.id + '=' + this.value + '\n'; });
+                          var login = $(element).find('.cart-form input[type=hidden]#login').html(function () { loginValues = this.value; });
+                          var url = $(element).find('.cart-form input[type=hidden]#returnUrl').html(function () { returnUrl = this.value; });
+                            */
+                        </script>*@
+                        @*    @{
+                            Model.Cart.ShippingID = 1;
+                        }
+                        *@
+                        @*
+                        
+                        <div class="multi-line">  @Html.DropDownListFor(model => model.SelectedSuperCategoryID,
+           new SelectList(Model.SuperCategories, "SuperCategoryID", "Name"), "--Выберите надкатегорию--")</div>
+                        <tr>
+                            <td></td><td></td><td>
+                                                  Тут будет стоимость доставки
+                                              </td><td>
+                                                       <div class="multi-line">  @Html.DropDownListFor(model => model.dimShipping, new SelectList(Model.dimShipping, "ShippingName", "ShippingName")
+                                                     )</div>
+
+                                                   </td><td></td><td></td><td></td>
+                        </tr>
+                        *@
+
+                    </tbody>
+                
+                    <tfoot>
+                        <tr>
+                            <td colspan="5" align="right">Итого без учета доставки:</td>
+                            <td align="right">@Model.Cart.ComputeTotalValue().ToString()р.</td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+        </div> 
+        <div class="btn-group" style="float: right">
+            
+            <a class="btn btn-custom btn-md" href="@Model.ReturnUrl" title="Вернуться назад">Продолжить покупки</a>
+                @Html.ActionLink("Пересчитать", "Index", new { }, new { @class = "btn btn-custom btn-md" })
+                @Html.ActionLink("Оформить заказ", "Checkout", null, new { @class = "btn btn-custom btn-md" })
+            
+        </div>
+    
+    }
+  }
+  
+@*  
+  <h3>Ваш заказ оформлен. Наши специалисты свяжутся с Вами в ближайшее время!</h3>
+@{
+    if (Model.Cart.Lines.Count() == 1)
+    {
+        <p>Вами был сделан заказ на следующий товар:</p>
+    }
+    else
+    {
+        <p>Вами был сделан закан на следующие товары:</p>
+    }
+}
+
+<style>
+    /*--- Оформление таблицы ---*/
+.features-table
+{
+  width: 100%;
+  margin: 0 auto;
+  border-collapse: separate;
+  border-spacing: 0;
+  text-shadow: 0 1px 0 #fff;
+  color: #2a2a2a;
+  background: #fafafa;  
+  background-image: -moz-linear-gradient(top, #fff, #eaeaea, #fff); /* Firefox 3.6 */
+  background-image: -webkit-gradient(linear,center bottom,center top,from(#fff),color-stop(0.5, #eaeaea),to(#fff)); 
+}
+
+.features-table td
+{
+  height: 50px;
+  line-height: 50px;
+  padding: 0 20px;
+  border-bottom: 1px solid #cdcdcd;
+  box-shadow: 0 1px 0 white;
+  -moz-box-shadow: 0 1px 0 white;
+  -webkit-box-shadow: 0 1px 0 white;
+  white-space: nowrap;
+  text-align: center;
+}
+
+/*--- Body ---*/
+.features-table tbody td
+{
+  text-align: center;
+  font: normal 12px Verdana, Arial, Helvetica;
+  width: 150px;
+}
+
+.features-table tbody td:first-child
+{
+  width: auto;
+  text-align: left;
+}
+
+.features-table td:nth-child(1), .features-table td:nth-child(2), .features-table td:nth-child(3),.features-table td:nth-child(4)
+{
+  background: #efefef;
+  background: rgba(144,144,144,0.15);
+  border-right: 1px solid white;
+}
+
+
+.features-table td:nth-child(5)
+{
+  background: #e7f3d4;  
+  background: rgba(184,243,85,0.3);
+}
+
+/*--- Header ---*/
+.features-table thead td
+{
+  font: bold 1.3em 'trebuchet MS', 'Lucida Sans', Arial;  
+  -moz-border-radius-topright: 10px;
+  -moz-border-radius-topleft: 10px; 
+  border-top-right-radius: 10px;
+  border-top-left-radius: 10px;
+  border-top: 1px solid #eaeaea; 
+}
+
+.features-table thead td:first-child
+{
+  border-top: none;
+}
+
+/*--- Footer ---*/
+.features-table tfoot td
+{
+  font: bold 1.4em Georgia;  
+  -moz-border-radius-bottomright: 10px;
+  -moz-border-radius-bottomleft: 10px; 
+  border-bottom-right-radius: 10px;
+  border-bottom-left-radius: 10px;
+  border-bottom: 1px solid #dadada;
+}
+
+.features-table tfoot td:first-child
+{
+  border-bottom: none;
+}
+    
+</style>*@
+@*<table style="
+          width: 100%;
+          margin: 0 auto;
+          border-collapse: separate;
+          border-spacing: 5px; border: dotted 2px gray; 
+          text-shadow: 0 1px 0 #fff;
+          color: #2a2a2a;
+          background: #fafafa;  
+          background-image: -moz-linear-gradient(top, #fff, #eaeaea, #fff); /* Firefox 3.6 */
+          background-image: -webkit-gradient(linear,center bottom,center top,from(#fff),color-stop(0.5, #eaeaea),to(#fff)); ">
+    <thead style="
+             font: bold 1.3em 'trebuchet MS', 'Lucida Sans', Arial;  
+             -moz-border-radius-topright: 10px;
+             -moz-border-radius-topleft: 10px; 
+             border-top-right-radius: 10px;
+             border-top-left-radius: 10px;
+             border-top: 1px solid #eaeaea;
+             text-align: center">
+        <tr>
+            <td>Товар</td>
+            <td>Категория</td>
+            <td>Цена</td>
+            <td>Количество</td>
+            <td>Сумма</td>
+        </tr>
+    </thead>
+    <tbody style="
+        text-align: center;
+        font: normal 12px Verdana, Arial, Helvetica; 
+        width: 150px;">
+        @{
+            foreach (var line in @Model.Cart.Lines)
+            {
+                <tr>
+                    <td style="text-align: left">@line.Product.Name</td>
+                    <td style="text-align: left">@line.Product.Category.Name</td>
+                    <td>@line.Product.Price</td>
+                    <td>@line.Quantity</td>
+                    <td>@(line.Quantity * line.Product.Price)</td>
+                
+                </tr>
+            }
+        }
+    </tbody>
+    
+    <tfoot style="
+              font: bold 1.4em Georgia;  
+              -moz-border-radius-bottomright: 10px;
+              -moz-border-radius-bottomleft: 10px; 
+              border-bottom-right-radius: 10px;
+              border-bottom-left-radius: 10px;
+              border-bottom: 1px solid #dadada;">
+        <tr>
+        <td></td><td></td><td></td><td>Итого:</td><td>@Model.Cart.Lines.Sum(x=>x.Product.Price*x.Quantity) руб.</td>
+        </tr>
+    </tfoot>
+</table>
+
+
+<table style="font: normal 1.1em Verdana, Arial, Helvetica">
+    <tr>
+        <td>Имя: </td>
+        <td></td>
+    </tr>
+    
+    <tr>
+        <td>Адрес доставки: </td>
+        <td></td>
+    </tr>
+    
+    <tr>
+        <td>Телефон: </td>
+        <td></td>
+    </tr>
+    
+    <tr>
+        <td>Email: </td>
+        <td></td>
+    </tr>
+
+</table>
+*@
+@*
+ .AppendLine(shippingInfo.ShippingName)
+                        .AppendLine(shippingInfo.ShippingAddress)
+                        .AppendLine(shippingInfo.ShippingName)
+                        .AppendLine(shippingInfo.ShippingPhone)
+                        .AppendLine(shippingInfo.ShippingEmail)
+*@
+
+@*
+ .AppendLine("<h3>Ваш заказ оформлен. Наши специалисты свяжутся с Вами в ближайшее время!</h3>")
+                        .AppendLine("<p>------------------------------------</p>")
+                        .AppendLine("<p>Товары:</p>");
+
+                    foreach (var line in cart.Lines)
+                    {
+                        var subtotal = line.Product.Price*line.Quantity;
+                        body.AppendFormat("<p>{0} x {1}   (Цена: {2:c}) </p>", line.Quantity, line.Product.Name.TrimEnd(), subtotal);
+                        body.Append("");
+                        body.Append("<img src='http://1.gravatar.com/avatar/94a8e15ef0912f42d96f16fe972a1c67?s=60&d=monsterid&r=G'/>");
+                    }
+
+                    body.AppendFormat("<p>Итого: {0:c}</p>", cart.ComputeTotalValue())
+                        .AppendLine("<p>------------------------------------</p>")
+                        .AppendLine("<p>Доставка:</p>")
+                        .AppendLine("<p>" + shippingInfo.ShippingName + "</p>")
+                        .AppendLine("<p>" + shippingInfo.ShippingAddress + "</p>")
+                        .AppendLine("<p>" + shippingInfo.ShippingName + "</p>")
+                        .AppendLine("<p>" + shippingInfo.ShippingPhone + "</p>")
+                        .AppendLine("<p>" + shippingInfo.ShippingEmail + "</p>")
+                        .AppendLine("<p>------------------------------------<br/></p>")
+                        .AppendFormat("<p>Подарочная упаковка: {0} </p>", shippingInfo.GiftWrap ? "Да" : "Нет");
+*@

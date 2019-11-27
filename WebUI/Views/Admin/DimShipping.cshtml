@@ -1,0 +1,54 @@
+﻿@model IEnumerable<Domain.Entities.DimShipping>
+@using MvcContrib.UI.Grid
+
+@{
+    ViewBag.Title = "Доставка";
+    Layout = null;
+}
+
+<h2>Детали доставки</h2>
+@using (Html.BeginForm("DeleteDimShipping", "Admin", FormMethod.Post))
+{
+
+    @Html.Grid(Model).Columns(column =>
+        {
+        @*column.For(x => x.ShippingName).SortColumnName("ShippingName").Named("Название");*@
+            @*column.For(x => Html.ActionQueryLink(x.ShippingType, "EditDimShipping", new {dimShippingId = x.ShippingID})).SortColumnName("DimShippingName").Named("Наименование").Attributes(x =>
+                {
+                    return new Dictionary<string, object> {{"style", "text-align: left; "}};
+                });*@
+        
+        
+            column.For(x => x.ShippingType).SortColumnName("DimShippingName").Named("Наименование").Attributes(x =>
+            {
+                return new Dictionary<string, object> { { "style", "text-align: left; " } };
+            });
+        
+        
+        @*column.For(x => Html.ActionLink(x.ShippingName, "EditDimShipping", "Admin", new { dimShippingId = x.ShippingID })).SortColumnName("DimShippingID").Sortable(true).Named("Название");*@
+            column.For(x => x.ShippingPrice).SortColumnName("ShippingPrice").Named("Цена");
+        @*column.Custom(x => MvcHtmlString.Create(string.Format("<form action='/Admin/DeleteDimShipping' method='post'> " +
+                                                              "<input id='dimShippingId' name='dimShippingId' type='hidden' value='{0}' />" +
+                                                              "<input type='submit' value='Удалить' /></form>", x.ShippingID)))
+          .Named("Удалить").Sortable(false);*@
+
+            //.linkButton
+
+
+
+            column.Custom(x => Html.Raw("<a href = " + Url.Action("EditDimShipping", "Admin", new {dimShippingId = x.ShippingID}) + " class='glyphicon glyphicon-edit btn-xs btn btn-default' title='Редактировать'></a>")).Header(o => "<span class='glyphicon glyphicon-edit'> </span>").Encode(false)
+                  .Sortable(false);
+
+            column.Custom(x => Html.Raw("<a href = " + Url.Action("DeleteDimShipping", "Admin", new {dimShippingId = x.ShippingID}) + " class='linkButton glyphicon glyphicon-remove btn-xs btn btn-danger' title='Удалить'></a>")).Named("Options").Header(o => "<span class='glyphicon glyphicon-remove'> </span>").Encode(false)
+                  .Sortable(false);
+            ;
+
+
+
+
+        }).Attributes(@class => "table table-striped table-bordered table-hover table-condensed grid-style")
+
+}
+ 
+    
+    @Html.ActionLink("Добавить новый вид доставки", "CreateDimShipping", null, new { @class = "btn btn-info btn-md", @style = "margin-left: 10px; color: white; float: right;" }) 

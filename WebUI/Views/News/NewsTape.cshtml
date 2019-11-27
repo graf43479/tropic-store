@@ -1,0 +1,98 @@
+﻿@model IEnumerable<Domain.Entities.NewsTape>
+
+@helper Truncate(string input, int length)
+ {
+    if (input.Length <= length) {
+        @input
+    } else {
+        @input.Substring(0, length)<text>...</text>
+    }
+}
+@*
+@helper Links(string input)
+{
+    string tmpHttp = input.Remove(0, input.IndexOf("http"));
+    tmpHttp = tmpHttp.Remove(input.IndexOf("http"), input.IndexOf(" "));
+
+    string tmpText = input.Remove(input.IndexOf("http"), input.IndexOf(" "));
+    
+
+    MvcHtmlString summary = MvcHtmlString.Create(tmpText + @Html.Raw("<a href="+tmpHttp +">!!!!!!</a>" ));
+    input = input.Replace("http://","@Html.Raw('<a href='ya.ru'>!!!!!!</a>')");
+}
+
+@functions
+{
+
+    public MvcHtmlString Substr(string s)
+    {
+        return MvcHtmlString.Create(Html.Raw(" " + Html.Raw("<a href='ya.ru'>!!!!</a>")).ToHtmlString());
+    }
+
+}
+*@
+
+<div id="newsContent">
+    <h2 class="newsHeader" style="text-align: center">Новости и акции</h2>
+    @{
+        foreach (var p in Model)
+        {
+            <div class="panel panel-default event" style="margin-bottom: 25px;">
+            
+                @*<div class="preHeader"><span class="glyphicon glyphicon-pushpin" style="padding-left: 5px; padding-top: 4px"></span></div>*@
+                <div class="panel-heading" style="">
+                    <h3>@p.Header1</h3>
+                </div>
+                <div class="panel-body" style="padding:0">
+                
+                    @{
+                        if (p.Header2!=null)
+                        {
+                            <h4>@p.Header2</h4>
+                        }
+                    
+                    }
+            
+                    <div class="news-preview-main">
+                        @{
+                            if (System.IO.File.Exists(System.IO.Path.Combine(Server.MapPath
+                                                                                 (@Url.Content("~/Content")), Domain.Constants.NEWS_MINI_IMAGES_FOLDER, @p.NewsID.ToString() + @p.ImgPath)) != true)
+                            {
+                            }
+                            else
+                            {
+                                string filename = string.Format("{0}{1}?{2}", p.NewsID, p.ImgPath.TrimEnd(), DateTime.Now); 
+                                <img class="example-image-link img-thumbnail" 
+                                     src='@(Url.Content("~/Content"))/@(Domain.Constants.NEWS_MINI_IMAGES_FOLDER)/@(filename)' 
+                                     alt='@p.NewsDate'
+                                     style="margin-top: 5px;"/> 
+                            }
+                        }
+                        @*<p>@p.NewsText +@Html.Raw(p.NewsText.Replace("!", "<p>!!!</p>"))</p> *@
+                        @*<p>@p.NewsText + @Html.Raw(@Html.ActionLink("гы!", "List").ToString())+ " " + @Html.Raw("<a href='ya.ru'>!!!</a>")</p>*@
+                        @MvcHtmlString.Create(@p.NewsPreview)
+            
+            
+            
+            
+            
+
+                        @*<p><b style="float: left">@p.NewsDate.ToShortDateString()</b><b style="float: right">@Html.ActionLink("Далее", "NewsArticle", "News", new { newsId = p.NewsID }, null)</b></p>*@
+                
+                        @*<p class="newsDate">@p.NewsDate.ToShortDateString()</p>*@
+                    </div>
+                </div>
+                <div class="news-footer panel-footer">
+                    <p><b class="b1">@p.NewsDate.ToShortDateString()</b><b class="b2"> <a title="Читать подробнее" href="@Url.Action("NewsArticle", "News", new { newsId = p.NewsID })"><span class="fa fa-chevron-right" style="float: right; font-size: 1.6em; color: #FFFFFF"></span></a></b></p>
+                </div>
+            </div>
+        
+        }
+    }
+    <div class="panel panel-default">
+        <div class="panel-heading" style="background-color: #0098CA"></div>
+        <div class="panel-body newsFooterSummary"><a href="@Url.Action("NewsPreviews","News")" class="col-lg-12" style="" >Все новости<span class="fa fa-chevron-circle-right" style="padding-left: 5px; "></span></a>
+        </div>
+    </div>
+
+</div>

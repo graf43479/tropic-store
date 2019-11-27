@@ -1,0 +1,96 @@
+﻿@model WebUI.Models.ProductEditViewModel
+<div style="width:  100%">
+
+@if (Model.ProductImages != null)
+{
+    <div id="controlsHolde2r">
+        <h2>Изображения для фотогалереи</h2>
+        <table>
+               @{
+                foreach (var image in Model.ProductImages.Where(x => x.ProductID == Model.ProductID).OrderBy(x => x.Sequence))
+                {
+                    <tr>
+                        <td><a class="example-image-link" href="@(Url.Content("~/Content"))/@(Domain.Constants.PRODUCT_IMAGE_FOLDER)/@image.ProductID@(String.Format("_"))@image.ProductImageID@image.ImageExt" data-lightbox="@image.ProductImageID" title="@Model.Name.TrimEnd()"> <img class="example-image" src="@(Url.Content("~/Content"))/@(Domain.Constants.PRODUCT_IMAGE_FOLDER)/@(Domain.Constants.PRODUCT_IMAGE_PREVIEW_FOLDER)/@image.ProductID@(String.Format("_"))@image.ProductImageID@image.ImageExt" alt="@Model.Name.TrimEnd()"/></a></td>
+                    
+                   
+                   
+                        <td>
+                            @Html.Raw(Ajax.ActionLink(" ", "ProductImageSequence", new {productImageID = image.ProductImageID, productID = @image.ProductID, actionType = "Up"}, new AjaxOptions
+                                {
+                                    UpdateTargetId = "controlsHolder",
+                                    InsertionMode = InsertionMode.Replace,
+                                    HttpMethod = "POST",
+                                    OnBegin = "gifLoaderBefore",
+                                    OnSuccess = "gifLoaderAfter",
+                                    OnFailure = "gifLoaderAfter",
+                                    OnComplete = "gifLoaderAfter"
+                                }, new {@class = "glyphicon glyphicon-arrow-up btn btn-lg", @style = "color: #8EB50C;"}).ToString())
+                        </td>
+                    
+                        <td>
+                            @Html.Raw(Ajax.ActionLink(" ", "ProductImageSequence", new {productImageID = image.ProductImageID, productID = @image.ProductID, actionType = "Down"}, new AjaxOptions
+                                {
+                                    UpdateTargetId = "controlsHolder",
+                                    InsertionMode = InsertionMode.Replace,
+                                    HttpMethod = "POST",
+                                    OnBegin = "gifLoaderBefore",
+                                    OnSuccess = "gifLoaderAfter",
+                                    OnFailure = "gifLoaderAfter",
+                                    OnComplete = "gifLoaderAfter"
+                                }, new {@class = "glyphicon glyphicon-arrow-down btn btn-lg", @style = "color: #8EB50C;"}).ToString())
+                        </td>
+                    
+                        <td>
+                            @Html.Raw(Ajax.ActionLink(" ", "DeleteExpress", new {id = image.ProductImageID, productID = @image.ProductID, actionType = "Down"}, new AjaxOptions
+                                {
+                                    UpdateTargetId = "controlsHolder",
+                                    InsertionMode = InsertionMode.Replace,
+                                    HttpMethod = "POST",
+                                    OnBegin = "gifLoaderBefore",
+                                    OnSuccess = "gifLoaderAfter",
+                                    OnFailure = "gifLoaderAfter",
+                                    OnComplete = "gifLoaderAfter"
+                                }, new {@class = "glyphicon glyphicon-remove btn btn-md btn-danger", @style = ""}).ToString())
+                        </td>
+
+                
+                    </tr>
+                }
+            }
+        </table>
+    </div>
+}
+</div>
+
+@*
+olumn.Custom(x => MvcHtmlString.Create(string.Format("<a href='{0}'><img class='example-image-link' src='{1}/{2}/{3}' alt='{4}'/></a>",
+                                                          Url.Action("EditCategory", "Admin", new { categoryId = x.CategoryID }),
+                                                          Url.Content("~/Content"),
+                                                          Domain.Constants.CATEGORY_MINI_IMAGES_FOLDER,
+                                                          (string.IsNullOrWhiteSpace(x.ImageExt) || (System.IO.File.Exists(System.IO.Path.Combine(Server.MapPath
+                                                                                                                                                      (@Url.Content("~/Content")),
+                                                                                                                                                  Domain.Constants.CATEGORY_MINI_IMAGES_FOLDER, x.CategoryID.ToString() + x.ImageExt)))) != true ? "0.jpg" : x.CategoryID + x.ImageExt,
+                                                          x.Name
+                                                ))).Named("Изображение").Sortable(false).InsertAt(0);
+*@
+
+
+    @*<td style="padding-left:20px">@Ajax.ActionLink("Вверх", "ProductImageSequence", "Admin", new { productImageID = image.ProductImageID, productID = @image.ProductID, actionType = "Up" }, new AjaxOptions
+                                                      {UpdateTargetId = "controlsHolder",                               
+                                                          InsertionMode = InsertionMode.Replace,
+                                                          HttpMethod = "POST"
+                                                      })</td>
+                
+                    <td style="padding-left:20px">@Ajax.ActionLink("Вниз", "ProductImageSequence", "Admin", new { productImageID = image.ProductImageID, productID = @image.ProductID, actionType = "Down"}, new AjaxOptions
+                                                      {UpdateTargetId = "controlsHolder",                               
+                                                          InsertionMode = InsertionMode.Replace,
+                                                          HttpMethod = "POST"
+                                                      })</td>
+                
+                    <td style="padding-left:20px">@Ajax.ActionLink("Удалить", "DeleteExpress", "Admin", new { id = image.ProductImageID, productId=image.ProductID}, new AjaxOptions
+                                                      {UpdateTargetId = "controlsHolder",                               
+                                                          InsertionMode = InsertionMode.Replace,
+                                                          HttpMethod = "POST"
+                                                      })</td>
+                                                      *@
+                    @*<td style="padding-left:20px">@Html.ActionLink("Удалить", "DeleteExpress", "Admin", new { id = image.ProductImageID, productId=image.ProductID}, new { onclick = "javascript:return confirm('Are you  sure?');" })</td>*@

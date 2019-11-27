@@ -1,0 +1,95 @@
+﻿<noscript>
+    <div id="banner" class="row visible-md visible-lg">
+                        <div class="col-md-12 col-md-offset-0 col-lg-12 col-lg-offset-0" style="padding: 0;">
+                            <div class="carousel slide" id="the-carouse" data-interval="5000">
+                                
+                                <ol class="carousel-indicators">
+                                    <li data-target="#the-carouse" data-slide-to="0" class="active"></li>
+                                </ol>
+
+                                <div class="carousel-inner" style="height: fill-available">
+                                    <div style="text-align: center !important" class="item active"><img src="@Url.Content("~/Content/Banner/carousel-1.jpg")" alt="1" class="img-responsive" />
+                                        <div class="carousel-caption">
+                                            <h4>Натуральная косметика Tropicana</h4>
+                                            <p>Прямо из сердца королевства Тайланд!</p>
+                                        </div>
+                                     </div>
+                                </div>
+                            </div>
+                        </div>
+                        </div>
+</noscript> 
+
+@*
+<div id="banner" class="row visible-md visible-lg">
+                        <div class="col-md-12 col-md-offset-0 col-lg-12 col-lg-offset-0" style="padding: 0;">
+                            <div class="carousel slide" id="the-carouse" data-interval="5000">
+                                
+                                <ol class="carousel-indicators">
+                                    <li data-target="#the-carouse" data-slide-to="0" class="active"></li>
+                                    <li data-target="#the-carouse" data-slide-to="1"></li>
+                                    <li data-target="#the-carouse" data-slide-to="2"></li>
+                                    <li data-target="#the-carouse" data-slide-to="3"></li>
+                                    <li data-target="#the-carouse" data-slide-to="4"></li>
+                                    <li data-target="#the-carouse" data-slide-to="5"></li>
+                                  
+                                </ol>
+
+                                <div class="carousel-inner" style="height: fill-available">
+                                    <div style="text-align: center !important" class="item active"><img src="@Url.Content("~/Content/Banner/carousel-1.jpg")" alt="1" class="img-responsive" />
+                                        <div class="carousel-caption">
+                                            <h4>Натуральная косметика Tropicana</h4>
+                                            <p>Прямо из сердца королевства Тайланд!</p>
+                                        </div>
+                                     </div>
+                                    
+                                    <div class="item"><img src="@Url.Content("~/Content/Banner/carousel-2.jpg")" alt="2" class="img-responsive" />
+                                        <div class="carousel-caption">
+                                            <h4 style="text-align: center">Тропические ароматы кокоса</h4>
+                                            <p style="text-align: left">Продукция из кокосового масла холодного отжима</p>
+                                        </div>
+                                        </div>
+                                    <div class="item"><img src="@Url.Content("~/Content/Banner/carousel-3.jpg")" alt="3" class="img-responsive" />
+                                        <div class="carousel-caption">
+                                            <h4 style="text-align: center">Уход за телом</h4>
+                                            <p><a href="@Url.Action("List", "Product", new { category = "krema-dlja-tela" })" rel="follow, index" style="color: yellow">Крема</a>, 
+                                                <a href="@Url.Action("List", "Product", new { category = "skraby-dlja-kozi" })" rel="follow, index" style="color: yellow">скрабы</a>, 
+                                                <a href="@Url.Action("List", "Product", new { category = "mylo" })" rel="follow, index" style="color: yellow">мыло</a> и  
+                                                <a href="@Url.Action("List", "Product", new { category = "geli-dlja-dusa" })" rel="follow, index" style="color: yellow">гели для душа</a></p>
+                                        </div>
+                                        </div>
+                                    <div class="item"><img src="@Url.Content("~/Content/Banner/carousel-4.jpg")" alt="4" class="img-responsive" />
+                                        <div class="carousel-caption">
+                                            <h4 style="text-align: center"><a href="@Url.Action("List", "Product", new { category = "kokosovoe-maslo-holodnogo-otzima" })" rel="follow, index" style="color: yellow">Кокосовое масло холодного отжима</a></h4>
+                                             
+                                            <p style="text-align: left">Без добавок и консервантов</p>
+                                        </div>
+                                        </div>
+                                    <div class="item"><img src="@Url.Content("~/Content/Banner/carousel-5.jpg")" alt="5" class="img-responsive" />
+                                        <div class="carousel-caption">
+                                            <h4 style="text-align: center">Уход за волосами</h4>
+                                            <p><a href="@Url.Action("List", "Product", new { category = "sampuni" })" rel="follow, index" style="color: yellow">Шампуни</a>, 
+                                                <a href="@Url.Action("List", "Product", new { category = "kondicionery" })" rel="follow, index" style="color: yellow">кондиционеры</a>, 
+                                                <a href="@Url.Action("List", "Product", new { category = "syvorotki-dlja-volos" })" rel="follow, index" style="color: yellow">сыворотки</a> и  
+                                                <a href="@Url.Action("List", "Product", new { category = "maski-dlja-volos" })" rel="follow, index" style="color: yellow">маски для волос</a></p>
+                                        </div>
+                                        </div>
+                                    <div class="item"><img src="@Url.Content("~/Content/Banner/carousel-6.jpg")" alt="6" class="img-responsive" />
+                                        <div class="carousel-caption">
+                                            <h4  style="text-align: center">Уход за губами</h4>
+                                            <p  style="text-align: left">
+                                                <a href="@Url.Action("List", "Product", new { category = "balzamy-dlja-gub" })" rel="follow, index" style="color: yellow">Бальзамы</a> и  
+                                                <a href="@Url.Action("List", "Product", new { category = "balzamy-dlja-gub" })" rel="follow, index" style="color: yellow">помада для губ</a>
+                                            </p>
+                                        </div>
+                                        </div>
+                                </div>
+                            </div>
+                            
+                            
+                            <a href="#the-carouse" class="carousel-control left" data-slide="prev"><span class="icon-prev"></span></a>
+                            <a href="#the-carouse" class="carousel-control right" data-slide="next"><span class="icon-next"></span></a>
+                        </div>
+                        </div>
+
+*@

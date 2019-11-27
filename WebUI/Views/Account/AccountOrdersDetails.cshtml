@@ -1,0 +1,154 @@
+﻿@model IEnumerable<Domain.Entities.OrderDetails>
+
+@{
+    var statusesView = TempData.Peek("Statuses");
+    bool visible = (bool)TempData.Peek("Visible");
+   string orderNumber = (string)TempData.Peek("OrderNumber");
+
+   int cnt = 0;
+   List<WebUI.Models.AssignedStatusViewModel> statuses = (List<WebUI.Models.AssignedStatusViewModel>)@statusesView;
+   string[] desc = statuses.Select(x => x.DimOrderStatusDesc).ToArray();
+}
+
+<div  class="modal" tabindex="-1" >
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <div class="heading">
+                    <h2>Заказ  №@orderNumber</h2>
+                </div>
+            </div>
+            <div class="modal-body container-fluid">
+                <ul class="nav nav-tabs nav-justified">
+                    <li class="active"><a href="#details" data-toggle="tab">Детали заказа</a></li>
+                    <li><a href="#statuses" data-toggle="tab">Статус заказа</a></li>
+                </ul>
+                
+
+                @{
+                    if (Model.Count() > 0)
+                    {
+                        <div class="tab-content">
+                        <div class="well tab-pane active" id="details">
+                        
+                            <div id="accountOrdersDetailsList">    
+                                <div class="heading">
+                                    <h2>Детали заказа  №@orderNumber</h2>   
+                                </div>
+                                <table class="table table-striped table-bordered">
+                                    <tr>
+                                        <th>Товар</th>
+                                        <th>Цена</th>
+                                        <th>Количество</th>
+                                        <th>Всего</th>
+        
+                                    </tr>
+    
+                                    @{
+                                        foreach (var p in Model)
+                                        {
+                                            <tr>
+                                                <td align="left">@p.Product.Name</td>
+                                                <td align="center">@p.Price</td>
+                                                <td align="center">@p.Quantity</td>
+                                                <td align="center">@(p.Price * p.Quantity)</td>
+                
+                                            </tr>
+                                        }
+                                    }
+
+                                </table>
+                            </div>
+                        </div>
+                    
+                        <div class="well tab-pane" id="statuses">
+                            @{
+                            if (visible)
+                            {
+                                
+                            <div id="orderStatus">
+                                <div class="heading">
+                                    <h2>Статус заказа</h2>
+                                    </div>
+                                <table style="width: 100%"> 
+                                    <tr> 
+                                    @foreach (var status in statuses)
+                                        {
+                                           if (cnt++ % 2 == 0)
+                                           { 
+                                               @:  </tr> 
+                                           } 
+                    @: <td>
+                    
+                                            <input type="checkbox" disabled="disabled"  
+                                                   name="selectedStatuses"
+                                                   value="@status.DimOrderStatusID"  
+                                                @(Html.Raw(status.Assigned ? "checked=\"checked\"" : "")) />
+        
+                @:&nbsp; @status.DimOrderStatusDesc 
+                                          @:</td> 
+                } 
+                </tr> 
+                                    
+                                </table>   
+                            </div>
+                     
+                            }
+                        }
+                           </div>
+                   </div>
+                    }
+    
+                }
+ 
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-custom" data-dismiss="modal" id="closeButton" aria-hidden="true">Ок</button>
+            </div>
+ </div>
+ </div>
+ </div>
+ 
+ 
+ 
+@*
+
+
+@using (Html.BeginForm())
+{
+    <fieldset>
+        <div class="editor-field"> 
+        <table style="width: 100%" class="orders-statuses"> 
+            <tr> 
+             
+    
+    @foreach (var status in statuses)
+    {
+        if (cnt++ % 3 == 0)
+        { 
+                        @:  </tr> 
+                    } 
+                    @: <td>
+                    
+        <input type="checkbox"  
+               name="selectedStatuses"
+               value="@status.DimOrderStatusID"  
+            @(Html.Raw(status.Assigned ? "checked=\"checked\"" : "")) />
+        
+                    @status.DimOrderStatusID @:&nbsp; @status.DimOrderStatusDesc 
+                    @:</td> 
+                } 
+                </tr> 
+             
+        </table> 
+        </div>
+        <div class="col-lg-12" style="padding: 0; margin: 10px 0 0 0;">
+            <input type="hidden" name="id" value="@s"/>
+            <button type="submit" class="btn btn-md btn-warning col-lg-offset-8 col-md-offset-8 col-lg-4 col-md-4" style="margin-bottom: 10px"><span class="glyphicon glyphicon-floppy-saved">&nbsp;</span>Сохранить</button>
+        </div>
+        
+    </fieldset>
+}
+
+*@

@@ -1,0 +1,97 @@
+﻿
+
+<h2>AddProductIntoOrderPartial</h2>
+@using MvcContrib.UI
+@using MvcContrib.UI.Grid
+@using WebUI.Infrastructure.ExtensionMethods
+@*@model IEnumerable<Domain.Entities.Category>*@
+@model WebUI.Models.PagedViewModel<WebUI.Models.ProductOrderViewModel>
+
+
+<style type="text/css">
+    .grid-style {
+        margin-left: 0;
+        margin-right: 0;
+    }
+</style>
+
+@{
+    Html.RenderPartial("Pager", Model.PagedList);
+}
+
+
+@using (Html.BeginForm("DeleteProduct", "Admin", FormMethod.Post))
+{    
+    @Html.Grid(Model.PagedList).Columns(column =>
+    {
+        
+
+        column.For(x => x.Name).SortColumnName("Name").Named("Наименование товара").Attributes(x =>
+        {
+            return new Dictionary<string, object> { { "style", "text-align: left;" } };
+        });
+        column.For(x => Html.ActionQueryLink(x.CategoryName, "Products", new { categoryId = x.SelectedCategoryID })).SortColumnName("CategoryName").Named("Категория").Attributes(x =>
+        {
+            return new Dictionary<string, object> { { "style", "text-align: left;" }, { "title", "Просмотреть товары категории " + x.Item.CategoryName } };
+        });
+        column.For(x => x.Price).SortColumnName("Price").Named("Цена");
+        
+        
+        
+        if (User.IsInRole("SEO")!=true)
+        {
+            column.For(x => x.Quantity).SortColumnName("Quantity").Named("Кол-во");
+        }
+        
+
+        @*column.For(x => x.IsActive).SortColumnName("IsActive").Named("Активен");
+        column.For(x => x.IsDeleted).SortColumnName("IsDeleted").Named("Удален");*@
+
+        
+
+        column.For(x => (x.IsActive == true) ? Html.Raw("<i class='fa fa-check-square-o fa-2x' style='color: #8EB50C;' title='Товар " + x.Name + " числится активным'></i>") : Html.Raw("<i class='fa fa-square-o fa-2x' title='Товар " + x.Name + " неактивен' style='color: red'></i>")).SortColumnName("IsActive").Named("Активен");
+        
+        column.For(x => (x.IsDeleted == true) ? Html.Raw("<i class='fa fa-check-square-o fa-2x' style='color: red' title='Товар " + x.Name + " числится удаленным'></i>") : Html.Raw("<i class='fa fa-square-o fa-2x' title='Товар " + x.Name + " не числится как удаленный' style='color: #8EB50C;'></i>")).SortColumnName("IsDeleted").Named("Удаленный");
+
+
+        column.For(x => x.UpdateDate.ToShortDateString()).SortColumnName("UpdateDate").Named("Дата изменения");
+
+
+
+
+
+        column.Custom(x => Html.Raw("<a href = " + Url.Action("AddProductIntoOrderAtLast", "Admin", new { productId = x.ProductID, orderId = x.OrderSummaryID }) + " title='Добавить'><i class='fa fa-plus fa-2x' style='color: #8EB50C'></i></a>")).Header(o => "<span class='glyphicon glyphicon-plus'> </span>").Encode(false)
+                                        .Sortable(false);
+        
+        
+
+    }
+              ).Sort(Model.GridSortOptions).Attributes(@class => "table table-striped table-bordered table-hover table-condensed grid-style").Empty("Нет данных")
+ 
+    
+}
+    
+    
+            
+            
+<script type="text/javascript">
+    $(function () {
+        $(".linkButton").click(
+            function (event) {
+                if (!confirm('Вы уверены?')) return false;
+                event.preventDefault();
+                var link = event.target;
+                var action = link.href;
+                while (link.tagName != 'FORM') {
+                    link = link.parentElement;
+                    if (!link) {
+                        return;
+                    }
+                }
+                link.action = action;
+                link.method = "POST";
+                link.submit();
+            });
+    });
+
+</script>

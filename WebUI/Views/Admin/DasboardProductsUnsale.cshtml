@@ -1,0 +1,32 @@
+﻿@model IEnumerable<WebUI.Models.DasboardBestsellersViewModel>
+@using MvcContrib.UI.Grid
+
+<div id="DasboardProductsUnsale" style="padding: 0">
+@Html.Grid(Model).Columns(column =>
+{
+    column.For(x => x.Desc).Named("Товар").Attributes(x =>
+    {
+        return new Dictionary<string, object> { { "style", "text-align: left; padding-left: 5px;" } };
+    });
+    column.For(x => x.Charge).Named("Цена");
+        column.For(x => x.Count).Named("Наличие");
+    }
+                  ).Attributes(@class => "table table-striped table-bordered table-hover table-condensed grid-style").Empty("Нет данных")
+           
+           
+             
+@Ajax.ActionLink(" ", "Dasboard", new { dashboardAction = "DasboardProductsUnsale" }, new AjaxOptions
+    {
+        UpdateTargetId = "DasboardProductsUnsale",
+        HttpMethod = "GET",
+        InsertionMode = InsertionMode.Replace,
+        OnBegin = "gifLoaderBefore",
+        OnSuccess = "gifLoaderAfter",
+        OnFailure = "gifLoaderAfter",
+        OnComplete = "gifLoaderAfter"
+      //  OnFailure = "alert('Error')",
+      //  OnSuccess = "alert('Sucess')"
+    }, new { @class = "glyphicon glyphicon-refresh btn btn-md btn-info", @style = "float: right; margin: -7px -10px 5px 0px;" })
+
+    
+    </div>   

@@ -1,0 +1,119 @@
+﻿@model Domain.Entities.Role
+       
+
+@*<script src="@Url.Content("~/Scripts/jquery-ui-1.9.2.custom.min.js")" type="text/javascript"></script> *@
+       
+<div class="modal" id="stack4" tabindex="-1" data-focus-on="input:first">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            </div>
+            
+              
+                       @using (Html.BeginForm("EditRole", "Admin", FormMethod.Post, new { @id = "updateRoleForm"}))
+                {
+                    <div class="modal-body container-fluid">
+    
+                        @Html.ValidationSummary(true)
+                   
+
+
+                        <div class="col-md-12">
+                            <fieldset>
+                                @{if (Model != null)
+                                  {
+                                      @Html.HiddenFor(x => x.RoleID)
+                                  }
+                                  else
+                                  {
+                                      @Html.Hidden("RoleID", 0)
+                                  }
+  
+                                }
+                                <div id="update-message" class="error invisible"></div>
+                                <div class="form-group">
+                                    <label class="col-lg-1 col-md-1 form-control-static">Роль:</label> 
+                                    <div class="col-lg-11 col-md-11">
+                                        @Html.TextBoxFor(x => x.RoleName, new { @class = "form-control" }) 
+                                        @*<p class="help-block">Введите логин</p>*@
+                                        @Html.ValidationMessageFor(x => x.RoleName)
+                                        
+                                    </div>
+                                </div>
+                            </fieldset>   
+                        
+                        </div>
+                    </div>
+                           
+                           <div class="modal-footer">
+                            <button class="btn" data-dismiss="modal" id="closeButton" aria-hidden="true">Закрыть</button>
+                               @*<button class="btn btn-primary" id="roleButton">OK</button>*@
+                               <button class="btn btn-primary" id="roleButton">OK</button>
+                            </div>
+                }
+
+            
+            
+    @*
+            <div class="modal-footer">
+                <button class="btn" data-dismiss="modal" id="closeButton" aria-hidden="true">Закрыть</button>
+                <button class="btn btn-primary" id="roleButton2">OK</button>
+                <div class="temp" style="width: 20px; height: 20px; background-color: red">Тест</div>
+            </div>*@
+        </div>
+    </div>
+</div>
+
+
+<script type="text/javascript">
+    //alert('we');
+
+   /* $("#roleButton").click(function (e) {
+        //alert('Хуяксс! ');
+        e.preventDefault();
+        $("#updateRoleForm").submit();
+    });*/
+
+    function updateRoleSuccess(data) {
+
+        if (data.Success == true) {
+            window.location.reload();
+        } else {
+            /*$("#update-message").html(data.ErrorMessage);
+            $("#update-message").show();*/
+            window.location.reload();
+        }
+    }
+</script>
+
+
+<script type="text/javascript">
+
+    /*    $("#tmps").click(function (e) {
+    e.preventDefault();
+    var form = $("#updateAccountEditForm")
+    .removeData("validator")
+    .removeData("unobtrusiveValidation");
+    alert('!!');
+    $.validator.unobtrusive.parse(form);
+
+
+    $.validator.unobtrusive.parse($("#contact-add-popup"));
+
+    if ($('#contact-add-popup').valid()) {
+    alert('AJAX');
+    }
+    });*/
+
+    $('#updateRoleForm').on('shown', function () {
+        $("#updateRoleForm2").removeData("validator");
+        $("#updateRoleForm2").removeData("unobtrusiveValidation");
+        $.validator.unobtrusive.parse("#updateRoleForm");
+    });
+
+    $('#roleButton').click(function (e) {
+        //  alert('Хоп');
+        $("#updateRoleForm").submit();
+    });
+</script>

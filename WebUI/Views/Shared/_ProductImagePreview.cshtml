@@ -1,0 +1,90 @@
+﻿@model IEnumerable<Domain.Entities.ProductImage>
+
+@*<script src="@Url.Content("~/Scripts/js/jquery-1.10.2.min.js")" type="text/javascript"></script>*@
+
+
+@*<script src="@Url.Content("~/Scripts/jquery-1.7.1.min.js")" type="text/javascript" ></script>
+<script src="@Url.Content("~/Scripts/scriptForLightBox.js")" type="text/javascript" ></script>
+*@
+
+@*@if (ViewBag.LeftArrow is int && ViewBag.LeftArrow > -1)
+{
+    @Ajax.ActionLink("<<Назад", "ProductImagePreview", "Product", new { ProductID = ViewBag.ProductID, start = ViewBag.LeftArrow }, new AjaxOptions { UpdateTargetId = "ProductImagePreview" })
+}
+*@
+
+<div>
+@foreach (var item in Model)
+{
+    
+        
+    @*
+    <a href="#" class="thumbnail col-lg-6 col-md-6">
+    <img src="@(Url.Content("~/Content"))/@(Domain.Constants.PRODUCT_IMAGE_FOLDER)/@(Domain.Constants.PRODUCT_IMAGE_PREVIEW_FOLDER)/@item.ProductID@(String.Format("_"))@item.ProductImageID@item.ImageExt" 
+                 alt="@item.ProductID"/>
+    </a>
+    *@
+    
+    <a href="@(Url.Content("~/Content"))/@(Domain.Constants.PRODUCT_IMAGE_FOLDER)/@item.ProductID@(String.Format("_"))@item.ProductImageID@item.ImageExt" 
+       class="thumbnail col-lg-4 col-md-4  example-image-link"
+       data-lightbox="example-set" 
+       style="padding:0px; margin: -2px;">
+        
+        @{
+                if (ViewBag.Sale==true)
+                {
+                    <span class="onsale" style="margin: 0;">Sale!</span>
+                }
+            }
+
+        <img src="@(Url.Content("~/Content"))/@(Domain.Constants.PRODUCT_IMAGE_FOLDER)/@(Domain.Constants.PRODUCT_IMAGE_PREVIEW_FOLDER)/@item.ProductID@(String.Format("_"))@item.ProductImageID@item.ImageExt" 
+             style="padding: 0;"
+             alt="@item.ProductID"/>
+             
+    </a>
+    
+    
+    
+    
+    @*
+    <div>
+    <div class="ImagePreviews col-lg-6 col-md-6 col-sm-3 col-xs-6" style="padding:0">
+        <a class="example-image-link" href="@(Url.Content("~/Content"))/@(Domain.Constants.PRODUCT_IMAGE_FOLDER)/@item.ProductID@(String.Format("_"))@item.ProductImageID@item.ImageExt" 
+           data-lightbox="example-set" 
+           title="@item.Product.Name.TrimEnd()"
+           style="position: relative;"> 
+            
+            @{
+                if (ViewBag.Sale==true)
+                {
+                    <span class="onsale" style="margin: 0;">Sale!</span>
+                }
+            }            
+            
+            
+            <img src="@(Url.Content("~/Content"))/@(Domain.Constants.PRODUCT_IMAGE_FOLDER)/@(Domain.Constants.PRODUCT_IMAGE_PREVIEW_FOLDER)/@item.ProductID@(String.Format("_"))@item.ProductImageID@item.ImageExt" 
+                 class="img-thumbnail"
+                 style="padding: 0;"
+                 alt="@item.ProductID"/>
+        </a>
+    </div>
+    </div>*@
+}
+
+@*
+@using (Ajax.BeginForm("ProductImage", "Product", null, new AjaxOptions { UpdateTargetId = "ProductImage" }, new { name = "ProductImageForm" }))
+{
+    @Html.Hidden("ProductImageID", 0)
+    <input type="submit" name="ProductImageFormSubmit" style="display:none" />
+}
+
+*@
+
+@*<div id="ProductImage" style="width:100%; text-align:center;">
+        @Html.Partial("_ProductImage", Model.ProductImages.OrderBy(item => item.Sequence).First())
+    </div>*@
+    
+    
+    
+    
+    </div>

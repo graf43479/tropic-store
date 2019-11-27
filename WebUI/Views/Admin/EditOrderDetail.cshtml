@@ -1,0 +1,146 @@
+﻿@model Domain.Entities.OrderDetails
+
+@{
+    ViewBag.Title = "Редактирование деталей заказа";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+@{
+    var p = @Model.OrdersSummary.OrderNumber;
+    string productName = @Model.Product.Name;
+    TempData.Keep("BaseQuantity");
+}
+
+<style type="text/css">
+        form 
+        {
+            border: 0;
+    }
+</style>
+
+
+<ul class="breadcrumb">
+    @{
+        <li><a href="@Url.Action("Actions", "Admin")">Главная</a> <span class="divider">/</span></li>
+        <li class=""><a href="@Url.Action("Orders", "Admin")">Заказы</a> <span class="divider">/</span></li>
+        <li class=""><a href="@Url.Action("OrdersDetails", "Admin", new { orderSummaryID = @Model.OrderSummaryID })">Детализация заказа №@Model.OrdersSummary.OrderNumber</a> <span class="divider">/</span></li>
+        <li class="active"><a href="@Url.Action("EditOrderDetail", "Admin", new { orderDetailsID = @Model.OrderDetailsID })">Редактировать детали заказа №@p</a> <span class="divider">/</span></li>
+      }
+</ul>
+
+<h2>Редактировать подзаказ</h2>
+
+@using (Html.BeginForm("EditOrderDetail", "Admin", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    <div class="editor-field"> @Html.HiddenFor(model => model.OrderDetailsID) </div>
+    <div class="editor-field"> @Html.HiddenFor(model => model.UserID)</div>
+    <div class="editor-field"> @Html.HiddenFor(model => model.OrderSummaryID)</div>    
+<div class="editor-field"> @Html.HiddenFor(model => model.ProductID)</div>       
+    @*<div class="editor-field"> @Html.HiddenFor(model => model.OrdersSummary)</div>        *@
+    
+    
+    @*
+    
+    <div class="editor-field"> @Html.HiddenFor(model => model.OrdersSummary.OrderNumber) </div>
+    <div class="editor-field"> @Html.HiddenFor(model => model.OrdersSummary.Email) </div>
+    <div class="editor-field"> @Html.HiddenFor(model => model.OrdersSummary.IsActive) </div>
+    <div class="editor-field"> @Html.HiddenFor(model => model.OrdersSummary.OrderSummaryID) </div>
+    <div class="editor-field"> @Html.HiddenFor(model => model.OrdersSummary.OrdersDetails) </div>
+    <div class="editor-field"> @Html.HiddenFor(model => model.OrdersSummary.Phone) </div>
+    <div class="editor-field"> @Html.HiddenFor(model => model.OrdersSummary.ShippingPrice) </div>
+    <div class="editor-field"> @Html.HiddenFor(model => model.OrdersSummary.ShippingType) </div>
+    <div class="editor-field"> @Html.HiddenFor(model => model.OrdersSummary.TotalValue) </div>
+    <div class="editor-field"> @Html.HiddenFor(model => model.OrdersSummary.TransactionDate) </div>
+    <div class="editor-field"> @Html.HiddenFor(model => model.OrdersSummary.UserAddress) </div>
+    <div class="editor-field"> @Html.HiddenFor(model => model.OrdersSummary.UserID) </div>
+    <div class="editor-field"> @Html.HiddenFor(model => model.OrdersSummary.UserName) </div>
+    
+    
+    
+    
+    
+    
+    <div class="editor-field"> @Html.HiddenFor(model => model.Product.CategoryID) </div>
+    <div class="editor-field"> @Html.HiddenFor(model => model.Product.CategoryName) </div>
+<div class="editor-field"> @Html.HiddenFor(model => model.Product.Description) </div>
+    <div class="editor-field"> @Html.HiddenFor(model => model.Product.IsActive) </div>
+    <div class="editor-field"> @Html.HiddenFor(model => model.Product.IsDeleted) </div>
+    <div class="editor-field"> @Html.HiddenFor(model => model.Product.Keywords) </div>
+    <div class="editor-field"> @Html.HiddenFor(model => model.Product.LastPriceChangeDate) </div>
+    <div class="editor-field"> @Html.HiddenFor(model => model.Product.Name) </div>
+    <div class="editor-field"> @Html.HiddenFor(model => model.Product.OldPrice) </div>
+    <div class="editor-field"> @Html.HiddenFor(model => model.Product.Price) </div>
+    <div class="editor-field"> @Html.HiddenFor(model => model.Product.ProductID) </div>
+    <div class="editor-field"> @Html.HiddenFor(model => model.Product.Quantity) </div>
+    <div class="editor-field"> @Html.HiddenFor(model => model.Product.Sequence) </div>
+    <div class="editor-field"> @Html.HiddenFor(model => model.Product.ShortName) </div>
+    <div class="editor-field"> @Html.HiddenFor(model => model.Product.Snippet) </div>
+    <div class="editor-field"> @Html.HiddenFor(model => model.Product.StartDate) </div>
+    <div class="editor-field"> @Html.HiddenFor(model => model.Product.UpdateDate) </div>
+    
+        *@
+    
+    
+    <div class="col-lg-12 col-md-12" style="padding: 2px 0"> 
+     <div class="form-group" style="padding: 0"> 
+   
+    <div class="col-lg-2 col-md-2" style="padding: 0"> @Html.Label("Товар")</div>    
+         <div class="col-lg-10 col-md-10" style="padding: 0">
+             <input class="text-box single-line form-control" readonly="readonly" data-val="true" type="text" value="@productName"/> 
+             @* @Html.Editor("", productName, productName, new { @readonly = "readonly", @class = "form-control" })*@
+         </div>    
+         </div>
+     </div>
+    
+
+      <div class="col-lg-12 col-md-12" style="padding: 2px 0"> 
+     <div class="form-group" style="padding: 0"> 
+   
+    <div class="col-lg-2 col-md-2" style="padding: 0"> @Html.Label("Количество")</div>    
+         <div class="col-lg-1 col-md-1" style="padding: 0"> @Html.TextBoxFor(model => model.Quantity, new
+                                                       { @*@readonly = "readonly",*@ @class = "form-control"
+                                                       })</div>    
+  
+         <div class="col-lg-2 col-md-2" style="padding: 0 5px 0 0; text-align:  right"> @Html.Label("Цена")</div>    
+         <div class="col-lg-2 col-md-2" style="padding: 0">  @Html.TextBoxFor(model => model.Price, new { @class = "form-control" })</div>    
+         
+         <div class=""><input type="submit" value="Сохранить" class="btn-warning btn col-lg-offset-1 col-md-offset-1 col-lg-4 col-md-4"/></div>
+     
+     </div>
+     </div>
+  
+    
+        @*
+     <div class="editor-label"> @Html.Label("Товар")</div>    
+     <div class="editor-field"> @Html.DisplayTextFor(model => model.Product.Name)</div>    
+   
+   
+     <div class="editor-label"> @Html.Label("Товар")</div>    
+     <div class="editor-field"> @Html.EditorFor(model => model.ProductID)</div>    
+   
+    <div class="editor-label"> @Html.Label("Количество")</div>    
+    <div class="editor-field"> @Html.EditorFor(model => model.Quantity)</div>    
+    
+    <div class="editor-label"> @Html.Label("Цена")</div>    
+     <div class="editor-field"> @Html.EditorFor(model => model.Price)</div>    
+   
+    <div class="editor-field"> @Html.HiddenFor(model => model.OrderSummaryID)</div>    
+   
+   @* <div class="editor-field"> @Html.HiddenFor(model => model.TotalValue)</div>    
+    
+   
+     
+    <input type="submit" value="Сохранить" />  *@
+   
+   
+}
+
+<p>@Html.ActionLink("Отменить и вернуться к списку", "OrdersDetails", "Admin")</p>
+<p>@Html.ActionLink("Перейти в меню администратора", "Actions")</p>
+
+
+
+<script>
+    var p = $("#menu li a[href='/Admin/Orders']");
+    p.parent().addClass("selected");
+</script>

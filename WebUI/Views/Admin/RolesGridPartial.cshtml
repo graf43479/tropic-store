@@ -1,0 +1,65 @@
+﻿@using MvcContrib.UI.Grid
+@model WebUI.Models.PagedViewModel<Domain.Entities.Role>
+
+
+@*script src="@Url.Content("~/Scripts/js/bootstrap.min.js")" type="text/javascript"></script>*@
+@*
+@{
+    Html.RenderPartial("Pager", Model.PagedList);
+}
+*@
+
+
+@using (Html.BeginForm("DeleteRole", "Admin", FormMethod.Post))
+{
+
+
+    @Html.Grid(Model.PagedList).Columns(column =>
+        {
+        
+            column.For(x => x.RoleName).SortColumnName("RoleName").Named("Роль");
+    @*column.For(x => @Html.ActionQueryLink(x.RoleName, "EditRole", new { roleId = x.RoleID })).Named("Роль");*@
+            column.For(x => x.UserRoles.Where(z => z.RoleID == x.RoleID).Count()).Sortable(false).Named("Количество");
+          @*  column.For(x => @Html.ActionQueryLink("Удалить", "DeleteRole", new {roleId = x.RoleID}));*@
+
+
+
+            column.For(x => Ajax.ActionLink(" ", "EditRole", new {roleId = x.RoleID}, new AjaxOptions()
+                {
+                    UpdateTargetId = "updateDialog5",
+                    HttpMethod = "GET",
+                    InsertionMode = InsertionMode.Replace,
+                    OnBegin = "gifLoaderBefore",
+                    OnSuccess = "gifLoaderAfter",
+                    OnFailure = "gifLoaderAfter",
+                    OnComplete = "gifLoaderAfter"
+                }, new {@class = "role-change edit-status glyphicon glyphicon-edit btn-xs btn btn-default", @title = "Редактировать"}
+
+                                )).Header(x => "<span class='glyphicon glyphicon-edit'> </span>").SortColumnName("RoleName").Named("Роль");
+
+
+            column.Custom(x => Html.Raw("<a href = " + Url.Action("DeleteRole", "Admin", new {roleId = x.RoleID}) + " class='linkButton glyphicon glyphicon-remove btn-xs btn btn-danger' title='Удалить'></a>")).Named("Options").Header(o => "<span class='glyphicon glyphicon-remove'> </span>").Encode(false)
+                  .Sortable(false);
+            ;
+
+
+        }).Attributes(@class => "table table-striped table-bordered table-hover table-condensed grid-style").Empty("Нет данных")
+
+    @Html.ActionLink("Создать роль", "EditRole", "Admin", null, new {@class = "role-change btn btn-info btn-md", @style = "margin-left: 10px; color: white; float: right;"})
+    
+
+ @*<div id="containers"></div>*@
+@*
+@Ajax.ActionLink(p.OrderNumber.ToString(), "AccountOrdersDetails", new { orderId = p.OrderSummaryID }, new AjaxOptions()
+                                    {
+                                        UpdateTargetId = "accountOrdersDetails",
+                                        HttpMethod = "POST",
+                                        InsertionMode = InsertionMode.Replace,
+                                        OnSuccess = "showModalData"
+                                    })           
+*@
+}
+<div id="message"></div>
+
+
+  

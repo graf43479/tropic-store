@@ -1,0 +1,228 @@
+﻿@model WebUI.Models.CategoryViewModel
+
+@{
+   ViewBag.Title = "Admin: Редактирование " + @Model.Name;
+   Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+
+<ul class="breadcrumb">
+    @{
+        <li><a href="@Url.Action("Actions", "Admin")">Главная</a> <span class="divider">/</span></li>
+        <li class=""><a href="@Url.Action("Categories", "Admin")">Категории</a> <span class="divider">/</span></li>
+        <li class="active"><a href="@Url.Action("EditCategory", "Admin", new {categoryId = @Model.CategoryID})">@{
+                                                                                                                  if(Model.Name == null) 
+                                                                                                                  { <b>Новая категория</b>} 
+                                                                                                                  else {<b>Редактировать категорию "@Model.Name"</b>}
+                                                                                                              } </a> <span class="divider">/</span></li>
+    }
+</ul>
+
+
+@{
+    bool readonl = false;
+    if (User.IsInRole("SEO"))
+    {
+        readonl = true;
+    }
+}
+
+<style>
+    form {
+        border: none;
+    }
+</style>
+@*
+ <div class="form-group" style="padding: 0">
+            <div class="col-lg-2 col-md-2"> @Html.Label("Надкатегория")</div>    
+            <div class="col-lg-8 col-md-8"> @Html.TextBoxFor(model => model.Name, new { @class = "form-control" })</div>    
+            <input type="submit" value="Сохранить" class="col-lg-2 col-md-2 btn btn-info" />
+        </div>
+*@
+
+<h2>Редактировать @Model.Name</h2>
+
+@using (Html.BeginForm("EditCategory", "Admin"))
+{
+   @* <!--<div class="editor-label"> @Html.Label("ID")</div>    -->*@
+    <div class="editor-field"> @Html.HiddenFor(model => model.CategoryID)</div>    
+    <div class="editor-field"> @Html.HiddenFor(model => model.SuperCategoryID)</div>   
+    <div class="editor-field"> @Html.HiddenFor(model => model.ShortName)</div>   
+    <div class="editor-field"> @Html.HiddenFor(model => model.SuperCategoryName)</div>   
+    <div class="editor-field"> @Html.HiddenFor(model => model.Sequence)</div>   
+    <div class="editor-field"> @Html.HiddenFor(model => model.ImageExt)</div>   
+    
+    <div style="padding: 0" class="col-lg-12 col-md-12"> 
+    <div class="form-group" style="padding: 0">
+        <div class="col-lg-2 col-md-2"> @Html.Label("Категория")</div>    
+        <div class="col-lg-5 col-md-5"> @Html.TextBoxFor(model => model.Name, @readonl ? (object)new { @class = "form-control", @readonly = "readonly" } : (object)new { @class = "form-control" })</div>    
+        @{
+            if (readonl)
+            {
+                <div class="col-lg-2 col-md-3">@Html.Label("Категория числится удаленной")</div>    
+                <div class="col-lg-3 col-md-2" style="text-align: right" > @Html.TextBoxFor(model => model.IsDeleted, new { @readonly = "readonly", @class = "form-control"  })</div>  
+                    
+            }
+            else
+            {
+                    <div class="col-lg-2 col-md-2" style="text-align: right" readonly = "readonly"> @Html.CheckBoxFor(model => model.IsDeleted, @readonl ? (object)new { @readonly = "readonly" } : null)</div>  
+        <div class="col-lg-3 col-md-3">@Html.Label("Категория числится удаленной")</div> 
+            }
+    }
+        
+        </div>
+    </div>    
+        <div style="padding: 0" class="col-lg-12 col-md-12"> 
+        <div class="form-group" style="padding: 0; padding-top: 10px;">
+            <div class="col-lg-2 col-md-2">@Html.Label("Выбранная надкатегория")</div>
+            @{
+            if (readonl)
+            {
+                    <div class="col-lg-5 col-md-5 multi-line">
+                        @Html.HiddenFor(x => x.SelectedSuperCategoryID) 
+                        @Html.TextBoxFor(model => model.SuperCategories.FirstOrDefault(x => x.SuperCategoryID == model.SelectedSuperCategoryID).Name, @readonl ? (object)new { @class = "form-control", @readonly = "readonly" } : (object)new { @class = "form-control" })
+                    </div>
+            }
+            else
+            {
+                      <div class="col-lg-5 col-md-5 multi-line">  @Html.DropDownListFor(model => model.SelectedSuperCategoryID,
+                                                                              new SelectList(Model.SuperCategories, "SuperCategoryID", "Name"), "--Выберите надкатегорию--")</div>
+            }
+            }
+            
+  
+            <div class="col-lg-2 col-md-2">@Html.Label("Дата изменения")</div>
+            <div class="col-lg-3 col-md-3">@Html.TextBoxFor(model => model.UpdateDate, new { disabled = "disabled", @class = "form-control" })</div>
+            
+        </div>
+        </div>
+
+            if (User.IsInRole("ContentManager") != true)
+            {
+        <div style="padding: 0" class="col-lg-12 col-md-12"> 
+            <div class="form-group" style="padding: 0; padding-top: 10px;">
+                <div class="col-lg-2 col-md-2">@Html.Label("Метатеги")</div>
+                <div class="col-lg-10 col-md-10 multi-line">  @Html.TextAreaFor(model => model.CategoryKeywords, new { @class = "form-control" })</div>
+            </div>
+        </div>
+
+        <div style="padding: 0" class="col-lg-12 col-md-12"> 
+            <div class="form-group" style="padding: 0; padding-top: 10px;">
+                <div class="col-lg-2 col-md-2">@Html.Label("Сниппет")</div>
+                <div class="col-lg-10 col-md-10 multi-line" >  @Html.TextAreaFor(model => model.CategorySnippet, new { @class = "form-control" })</div>
+            </div>
+        </div>
+            }
+
+    <div style="padding: 0" class="col-lg-12 col-md-12"> 
+        <div class="form-group" style="padding: 0; padding-top: 10px;">
+            <div class="col-lg-2 col-md-2">@Html.Label("Описание")</div>
+            <div class="col-lg-10 col-md-10 multi-line">  @Html.TextAreaFor(model => model.Description, new { @class = "form-control" })</div>
+        </div>
+    </div>
+    
+    
+        <div style="padding: 0 0 10px 0;" class="col-lg-12 col-md-12"> 
+        <div class="form-group" style="padding: 0; padding-top: 10px;">
+            
+            <div class="col-lg-2 col-md-2 col-lg-offset-10 col-md-offset-10" style="padding: 0;"><input type="submit" value="Сохранить" class="btn-warning btn"/></div>
+        </div>
+        </div>    
+    
+    
+}
+@{
+    if (readonl != true)
+    {
+  
+ 
+<div id="uploadCategoryImage" style="display: none; padding: 0 0 10px 0;" class="col-lg-12 col-md-12">
+    <h2>Изображение категории</h2>
+    
+   @using (Html.BeginForm("UploadCatalogImage", "Admin", FormMethod.Post, new { enctype = "multipart/form-data" }))
+   {
+        @Html.Hidden("categoryId", Model.CategoryID)
+
+        <div class="col-lg-12 col-md-12">
+        <div class="form-group" style="padding: 0">
+            <div class="col-lg-4 col-md-4" style="padding: 0"> @{
+       string filename = string.Empty;
+       if ((string.IsNullOrWhiteSpace(Model.ImageExt)) || (System.IO.File.Exists(System.IO.Path.Combine(Server.MapPath
+                               (@Url.Content("~/Content")), Domain.Constants.CATEGORY_MINI_IMAGES_FOLDER, @Model.CategoryID.ToString() + @Model.ImageExt)) != true))
+       { filename = "0.jpg"; }
+       else { filename = string.Format("{0}{1}?{2}", Model.CategoryID, Model.ImageExt.TrimEnd(), DateTime.Now); }
+                    }
+                    <img class="example-image-link" src='@(Url.Content("~/Content"))/@(Domain.Constants.CATEGORY_MINI_IMAGES_FOLDER)/@(filename)' alt='@Model.Name' /> 
+            
+            </div>    
+    
+            <div class="col-lg-4 col-md-4" style="padding: 0"> <input type="file" name="imagefile" class = "form-control"/></div>    
+            <div class="col-lg-4 col-md-4" style="padding: 0"> <input type="submit" class = "form-control btn-info" value="Загрузить"/></div>  
+            @*
+    <table>
+            <tr>
+                <td>
+                    @{
+       string filename = string.Empty;
+       if ((string.IsNullOrWhiteSpace(Model.ImageExt)) || (System.IO.File.Exists(System.IO.Path.Combine(Server.MapPath
+                               (@Url.Content("~/Content")), Domain.Constants.CATEGORY_MINI_IMAGES_FOLDER, @Model.CategoryID.ToString() + @Model.ImageExt)) != true))
+       { filename = "0.jpg"; }
+       else { filename = string.Format("{0}{1}?{2}", Model.CategoryID, Model.ImageExt.TrimEnd(), DateTime.Now); }
+                    }
+                    <img class="example-image-link" src='@(Url.Content("~/Content"))/@(Domain.Constants.CATEGORY_MINI_IMAGES_FOLDER)/@(filename)' alt='@Model.Name' /> 
+                    
+                    @*
+                  
+                </td>
+                <td style="padding-left:20px">
+                    <input type="file" name="imagefile" />
+                    <br />
+                    <input type="submit" value="Загрузить" />
+                </td>
+            </tr>
+        </table>*@
+        </div></div>
+   }
+        </div>
+        
+    <br/>
+  @* <p>@Html.ActionLink("Отменить и вернуться к списку", "Categories")</p>
+<p>@Html.ActionLink("Перейти в меню администратора", "Actions")</p>*@
+
+
+   
+   
+   if (Model.CategoryID != 0)
+   {
+            <script type="text/javascript">                document.getElementById("uploadCategoryImage").style.display = "inherit"</script>
+   }
+   else
+   {
+            <script type="text/javascript">      document.getElementById("uploadCategoryImage").display = "none"</script>
+   }
+   
+   
+<script>
+
+    $(document).ready(function () {
+        $("#SelectedSuperCategoryID").addClass("form-control");
+
+    });
+</script>
+    }
+}
+
+<link href="@Url.Content("~/Content/jquery.cleditor.css")" rel="stylesheet" type="text/css" />
+<script src="@Url.Content("~/Scripts/jquery.cleditor.min.js")" type="text/javascript"></script>
+<script type="text/javascript">
+    $("#Description").cleditor();
+</script>
+
+
+
+
+
+<script>
+    var p = $("#menu li a[href='/Admin/Categories']");
+    p.parent().addClass("selected");
+</script>
